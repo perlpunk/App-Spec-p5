@@ -130,7 +130,6 @@ sub usage {
         }
     }
 
-    say $usage;
     return $usage;
 }
 
@@ -144,12 +143,12 @@ sub gather_options_parameters {
 
     for my $cmd (@$cmds) {
         my $cmd_spec = $commands->{ $cmd };
-        my $options = $cmd_spec->{options} || [];
-        my $parameters = $cmd_spec->{parameters} || [];
+        my $options = $cmd_spec->options || [];
+        my $parameters = $cmd_spec->parameters || [];
         push @options, @$options;
         push @parameters, @$parameters;
 
-        $commands = $cmd_spec->{subcommands} || {};
+        $commands = $cmd_spec->subcommands || {};
 
     }
     return \@options, \@parameters;
@@ -377,14 +376,15 @@ sub zsh_options {
 }
 
 sub make_getopt {
-    my ($self, $options, $result) = @_;
+    my ($self, $options, $result, $specs) = @_;
     my @getopt;
     for my $opt (@$options) {
-        my $name = $opt->{name};
+        my $name = $opt->name;
         my $spec = $name;
         unless ($opt->type eq 'bool') {
             $spec .= "=s";
         }
+        $specs->{ $name } = $opt;
         push @getopt, $spec, \$result->{ $name },
     }
     return @getopt;

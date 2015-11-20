@@ -6,6 +6,7 @@ use 5.010;
 
 our $VERSION = '0.000'; # VERSION
 
+use App::Spec::Options;
 
 use Getopt::Long qw/ :config pass_through /;
 use Moo;
@@ -35,59 +36,67 @@ sub run {
     my $commands = $spec->commands;
 
     my %options;
+    my %option_specs;
     my $global_options = $spec->options;
-    my @getopt = $spec->make_getopt($global_options, \%options);
-#    warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\@getopt], ['getopt']);
+    my @getopt = $spec->make_getopt($global_options, \%options, \%option_specs);
     GetOptions(@getopt);
 
     my $parameters;
-    my @commands;
+    my @cmds;
     my %parameters;
     my $op;
+    my $cmd_spec;
     while (my $cmd = shift @ARGV) {
-#        warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\$cmd], ['cmd']);
-        my $cmd_spec = $commands->{ $cmd } or die "Unknown subcommand '$cmd'";
+        $cmd_spec = $commands->{ $cmd } or die "Unknown subcommand '$cmd'";
         my $options = $cmd_spec->{options} || [];
-        my @getopt = $spec->make_getopt($options, \%options);
+        my @getopt = $spec->make_getopt($options, \%options, \%option_specs);
         GetOptions(@getopt);
-#        warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\@getopt], ['getopt']);
-#        warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\%options], ['options']);
-        push @commands, $cmd;
-        my $subcommands = $cmd_spec->{subcommands} || {};
+        push @cmds, $cmd;
+        my $subcommands = $cmd_spec->subcommands || {};
         $commands = $subcommands;
         $op = $cmd_spec->op if $cmd_spec->op;
         $parameters = $cmd_spec->parameters;
         last unless %$subcommands;
     }
     unless ($op) {
-        die "Missing op for commands (@commands)";
+        my $subcommands = $cmd_spec->subcommands || {};
+        my @names = sort keys %$subcommands;
+        if (@names) {
+            warn "Missing subcommand (one of (@names))\n";
+        }
+        else {
+            warn "Missing op for commands (@cmds)\n";
+        }
+        my $help = $spec->usage(\@cmds);
+        say $help;
+        exit;
     }
 
+    my %param_specs;
     for my $p (@$parameters) {
         my $name = $p->name;
         my $type = $p->type;
         my $value = shift @ARGV;
-        if ($p->required) {
-            unless (defined $value) {
-                die "Missing parameter '$name'";
-            }
-            my $filter = $p->filter;
-            if ($filter) {
-                my $method = $filter->{method};
-                $value = $self->$method($value);
-            }
-            if ($type eq 'file') {
-                unless (-e $value) {
-                    die "Invalid value for parameter '$name': File '$value' does not exist";
-                }
-            }
-        }
         $parameters{ $name } = $value;
+        $param_specs{ $name } = $p;
     }
+    my $opt = App::Spec::Options->new({
+        options => \%options,
+        option_specs => \%option_specs,
+        parameters => \%parameters,
+        param_specs => \%param_specs,
+    });
+    my %errs;
+    my ($ok) = $opt->process( \%errs, type => "parameters", app => $self );
+    $ok &&= $opt->process( \%errs, type => "options", app => $self );
 
+    unless ($ok) {
+        warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\%errs], ['errs']);
+        die "sorry =(\n";
+    }
     $self->options(\%options);
     $self->parameters(\%parameters);
-    $self->commands(\@commands);
+    $self->commands(\@cmds);
     $self->$op;
 
 }

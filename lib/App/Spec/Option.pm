@@ -11,6 +11,7 @@ has type => ( is => 'ro' );
 has required => ( is => 'ro' );
 has description => ( is => 'ro' );
 has default => ( is => 'ro' );
+has filter => ( is => 'ro' );
 
 sub build {
     my ($class, $args) = @_;
