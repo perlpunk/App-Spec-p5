@@ -10,13 +10,13 @@ _app-spec() {
         _arguments -s  \
             '1: :->cmd1' \
             '*: :->args' \
-                '--help[Show command help]' \
+                '(--help -h)'{--help,-h}'[Show command help]' \
         && ret=0
 
 
         case $state in
         cmd1)
-            _alternative 'args:path:((_complete\:"Generate self completion" completion\:"Generate completion for a specified apec file" help\:"Show command help"))'
+            _alternative 'args:cmd2:((_complete\:"Generate self completion" completion\:"Generate completion for a specified apec file" help\:"Show command help"))'
         ;;
         args)
             case $line[1] in
@@ -33,7 +33,7 @@ _app-spec() {
 
             case $state in
             cmd2)
-                _alternative 'args:path:((bash\:"for bash" zsh\:"for zsh"))'
+                _alternative 'args:cmd3:((bash\:"for bash" zsh\:"for zsh"))'
             ;;
             args)
                     case $line[2] in
@@ -78,7 +78,7 @@ _app-spec() {
 
             case $state in
             cmd2)
-                _alternative 'args:path:((bash\:"for bash" zsh\:"for zsh"))'
+                _alternative 'args:cmd3:((bash\:"for bash" zsh\:"for zsh"))'
             ;;
             args)
                     case $line[2] in
@@ -129,7 +129,7 @@ _files
 
             case $state in
             cmd2)
-                _alternative 'args:path:((_complete completion))'
+                _alternative 'args:cmd3:((_complete completion))'
             ;;
             args)
                     case $line[2] in
@@ -146,7 +146,7 @@ _files
 
                 case $state in
                 cmd3)
-                    _alternative 'args:path:((bash zsh))'
+                    _alternative 'args:cmd4:((bash zsh))'
                 ;;
                 args)
                             case $line[3] in
@@ -192,7 +192,7 @@ _files
 
                 case $state in
                 cmd3)
-                    _alternative 'args:path:((bash zsh))'
+                    _alternative 'args:cmd4:((bash zsh))'
                 ;;
                 args)
                             case $line[3] in

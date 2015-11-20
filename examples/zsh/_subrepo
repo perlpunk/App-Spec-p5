@@ -10,13 +10,13 @@ _subrepo() {
         _arguments -s  \
             '1: :->cmd1' \
             '*: :->args' \
-                '--help[Show command help]' \
+                '(--help -h)'{--help,-h}'[Show command help]' \
         && ret=0
 
 
         case $state in
         cmd1)
-            _alternative 'args:path:((_complete\:"Generate self completion" branch\:"Create a branch with local subrepo commits since last pull." clean\:"Remove artifacts created by fetch and branch commands." clone\:"Add a repository as a subrepo in a subdir of your repository." commit\:"Add subrepo branch to current history as a single commit." fetch\:"Fetch the remote/upstream content for a subrepo." help\:"Same as git help subrepo" init\:"Turn an existing subdirectory into a subrepo." pull\:"Update the subrepo subdir with the latest upstream changes." push\:"Push a properly merged subrepo branch back upstream." status\:"Get the status of a subrepo." version\:"display version information about git-subrepo"))'
+            _alternative 'args:cmd2:((_complete\:"Generate self completion" branch\:"Create a branch with local subrepo commits since last pull." clean\:"Remove artifacts created by fetch and branch commands." clone\:"Add a repository as a subrepo in a subdir of your repository." commit\:"Add subrepo branch to current history as a single commit." fetch\:"Fetch the remote/upstream content for a subrepo." help\:"Same as git help subrepo" init\:"Turn an existing subdirectory into a subrepo." pull\:"Update the subrepo subdir with the latest upstream changes." push\:"Push a properly merged subrepo branch back upstream." status\:"Get the status of a subrepo." version\:"display version information about git-subrepo"))'
         ;;
         args)
             case $line[1] in
@@ -33,7 +33,7 @@ _subrepo() {
 
             case $state in
             cmd2)
-                _alternative 'args:path:((bash\:"for bash" zsh\:"for zsh"))'
+                _alternative 'args:cmd3:((bash\:"for bash" zsh\:"for zsh"))'
             ;;
             args)
                     case $line[2] in
@@ -113,8 +113,8 @@ _subrepo() {
             '2: :->repository' \
             '3: :->subdir' \
                     '*: :->args' \
-                        '--branch[Upstream branch]:branch' \
-                        '--force[reclone (completely replace) an existing subdir.]' \
+                        '(--branch -b)'{--branch,-b}'[Upstream branch]:branch' \
+                        '(--force -f)'{--force,-f}'[reclone (completely replace) an existing subdir.]' \
                 && ret=0
 
             case $state in
@@ -182,7 +182,7 @@ _files
 
             case $state in
             cmd2)
-                _alternative 'args:path:((_complete branch clean clone commit fetch init pull push status version))'
+                _alternative 'args:cmd3:((_complete branch clean clone commit fetch init pull push status version))'
             ;;
             args)
                     case $line[2] in
@@ -199,7 +199,7 @@ _files
 
                 case $state in
                 cmd3)
-                    _alternative 'args:path:((bash zsh))'
+                    _alternative 'args:cmd4:((bash zsh))'
                 ;;
                 args)
                             case $line[3] in
@@ -354,8 +354,8 @@ _files
                     '1: :->cmd1' \
             '2: :->subdir' \
                     '*: :->args' \
-                        '--remote[Specify remote repository]:remote' \
-                        '--branch[Upstream branch]:branch' \
+                        '(--remote -r)'{--remote,-r}'[Specify remote repository]:remote' \
+                        '(--branch -b)'{--branch,-b}'[Upstream branch]:branch' \
                 && ret=0
 
             case $state in
@@ -373,9 +373,9 @@ _files
             '2: :->subrepo' \
                     '*: :->args' \
                         '--all[All subrepos]' \
-                        '--branch[Upstream branch]:branch' \
-                        '--remote[Specify remote repository]:remote' \
-                        '--update[update]:update' \
+                        '(--branch -b)'{--branch,-b}'[Upstream branch]:branch' \
+                        '(--remote -r)'{--remote,-r}'[Specify remote repository]:remote' \
+                        '(--update -u)'{--update,-u}'[update]:update' \
                 && ret=0
 
             case $state in
@@ -396,9 +396,9 @@ _files
             '2: :->subrepo' \
                     '*: :->args' \
                         '--all[All subrepos]' \
-                        '--branch[Upstream branch]:branch' \
-                        '--remote[Specify remote repository]:remote' \
-                        '--update[update]:update' \
+                        '(--branch -b)'{--branch,-b}'[Upstream branch]:branch' \
+                        '(--remote -r)'{--remote,-r}'[Specify remote repository]:remote' \
+                        '(--update -u)'{--update,-u}'[update]:update' \
                 && ret=0
 
             case $state in
@@ -418,7 +418,7 @@ _files
                     '1: :->cmd1' \
             '2: :->subrepo' \
                     '*: :->args' \
-                        '--quiet[Just print names]:quiet' \
+                        '(--quiet -q)'{--quiet,-q}'[Just print names]:quiet' \
                 && ret=0
 
             case $state in

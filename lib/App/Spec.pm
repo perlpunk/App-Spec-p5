@@ -346,7 +346,7 @@ sub zsh_commands_alternative {
         my $summary = $cmd->summary // '';
         push @subcommands, length $summary ? qq{$name\\:"$summary"} : $name;
     }
-    my $string = qq{_alternative 'args:path:((@subcommands))'};
+    my $string = qq{_alternative 'args:cmd$level:((@subcommands))'};
     return $string;
 }
 
@@ -359,6 +359,7 @@ sub zsh_options {
         my $name = $opt->name;
         my $desc = $opt->description;
         my $type = $opt->type;
+        my $aliases = $opt->aliases;
         my $values = '';
         if (ref $type) {
             if (my $enums = $type->{enum}) {
@@ -369,7 +370,20 @@ sub zsh_options {
             $values = ":$name";
         }
         $desc =~ s/'/'"'"'/g;
-        push @options, ("        " x $level) . "'--$name\[$desc\]$values'";
+#        '(-c --count)'{-c,--count}'[Number of list items to show]:c' \
+#        '(-a --all)'{-a,--all}'[Show all list items]' \
+        my $name_str;
+        if (@$aliases) {
+            my @names = map {
+                length > 1 ? "--$_" : "-$_"
+            } ($name, @$aliases);
+            $name_str = "(@names)'\{" . join(',', @names) . "\}'";
+        }
+        else {
+            $name_str = "--$name";
+        }
+        my $str = "'$name_str\[$desc\]$values'";
+        push @options, ("        " x $level) . $str;
     }
     my $string = join " \\\n", @options;
     return $string;
