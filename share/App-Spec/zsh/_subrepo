@@ -1,0 +1,450 @@
+#compdef subrepo
+
+_subrepo() {
+    local program=subrepo
+    typeset -A opt_args
+    local curcontext="$curcontext" state line context
+
+
+            # ---- Command: 
+        _arguments -s  \
+            '1: :->cmd1' \
+            '*: :->args' \
+                '--help[Show command help]' \
+        && ret=0
+
+
+        case $state in
+        cmd1)
+            _alternative 'args:path:((_complete\:"Generate self completion" branch\:"Create a branch with local subrepo commits since last pull." clean\:"Remove artifacts created by fetch and branch commands." clone\:"Add a repository as a subrepo in a subdir of your repository." commit\:"Add subrepo branch to current history as a single commit." fetch\:"Fetch the remote/upstream content for a subrepo." help\:"Same as git help subrepo" init\:"Turn an existing subdirectory into a subrepo." pull\:"Update the subrepo subdir with the latest upstream changes." push\:"Push a properly merged subrepo branch back upstream." status\:"Get the status of a subrepo." version\:"display version information about git-subrepo"))'
+        ;;
+        args)
+            case $line[1] in
+                _complete)
+
+                # ---- Command: _complete
+                _arguments -s -C \
+                    '1: :->cmd1' \
+                    '2: :->cmd2' \
+                    '*: :->args' \
+                        '--name[name of the program]:name' \
+                && ret=0
+
+
+            case $state in
+            cmd2)
+                _alternative 'args:path:((bash\:"for bash" zsh\:"for zsh"))'
+            ;;
+            args)
+                    case $line[2] in
+                    bash)
+
+                    # ---- Command: _complete bash
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '*: :->args' \
+                                '--without-description[generate without description]' \
+                        && ret=0
+
+
+                ;;
+                    zsh)
+
+                    # ---- Command: _complete zsh
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '*: :->args' \
+                        && ret=0
+
+
+                ;;
+            esac
+
+            ;;
+            esac
+            ;;
+                branch)
+
+                # ---- Command: branch
+                _arguments -s -C \
+                    '1: :->cmd1' \
+            '2: :->subrepo' \
+                    '*: :->args' \
+                        '--all[All subrepos]' \
+                && ret=0
+
+            case $state in
+                    subrepo)
+                 local __subrepo_completion
+                 IFS=$'\n' set -A __subrepo_completion `$program 'status' '--quiet'`
+                 compadd -X "subrepo:" $__subrepo_completion
+
+                    ;;
+            esac
+
+            ;;
+                clean)
+
+                # ---- Command: clean
+                _arguments -s -C \
+                    '1: :->cmd1' \
+            '2: :->subrepo' \
+                    '*: :->args' \
+                        '--all[All subrepos]' \
+                && ret=0
+
+            case $state in
+                    subrepo)
+                 local __subrepo_completion
+                 IFS=$'\n' set -A __subrepo_completion `$program 'status' '--quiet'`
+                 compadd -X "subrepo:" $__subrepo_completion
+
+                    ;;
+            esac
+
+            ;;
+                clone)
+
+                # ---- Command: clone
+                _arguments -s -C \
+                    '1: :->cmd1' \
+            '2: :->repository' \
+            '3: :->subdir' \
+                    '*: :->args' \
+                        '--branch[Upstream branch]:branch' \
+                        '--force[reclone (completely replace) an existing subdir.]' \
+                && ret=0
+
+            case $state in
+                    repository)
+
+                    ;;
+                    subdir)
+_files
+                    ;;
+            esac
+
+            ;;
+                commit)
+
+                # ---- Command: commit
+                _arguments -s -C \
+                    '1: :->cmd1' \
+            '2: :->subrepo' \
+            '3: :->subreporef' \
+                    '*: :->args' \
+                && ret=0
+
+            case $state in
+                    subrepo)
+                 local __subrepo_completion
+                 IFS=$'\n' set -A __subrepo_completion `$program 'status' '--quiet'`
+                 compadd -X "subrepo:" $__subrepo_completion
+
+                    ;;
+                    subreporef)
+
+                    ;;
+            esac
+
+            ;;
+                fetch)
+
+                # ---- Command: fetch
+                _arguments -s -C \
+                    '1: :->cmd1' \
+            '2: :->subrepo' \
+                    '*: :->args' \
+                        '--all[All subrepos]' \
+                && ret=0
+
+            case $state in
+                    subrepo)
+                 local __subrepo_completion
+                 IFS=$'\n' set -A __subrepo_completion `$program 'status' '--quiet'`
+                 compadd -X "subrepo:" $__subrepo_completion
+
+                    ;;
+            esac
+
+            ;;
+                help)
+
+                # ---- Command: help
+                _arguments -s -C \
+                    '1: :->cmd1' \
+                    '2: :->cmd2' \
+                    '*: :->args' \
+                && ret=0
+
+
+            case $state in
+            cmd2)
+                _alternative 'args:path:((_complete branch clean clone commit fetch init pull push status version))'
+            ;;
+            args)
+                    case $line[2] in
+                    _complete)
+
+                    # ---- Command: help _complete
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '3: :->cmd3' \
+                            '*: :->args' \
+                        && ret=0
+
+
+                case $state in
+                cmd3)
+                    _alternative 'args:path:((bash zsh))'
+                ;;
+                args)
+                            case $line[3] in
+                        bash)
+
+                        # ---- Command: help _complete bash
+                                _arguments -s -C \
+                                    '1: :->cmd1' \
+                                    '2: :->cmd2' \
+                                    '3: :->cmd3' \
+                                    '*: :->args' \
+                                && ret=0
+
+
+                    ;;
+                        zsh)
+
+                        # ---- Command: help _complete zsh
+                                _arguments -s -C \
+                                    '1: :->cmd1' \
+                                    '2: :->cmd2' \
+                                    '3: :->cmd3' \
+                                    '*: :->args' \
+                                && ret=0
+
+
+                    ;;
+                esac
+
+                ;;
+                esac
+                ;;
+                    branch)
+
+                    # ---- Command: help branch
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '*: :->args' \
+                        && ret=0
+
+
+                ;;
+                    clean)
+
+                    # ---- Command: help clean
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '*: :->args' \
+                        && ret=0
+
+
+                ;;
+                    clone)
+
+                    # ---- Command: help clone
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '*: :->args' \
+                        && ret=0
+
+
+                ;;
+                    commit)
+
+                    # ---- Command: help commit
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '*: :->args' \
+                        && ret=0
+
+
+                ;;
+                    fetch)
+
+                    # ---- Command: help fetch
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '*: :->args' \
+                        && ret=0
+
+
+                ;;
+                    init)
+
+                    # ---- Command: help init
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '*: :->args' \
+                        && ret=0
+
+
+                ;;
+                    pull)
+
+                    # ---- Command: help pull
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '*: :->args' \
+                        && ret=0
+
+
+                ;;
+                    push)
+
+                    # ---- Command: help push
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '*: :->args' \
+                        && ret=0
+
+
+                ;;
+                    status)
+
+                    # ---- Command: help status
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '*: :->args' \
+                        && ret=0
+
+
+                ;;
+                    version)
+
+                    # ---- Command: help version
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '*: :->args' \
+                        && ret=0
+
+
+                ;;
+            esac
+
+            ;;
+            esac
+            ;;
+                init)
+
+                # ---- Command: init
+                _arguments -s -C \
+                    '1: :->cmd1' \
+            '2: :->subdir' \
+                    '*: :->args' \
+                        '--remote[Specify remote repository]:remote' \
+                        '--branch[Upstream branch]:branch' \
+                && ret=0
+
+            case $state in
+                    subdir)
+_files
+                    ;;
+            esac
+
+            ;;
+                pull)
+
+                # ---- Command: pull
+                _arguments -s -C \
+                    '1: :->cmd1' \
+            '2: :->subrepo' \
+                    '*: :->args' \
+                        '--all[All subrepos]' \
+                        '--branch[Upstream branch]:branch' \
+                        '--remote[Specify remote repository]:remote' \
+                        '--update[update]:update' \
+                && ret=0
+
+            case $state in
+                    subrepo)
+                 local __subrepo_completion
+                 IFS=$'\n' set -A __subrepo_completion `$program 'status' '--quiet'`
+                 compadd -X "subrepo:" $__subrepo_completion
+
+                    ;;
+            esac
+
+            ;;
+                push)
+
+                # ---- Command: push
+                _arguments -s -C \
+                    '1: :->cmd1' \
+            '2: :->subrepo' \
+                    '*: :->args' \
+                        '--all[All subrepos]' \
+                        '--branch[Upstream branch]:branch' \
+                        '--remote[Specify remote repository]:remote' \
+                        '--update[update]:update' \
+                && ret=0
+
+            case $state in
+                    subrepo)
+                 local __subrepo_completion
+                 IFS=$'\n' set -A __subrepo_completion `$program 'status' '--quiet'`
+                 compadd -X "subrepo:" $__subrepo_completion
+
+                    ;;
+            esac
+
+            ;;
+                status)
+
+                # ---- Command: status
+                _arguments -s -C \
+                    '1: :->cmd1' \
+            '2: :->subrepo' \
+                    '*: :->args' \
+                        '--quiet[Just print names]:quiet' \
+                && ret=0
+
+            case $state in
+                    subrepo)
+                 local __subrepo_completion
+                 IFS=$'\n' set -A __subrepo_completion `$program 'status' '--quiet'`
+                 compadd -X "subrepo:" $__subrepo_completion
+
+                    ;;
+            esac
+
+            ;;
+                version)
+
+                # ---- Command: version
+                _arguments -s -C \
+                    '1: :->cmd1' \
+                    '*: :->args' \
+                && ret=0
+
+
+            ;;
+        esac
+
+        ;;
+        esac
+
+}
+

@@ -1,0 +1,100 @@
+name: subrepo
+version: 1
+title: Git Submodule Alternative
+options: []
+commands:
+    clone:
+        summary: Add a repository as a subrepo in a subdir of your repository.
+        parameters:
+            -   name: repository
+                type: string
+                required: true
+            -   name: subdir
+                type: file
+        options:
+            -   &option_branch
+                name: branch
+                description: Upstream branch
+                aliases: ["b"]
+            -   name: force
+                aliases: ["f"]
+                description: 'reclone (completely replace) an existing subdir.'
+                type: bool
+    init:
+        summary: Turn an existing subdirectory into a subrepo.
+        parameters:
+            -   name: subdir
+                required: true
+                type: file
+        options:
+            -   &option_remote
+                name: remote
+                aliases: ["r"]
+                description: Specify remote repository
+            -   *option_branch
+    pull:
+        summary: Update the subrepo subdir with the latest upstream changes.
+        parameters: &pull_parameters
+            -   &param_subrepo_optional
+                name: subrepo
+                required: false
+                description: Subrepo
+                completion:
+                    - status
+                    - '--quiet'
+        options: &pull_options
+            -   &option_all
+                name: all
+                type: bool
+                description: All subrepos
+            -   *option_branch
+            -   *option_remote
+            -   name: update
+                aliases: ["u"]
+                description: update
+    push:
+        summary: Push a properly merged subrepo branch back upstream.
+        parameters: *pull_parameters
+        options: *pull_options
+    fetch:
+        summary: Fetch the remote/upstream content for a subrepo.
+        parameters:
+            -   *param_subrepo_optional
+        options:
+            -   *option_all
+    branch:
+        summary: Create a branch with local subrepo commits since last pull.
+        parameters:
+            -   *param_subrepo_optional
+        options:
+            -   *option_all
+    commit:
+        summary: Add subrepo branch to current history as a single commit.
+        parameters:
+            -   &param_subrepo
+                name: subrepo
+                required: true
+                description: Subrepo
+                completion:
+                    - status
+                    - '--quiet'
+            -   name: subreporef
+                description: Subrepo ref
+    status:
+        summary: Get the status of a subrepo.
+        parameters:
+            -   *param_subrepo_optional
+        options:
+            -   name: quiet
+                aliases: ["q"]
+                description: Just print names
+    clean:
+        summary: 'Remove artifacts created by fetch and branch commands.'
+        parameters:
+            -   *param_subrepo_optional
+        options:
+            -   *option_all
+    help:
+        summary: 'Same as git help subrepo'
+    version:
+        summary: 'display version information about git-subrepo'
