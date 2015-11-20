@@ -88,10 +88,16 @@ _app-spec() {
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
+                '3: :->spec_file' \
                             '*: :->args' \
                                 '--without-description[generate without description]' \
                         && ret=0
 
+                case $state in
+                        spec_file)
+_files
+                        ;;
+                esac
 
                 ;;
                     zsh)

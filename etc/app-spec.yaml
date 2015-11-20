@@ -19,8 +19,9 @@ commands:
             zsh:
                 op: cmd_completion_zsh
                 summary: for zsh
-                parameters: &param_spec_file
-                -   name: spec_file
+                parameters:
+                -   &param_spec_file
+                    name: spec_file
                     type: file
                     required: true
                     description: Path to the spec file
@@ -32,4 +33,5 @@ commands:
                     type: bool
                     default: false
                     description: generate without description
-                parameters: *param_spec_file
+                parameters:
+                -   *param_spec_file
