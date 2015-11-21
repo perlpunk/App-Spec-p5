@@ -208,9 +208,6 @@ sub bash_completion_commands {
     my ($self, %args) = @_;
     my $name = $self->name;
     my $commands = $args{commands};
-    unless (keys %$commands) {
-        return '';
-    }
     my $level = $args{level};
     my $indent = "    " x $level;
 
@@ -226,17 +223,26 @@ ${indent}case \$\{COMP_WORDS\[$level\]\} in
 EOM
     for my $name (sort keys %$commands) {
         $subc .= <<"EOM";
-  ${indent}$name)
+${indent}  $name)
 EOM
         my $spec = $commands->{ $name };
         my $subcommands = $spec->subcommands;
-        my $comp = $self->bash_completion_commands(
-            commands => $subcommands,
-            options => $spec->options,
-            level => $level + 1,
-        );
+        my $parameters = $spec->parameters;
+        if (keys %$subcommands) {
+            my $comp = $self->bash_completion_commands(
+                commands => $subcommands,
+                options => $spec->options,
+                level => $level + 1,
+            );
+            $subc .= $comp;
+        }
+        elsif (@$parameters) {
+            $subc .= $self->bash_completion_parameters(
+                parameters => $parameters,
+                level => $level + 1,
+            );
+        }
         $subc .= <<"EOM";
-$comp
 ${indent}  ;;
 EOM
     }
@@ -257,6 +263,52 @@ ${indent};;
 ${indent}esac
 EOM
     return $completion;
+}
+
+sub bash_completion_parameters {
+    my ($self, %args) = @_;
+    my $parameters = $args{parameters};
+    my $level = $args{level};
+    my $indent = "    " x $level;
+
+    my $comp = <<"EOM";
+${indent}case \$COMP_CWORD in
+EOM
+    for my $i (0 .. $#$parameters) {
+        my $param = $parameters->[ $i ];
+        my $name = $param->name;
+        my $num = $level + $i;
+        $comp .= $indent . "$num)\n";
+        $comp .= $self->bash_completion_parameter(
+            parameter => $param,
+            level => $level + 1,
+        );
+        $comp .= $indent . ";;\n";
+    }
+    $comp .= $indent . "esac\n";
+}
+
+sub bash_completion_parameter {
+    my ($self, %args) = @_;
+    my $name = $self->name;
+    my $param = $args{parameter};
+    my $level = $args{level};
+    my $indent = "    " x $level;
+
+    my $comp = '';
+
+    my $type = $param->type;
+    if (ref $type) {
+        if (my $list = $type->{enum}) {
+        local $" = q{"$'\\n'"};
+        $comp = <<"EOM";
+${indent}    _${name}_compreply "@$list"
+EOM
+        }
+    }
+    elsif ($type eq "file" or $type eq "dir") {
+    }
+    return $comp;
 }
 
 sub generate_completion_zsh {
@@ -387,7 +439,13 @@ sub zsh_parameters {
         $count++;
 
         my $completion = '';
-        if ($p->type eq 'file') {
+        if (ref $p->type) {
+            if (my $list = $p->type->{enum}) {
+                my @list = map { "'$_'" } @$list;
+                $completion = "compadd -X '$name:' @list";
+            }
+        }
+        elsif ($p->type eq 'file') {
             $completion = '_files';
         }
         elsif ($p->type eq 'user') {
@@ -466,14 +524,15 @@ sub zsh_options {
         my $aliases = $opt->aliases;
         my $values = '';
         if (ref $type) {
-            if (my $enums = $type->{enum}) {
-                $values = ":$name:(@$enums)";
+            if (my $list = $type->{enum}) {
+                my @list = map { qq{"$_"} } @$list;
+                $values = ":$name:(@list)";
             }
         }
         elsif ($type ne "bool") {
             $values = ":$name";
         }
-        $desc =~ s/'/'"'"'/g;
+        $desc =~ s/'`/'"'"'/g;
 #        '(-c --count)'{-c,--count}'[Number of list items to show]:c' \
 #        '(-a --all)'{-a,--all}'[Show all list items]' \
         my $name_str;
