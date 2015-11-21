@@ -156,8 +156,112 @@ sub gather_options_parameters {
 
 sub generate_completion {
     my ($self, %args) = @_;
+    my $shell = delete $args{shell};
+
+    if ($shell eq "zsh") {
+        return $self->generate_completion_zsh(%args);
+    }
+    elsif ($shell eq "bash") {
+        return $self->generate_completion_bash(%args);
+    }
+}
+
+sub generate_completion_bash {
+    my ($self, %args) = @_;
     my $name = $self->name;
 
+    my $commands = $self->commands;
+
+    my $completion_outer = $self->bash_completion_commands(
+        commands => $self->commands,
+        options => $self->options,
+        level => 1,
+    );
+
+    my $body = <<"EOM";
+#!bash
+
+# http://stackoverflow.com/questions/7267185/bash-autocompletion-add-description-for-possible-completions
+
+_$name() \{
+
+    COMPREPLY=()
+    local cur=\$\{COMP_WORDS[\$COMP_CWORD]\}
+#    echo "COMP_CWORD:\$COMP_CWORD cur:\$cur" >>/tmp/comp
+
+$completion_outer
+\}
+
+_${name}_compreply() \{
+    IFS=\$'\\n' COMPREPLY=(\$(compgen -W "\$1" -- \$\{COMP_WORDS\[COMP_CWORD\]\}))
+    if [[ \$\{#COMPREPLY[*]\} -eq 1 ]]; then #Only one completion
+        COMPREPLY=( \$\{COMPREPLY[0]%% -- *\} ) #Remove ' -- ' and everything after
+    fi
+\}
+
+complete -o default -F _$name $name
+EOM
+    return $body;
+}
+
+sub bash_completion_commands {
+    my ($self, %args) = @_;
+    my $name = $self->name;
+    my $commands = $args{commands};
+    unless (keys %$commands) {
+        return '';
+    }
+    my $level = $args{level};
+    my $indent = "    " x $level;
+
+    my @commands = map {
+        my $summary = $commands->{ $_ }->summary;
+        length $summary ? "$_ -- " . $summary : $_
+    } sort keys %$commands;
+    my $cmds = join q{"$'\\n'"}, @commands;
+
+    my $subc = <<"EOM";
+$indent# subcmds
+${indent}case \$\{COMP_WORDS\[$level\]\} in
+EOM
+    for my $name (sort keys %$commands) {
+        $subc .= <<"EOM";
+  ${indent}$name)
+EOM
+        my $spec = $commands->{ $name };
+        my $subcommands = $spec->subcommands;
+        my $comp = $self->bash_completion_commands(
+            commands => $subcommands,
+            options => $spec->options,
+            level => $level + 1,
+        );
+        $subc .= <<"EOM";
+$comp
+${indent}  ;;
+EOM
+    }
+    $subc .= <<"EOM";
+${indent}esac
+EOM
+
+    my $completion = <<"EOM";
+${indent}case \$COMP_CWORD in
+
+${indent}$level)
+${indent}    _${name}_compreply "$cmds"
+
+${indent};;
+${indent}*)
+$subc
+${indent};;
+${indent}esac
+EOM
+    return $completion;
+}
+
+sub generate_completion_zsh {
+    my ($self, %args) = @_;
+    my $name = $self->name;
     my $completion_outer = $self->zsh_completion_commands(
         commands => $self->commands,
         options => $self->options,

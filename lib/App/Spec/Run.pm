@@ -111,13 +111,15 @@ sub cmd_help {
 sub cmd_self_completion_bash {
     my ($self) = @_;
     my $options = $self->options;
-    my $parameters = $self->parameters;
+    my $spec = $self->spec;
+    my $completion = $spec->generate_completion(
+        shell => "bash",
+    );
+    say $completion;
 }
 
 sub cmd_self_completion_zsh {
     my ($self) = @_;
-#    my $options = $self->options;
-    my $parameters = $self->parameters;
 
     my $spec = $self->spec;
     my $completion = $spec->generate_completion(
