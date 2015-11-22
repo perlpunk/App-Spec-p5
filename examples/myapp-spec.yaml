@@ -1,21 +1,29 @@
+---
 name: myapp
 version: 1
 title: My Very Cool App
 options:
--   name: verbose
+  -
+    name: verbose
     type: bool
     aliases: ["v"]
 commands:
-    cook:
-        op: cook
-        summary: Cook something
-        parameters:
-        -   name: drink
-            required: true
-            type:
-                enum: ["tea", "coffee"]
-        options:
-        -   name: with
-            description: Drink with ...
-            type:
-                enum: ["almond milk", "soy milk", "oat milk", "spelt milk", "cow milk"]
+  cook:
+    op: cook
+      summary: Cook something
+      parameters:
+        -
+          name: drink
+          required: true
+          type:
+            enum: ["tea", "coffee"]
+      options:
+        -
+          name: with
+          description: Drink with ...
+          type:
+            enum: ["almond milk", "soy milk", "oat milk", "spelt milk", "cow milk"]
+        -
+          name: sugar
+          type: bool
+# vim:et:sts=2:sws=2:sw=2:foldmethod=indent
