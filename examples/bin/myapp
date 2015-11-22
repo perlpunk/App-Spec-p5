@@ -1,0 +1,33 @@
+#!/usr/bin/env perl
+# vim:et:sts=4:sws=4:sw=4
+use strict;
+use warnings;
+use 5.010;
+use Data::Dumper;
+use FindBin '$Bin';
+
+use App::Spec;
+
+my $spec = App::Spec->read("$Bin/../myapp-spec.yaml");
+my $run = App::Spec::Eample::MyApp->new({
+    spec => $spec,
+});
+$run->run;
+
+package App::Spec::Eample::MyApp;
+
+use base 'App::Spec::Run';
+
+sub cook {
+    my ($self) = @_;
+    my $param = $self->parameters;
+    my $opt = $self->options;
+
+    my $with = $opt->{with} // 'nothing';
+    if ($with eq "cow milk") {
+        die "Sorry, no cow milk today. go vegan\n";
+    }
+
+    say "Starting to cook $param->{drink} with $with";
+}
+
