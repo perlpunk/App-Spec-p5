@@ -28,6 +28,18 @@ _myapp() {
         # subcmds
         case ${COMP_WORDS[2]} in
           bash)
+            case $COMP_CWORD in
+            *)
+            case ${COMP_WORDS[$COMP_CWORD-1]} in
+              --without-description)
+              ;;
+
+              *)
+                _myapp_compreply "'--without-description -- generate without description'"
+              ;;
+            esac
+            ;;
+            esac
           ;;
           zsh)
           ;;
@@ -40,6 +52,19 @@ _myapp() {
         case $COMP_CWORD in
         2)
                 _myapp_compreply "tea"$'\n'"coffee"
+        ;;
+        *)
+        case ${COMP_WORDS[$COMP_CWORD-1]} in
+          --with)
+            _myapp_compreply "'almond\ milk'"$'\n'"'soy\ milk'"$'\n'"'oat\ milk'"$'\n'"'spelt\ milk'"$'\n'"'cow\ milk'"
+          ;;
+          --sugar|-s)
+          ;;
+
+          *)
+            _myapp_compreply "'--with -- Drink with ...'"$'\n'"'--sugar -- add sugar'"$'\n'"'-s -- add sugar'"
+          ;;
+        esac
         ;;
         esac
       ;;

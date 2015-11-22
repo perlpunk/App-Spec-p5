@@ -9,21 +9,23 @@ options:
     aliases: ["v"]
 commands:
   cook:
+    summary: Cook something
     op: cook
-      summary: Cook something
-      parameters:
-        -
-          name: drink
-          required: true
-          type:
-            enum: ["tea", "coffee"]
-      options:
-        -
-          name: with
-          description: Drink with ...
-          type:
-            enum: ["almond milk", "soy milk", "oat milk", "spelt milk", "cow milk"]
-        -
-          name: sugar
-          type: bool
+    parameters:
+      -
+        name: drink
+        required: true
+        type:
+          enum: ["tea", "coffee"]
+    options:
+      -
+        name: with
+        description: Drink with ...
+        type:
+          enum: ["almond milk", "soy milk", "oat milk", "spelt milk", "cow milk"]
+      -
+        name: sugar
+        type: bool
+        aliases: ["s"]
+        description: add sugar
 # vim:et:sts=2:sws=2:sw=2:foldmethod=indent

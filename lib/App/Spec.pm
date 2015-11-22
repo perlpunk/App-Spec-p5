@@ -228,6 +228,7 @@ EOM
         my $spec = $commands->{ $name };
         my $subcommands = $spec->subcommands;
         my $parameters = $spec->parameters;
+        my $options = $spec->options;
         if (keys %$subcommands) {
             my $comp = $self->bash_completion_commands(
                 commands => $subcommands,
@@ -236,9 +237,10 @@ EOM
             );
             $subc .= $comp;
         }
-        elsif (@$parameters) {
+        elsif (@$parameters or @$options) {
             $subc .= $self->bash_completion_parameters(
                 parameters => $parameters,
+                options => $options,
                 level => $level + 1,
             );
         }
@@ -267,13 +269,16 @@ EOM
 
 sub bash_completion_parameters {
     my ($self, %args) = @_;
+    my $appname = $self->name;
     my $parameters = $args{parameters};
+    my $options = $args{options};
     my $level = $args{level};
     my $indent = "    " x $level;
 
     my $comp = <<"EOM";
 ${indent}case \$COMP_CWORD in
 EOM
+
     for my $i (0 .. $#$parameters) {
         my $param = $parameters->[ $i ];
         my $name = $param->name;
@@ -285,6 +290,66 @@ EOM
         );
         $comp .= $indent . ";;\n";
     }
+
+    if (@$options) {
+        my $num = $level + @$parameters;
+        $comp .= $indent . "*)\n";
+
+        my @comp_options;
+        my @comp_values;
+        my $comp_value = <<"EOM";
+${indent}case \${COMP_WORDS[\$COMP_CWORD-1]\} in
+EOM
+        for my $i (0 .. $#$options) {
+            my $opt = $options->[ $i ];
+            my $name = $opt->name;
+            my $type = $opt->type;
+            my $summary = $opt->description;
+            my $aliases = $opt->aliases;
+            my @names = ($name, @$aliases);
+            my @option_strings;
+            for my $n (@names) {
+                my $dash = length $n > 1 ? "--" : "-";
+                my $option_string = "$dash$n";
+                my $string = length $summary
+                    ? qq{'$option_string -- $summary'}
+                    : qq{'$option_string'};
+                push @option_strings, $option_string;
+                push @comp_options, $string;
+            }
+
+            $comp_value .= <<"EOM";
+${indent}  @{[ join '|', @option_strings ]})
+EOM
+            if (ref $type) {
+                if (my $list = $type->{enum}) {
+                    my @list = map { s/ /\\ /g; "'$_'" } @$list;
+                    local $" = q{"$'\\n'"};
+                    $comp_value .= <<"EOM";
+${indent}    _${appname}_compreply "@list"
+EOM
+                }
+            }
+            elsif ($type eq "bool") {
+            }
+            elsif ($type eq "file" or $type eq "dir") {
+            }
+            $comp_value .= $indent . "  ;;\n";
+        }
+
+        {
+            local $" = q{"$'\\n'"};
+            $comp .= <<"EOM";
+$comp_value
+${indent}  *)
+${indent}    _${appname}_compreply "@comp_options"
+${indent}  ;;
+${indent}esac
+EOM
+        }
+        $comp .= $indent . ";;\n";
+    }
+
     $comp .= $indent . "esac\n";
 }
 
@@ -532,7 +597,7 @@ sub zsh_options {
         elsif ($type ne "bool") {
             $values = ":$name";
         }
-        $desc =~ s/'`/'"'"'/g;
+        $desc =~ s/['`]/'"'"'/g;
 #        '(-c --count)'{-c,--count}'[Number of list items to show]:c' \
 #        '(-a --all)'{-a,--all}'[Show all list items]' \
         my $name_str;
