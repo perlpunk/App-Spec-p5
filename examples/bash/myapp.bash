@@ -5,13 +5,14 @@
 _myapp() {
 
     COMPREPLY=()
+    local program=myapp
     local cur=${COMP_WORDS[$COMP_CWORD]}
 #    echo "COMP_CWORD:$COMP_CWORD cur:$cur" >>/tmp/comp
 
     case $COMP_CWORD in
 
     1)
-        _myapp_compreply "_complete -- Generate self completion"$'\n'"cook -- Cook something"$'\n'"help -- Show command help"
+        _myapp_compreply "_complete -- Generate self completion"$'\n'"cook -- Cook something"$'\n'"help -- Show command help"$'\n'"weather -- Weather"
 
     ;;
     *)
@@ -51,7 +52,7 @@ _myapp() {
       cook)
         case $COMP_CWORD in
         2)
-                _myapp_compreply "tea"$'\n'"coffee"
+                _drink_compreply "tea"$'\n'"coffee"
         ;;
         *)
         case ${COMP_WORDS[$COMP_CWORD-1]} in
@@ -72,7 +73,7 @@ _myapp() {
         case $COMP_CWORD in
 
         2)
-            _myapp_compreply "_complete"$'\n'"cook"
+            _myapp_compreply "_complete"$'\n'"cook"$'\n'"weather"
 
         ;;
         *)
@@ -98,6 +99,70 @@ _myapp() {
             esac
           ;;
           cook)
+          ;;
+          weather)
+            case $COMP_CWORD in
+
+            3)
+                _myapp_compreply "cities"$'\n'"countries"$'\n'"show"
+
+            ;;
+            *)
+            # subcmds
+            case ${COMP_WORDS[3]} in
+              cities)
+              ;;
+              countries)
+              ;;
+              show)
+              ;;
+            esac
+
+            ;;
+            esac
+          ;;
+        esac
+
+        ;;
+        esac
+      ;;
+      weather)
+        case $COMP_CWORD in
+
+        2)
+            _myapp_compreply "cities -- show list of cities"$'\n'"countries -- show list of countries"$'\n'"show"
+
+        ;;
+        *)
+        # subcmds
+        case ${COMP_WORDS[2]} in
+          cities)
+            case $COMP_CWORD in
+            *)
+            case ${COMP_WORDS[$COMP_CWORD-1]} in
+              --country)
+              ;;
+
+              *)
+                _myapp_compreply "'--country -- country name'"
+              ;;
+            esac
+            ;;
+            esac
+          ;;
+          countries)
+          ;;
+          show)
+            case $COMP_CWORD in
+            3)
+                    local param_country=`$program 'weather' 'countries'`
+                    _myapp_compreply "$param_country"
+            ;;
+            4)
+                    local param_city=`$program 'weather' 'cities' '--country' "${COMP_WORDS[$COMP_CWORD-1]}"`
+                    _myapp_compreply "$param_city"
+            ;;
+            esac
           ;;
         esac
 

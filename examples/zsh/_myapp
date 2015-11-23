@@ -17,7 +17,7 @@ _myapp() {
 
         case $state in
         cmd1)
-            _alternative 'args:cmd2:((_complete\:"Generate self completion" cook\:"Cook something" help\:"Show command help"))'
+            _alternative 'args:cmd2:((_complete\:"Generate self completion" cook\:"Cook something" help\:"Show command help" weather\:"Weather"))'
         ;;
         args)
             case $line[1] in
@@ -97,7 +97,7 @@ _myapp() {
 
                 case $state in
                 cmd2)
-                    _alternative 'args:cmd3:((_complete cook))'
+                    _alternative 'args:cmd3:((_complete cook weather))'
                 ;;
                 args)
                     case $line[2] in
@@ -156,6 +156,135 @@ _myapp() {
                             '*: :->args' \
                             && ret=0
 
+
+                    ;;
+                    weather)
+
+                        # ---- Command: help weather
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '3: :->cmd3' \
+                            '*: :->args' \
+                            && ret=0
+
+
+                        case $state in
+                        cmd3)
+                            _alternative 'args:cmd4:((cities countries show))'
+                        ;;
+                        args)
+                            case $line[3] in
+                            cities)
+
+                                # ---- Command: help weather cities
+                                _arguments -s -C \
+                                    '1: :->cmd1' \
+                                    '2: :->cmd2' \
+                                    '3: :->cmd3' \
+                                    '*: :->args' \
+                                    && ret=0
+
+
+                            ;;
+                            countries)
+
+                                # ---- Command: help weather countries
+                                _arguments -s -C \
+                                    '1: :->cmd1' \
+                                    '2: :->cmd2' \
+                                    '3: :->cmd3' \
+                                    '*: :->args' \
+                                    && ret=0
+
+
+                            ;;
+                            show)
+
+                                # ---- Command: help weather show
+                                _arguments -s -C \
+                                    '1: :->cmd1' \
+                                    '2: :->cmd2' \
+                                    '3: :->cmd3' \
+                                    '*: :->args' \
+                                    && ret=0
+
+
+                            ;;
+                            esac
+
+                        ;;
+                        esac
+                    ;;
+                    esac
+
+                ;;
+                esac
+            ;;
+            weather)
+
+                # ---- Command: weather
+                _arguments -s -C \
+                    '1: :->cmd1' \
+                    '2: :->cmd2' \
+                    '*: :->args' \
+                    && ret=0
+
+
+                case $state in
+                cmd2)
+                    _alternative 'args:cmd3:((cities\:"show list of cities" countries\:"show list of countries" show))'
+                ;;
+                args)
+                    case $line[2] in
+                    cities)
+
+                        # ---- Command: weather cities
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '*: :->args' \
+                            '--country[country name]:country' \
+                            && ret=0
+
+
+                    ;;
+                    countries)
+
+                        # ---- Command: weather countries
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '*: :->args' \
+                            && ret=0
+
+
+                    ;;
+                    show)
+
+                        # ---- Command: weather show
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                        '3: :->country' \
+                        '4: :->city' \
+                            '*: :->args' \
+                            && ret=0
+
+                case $state in
+                    country)
+                     local __country_completion
+                     IFS=$'\n' set -A __country_completion `$program 'weather' 'countries'`
+                     compadd -X "country:" $__country_completion
+
+                    ;;
+                    city)
+                     local __city_completion
+                     IFS=$'\n' set -A __city_completion `$program 'weather' 'cities' '--country' "$words[$CURRENT-1]"`
+                     compadd -X "city:" $__city_completion
+
+                    ;;
+                esac
 
                     ;;
                     esac

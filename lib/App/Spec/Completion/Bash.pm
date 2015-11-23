@@ -24,6 +24,7 @@ sub generate_completion {
 _$name() \{
 
     COMPREPLY=()
+    local program=$name
     local cur=\$\{COMP_WORDS[\$COMP_CWORD]\}
 #    echo "COMP_CWORD:\$COMP_CWORD cur:\$cur" >>/tmp/comp
 
@@ -196,8 +197,9 @@ EOM
 sub completion_parameter {
     my ($self, %args) = @_;
     my $spec = $self->spec;
-    my $name = $spec->name;
+    my $appname = $spec->name;
     my $param = $args{parameter};
+    my $name = $param->name;
     my $level = $args{level};
     my $indent = "    " x $level;
 
@@ -213,6 +215,33 @@ EOM
         }
     }
     elsif ($type eq "file" or $type eq "dir") {
+    }
+    elsif (my $def = $param->completion) {
+        my @args;
+        for my $arg (@$def) {
+            unless (ref $arg) {
+                push @args, "'$arg'";
+                next;
+            }
+            if (my $replace = $arg->{replace}) {
+                if (ref $replace eq 'ARRAY') {
+                    my @repl = @$replace;
+                    if ($replace->[0] eq 'SHELL_WORDS') {
+                        my $num = $replace->[1];
+                        my $index = "\$COMP_CWORD";
+                        if ($num ne 'CURRENT') {
+                            $index .= $num;
+                        }
+                        my $string = qq{"\$\{COMP_WORDS\[$index\]\}"};
+                        push @args, $string;
+                    }
+                }
+            }
+        }
+        $comp .= <<"EOM";
+${indent}    local param_$name=`\$program @args`
+${indent}    _${appname}_compreply "\$param_$name"
+EOM
     }
     return $comp;
 }

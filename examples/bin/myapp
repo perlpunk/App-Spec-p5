@@ -5,15 +5,6 @@ use warnings;
 use 5.010;
 use Data::Dumper;
 use FindBin '$Bin';
-
-use App::Spec;
-
-my $spec = App::Spec->read("$Bin/../myapp-spec.yaml");
-my $run = App::Spec::Eample::MyApp->new({
-    spec => $spec,
-});
-$run->run;
-
 package App::Spec::Eample::MyApp;
 
 use base 'App::Spec::Run';
@@ -30,4 +21,35 @@ sub cook {
 
     say "Starting to cook $param->{drink} with $with";
 }
+
+sub weather {
+}
+
+my %countries = (
+    Austria => [qw/ Vienna Salzburg /],
+    Germany => [qw/ Berlin Hamburg Frankfurt /],
+    Netherlands => [qw/ Amsterdam Echt /],
+);
+
+sub countries {
+    say for sort keys %countries;
+}
+
+sub cities {
+    my ($self) = @_;
+    my $country = $self->{options}->{country};
+    my @countries = defined $country ? $country : sort keys %countries;
+    say for map { sort @$_ } @countries{ @countries };
+}
+
+package main;
+
+use App::Spec;
+
+my $spec = App::Spec->read("$Bin/../myapp-spec.yaml");
+my $run = App::Spec::Eample::MyApp->new({
+    spec => $spec,
+});
+$run->run;
+
 

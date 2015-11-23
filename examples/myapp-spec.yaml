@@ -28,4 +28,39 @@ commands:
         type: bool
         aliases: ["s"]
         description: add sugar
+  weather:
+    summary: Weather
+    subcommands:
+      show:
+        summar: Show Weather forecast
+        op: weather
+        parameters:
+          -
+            name: country
+            required: true
+            completion:
+              - weather
+              - countries
+          -
+            name: city
+            required: true
+            completion:
+              - weather
+              - cities
+              - '--country'
+              -
+                replace: ["SHELL_WORDS", "-1"]
+      countries:
+        summary: show list of countries
+        op: countries
+      cities:
+        summary: show list of cities
+        op: cities
+        options:
+          -
+            name: country
+            description: country name
+            completion:
+              - weather
+              - countries
 # vim:et:sts=2:sws=2:sw=2:foldmethod=indent
