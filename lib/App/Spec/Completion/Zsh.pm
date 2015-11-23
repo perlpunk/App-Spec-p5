@@ -37,19 +37,19 @@ sub completion_commands {
     my $previous = $args{previous} || [];
     my $opt = $self->options(
         options => $args{options},
-        level => $level + 1,
+        level => $level,
     );
 
-    my $indent = '    ' x $level;
-    my $indent2 = '        ' x $level;
+    my $indent = '        ' x $level;
+    my $indent2 = '        ' x $level . '    ';
     my $state = $level > 1 ? "-C" : "";
-    my $arguments = $indent2 . "_arguments -s $state \\\n";
+    my $arguments = $indent . "_arguments -s $state \\\n";
     my $cmd_count = $level;
     unless (keys %$commands) {
         $cmd_count--;
     }
     for my $i (1 .. $cmd_count) {
-        $arguments .= $indent2 . "    '$i: :->cmd$i' \\\n";
+        $arguments .= $indent2 . "'$i: :->cmd$i' \\\n";
     }
 
     my ($param_args, $param_case) = $self->parameters(
@@ -65,7 +65,7 @@ sub completion_commands {
     unless (keys %$commands) {
 #        $default_args = "*::file:_files";
     }
-    $arguments .= $indent2 . "    '$default_args' \\\n";
+    $arguments .= $indent2 . "'$default_args' \\\n";
     if ($opt) {
         $arguments .= "$opt \\\n";
     }
@@ -78,12 +78,11 @@ sub completion_commands {
 
     my $subcmds = '';
     if (keys %$commands) {
-        $subcmds .= $indent2 . "    case \$line[$level] in\n";
-#        $subcmds .= $indent2 . "    case \$words[\$CURRENT-1] in\n";
+        $subcmds .= $indent2 . "case \$line[$level] in\n";
         for my $key (sort keys %$commands) {
             my $cmd_spec = $commands->{ $key };
             my $name = $cmd_spec->name;
-            $subcmds .= $indent . "            $name)\n";
+            $subcmds .= $indent2 . "$name)\n";
             my $sc = $self->completion_commands(
                 commands => $cmd_spec->subcommands || [],
                 options => $cmd_spec->options,
@@ -92,27 +91,27 @@ sub completion_commands {
                 previous => [@$previous, $name],
             );
             $subcmds .= $sc;
-            $subcmds .= $indent . "        ;;\n";
+            $subcmds .= $indent2 . ";;\n";
         }
-        $subcmds .= $indent . "    esac\n";
+        $subcmds .= $indent2 . "esac\n";
     }
 
     my $body = <<"EOM";
 
-$indent        # ---- Command: @$previous
+$indent# ---- Command: @$previous
 $arguments
 $param_case
 EOM
     if ($cmds) {
         $body .= <<"EOM";
-${indent}    case \$state in
-${indent}    cmd$level)
-${indent}        $cmds
-${indent}    ;;
-${indent}    args)
+${indent}case \$state in
+${indent}cmd$level)
+${indent}    $cmds
+${indent};;
+${indent}args)
 $subcmds
-${indent}    ;;
-${indent}    esac
+${indent};;
+${indent}esac
 EOM
     }
 
@@ -132,14 +131,14 @@ sub parameters {
     my $case = $indent . "case \$state in\n";
     for my $p (@$parameters) {
         my $name = $p->name;
-        $arguments .= $indent . "'$count: :->$name' \\\n";
+        $arguments .= $indent . "        '$count: :->$name' \\\n";
         $count++;
 
         my $completion = '';
         if (ref $p->type) {
             if (my $list = $p->type->{enum}) {
                 my @list = map { "'$_'" } @$list;
-                $completion = "compadd -X '$name:' @list";
+                $completion = $indent . "        compadd -X '$name:' @list";
             }
         }
         elsif ($p->type eq 'file') {
@@ -182,9 +181,9 @@ $indent     compadd -X "$name:" \$$varname
 EOM
         }
         $case .= <<"EOM";
-${indent}        $name)
+${indent}    $name)
 $completion
-${indent}        ;;
+${indent}    ;;
 EOM
     }
     $case .= $indent . "esac\n";
@@ -215,6 +214,7 @@ sub options {
     my $spec = $self->spec;
     my $options = $args{options};
     my $level = $args{level};
+    my $indent = '        ' x $level;
     my @options;
     for my $opt (@$options) {
         my $name = $opt->name;
@@ -245,7 +245,7 @@ sub options {
             $name_str = "--$name";
         }
         my $str = "'$name_str\[$desc\]$values'";
-        push @options, ("        " x $level) . $str;
+        push @options, $indent . "    $str";
     }
     my $string = join " \\\n", @options;
     return $string;
