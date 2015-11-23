@@ -5,6 +5,7 @@ title: My Very Cool App
 options:
   -
     name: verbose
+    description: be verbose
     type: bool
     aliases: ["v"]
 commands:
@@ -32,7 +33,7 @@ commands:
     summary: Weather
     subcommands:
       show:
-        summar: Show Weather forecast
+        summary: Show Weather forecast
         op: weather
         parameters:
           -
@@ -59,6 +60,7 @@ commands:
         options:
           -
             name: country
+            aliases: ["c"]
             description: country name
             completion:
               - weather

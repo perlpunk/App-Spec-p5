@@ -8,10 +8,12 @@ sub generate_completion {
     my ($self, %args) = @_;
     my $spec = $self->spec;
     my $name = $spec->name;
+    my $functions = [];
     my $completion_outer = $self->completion_commands(
         commands => $spec->commands,
         options => $spec->options,
         level => 1,
+        functions => $functions,
     );
 
 
@@ -25,19 +27,24 @@ _$name() {
 
 $completion_outer
 }
+
+@{[ join '', @$functions ]}
 EOM
     return $body;
 }
 
 sub completion_commands {
     my ($self, %args) = @_;
+    my $functions = $args{functions};
     my $spec = $self->spec;
     my $commands = $args{commands};
     my $level = $args{level};
     my $previous = $args{previous} || [];
-    my $opt = $self->options(
+    my ($opt, $opt_comp) = $self->options(
         options => $args{options},
         level => $level,
+        functions => $functions,
+        previous => $args{previous},
     );
 
     my $indent = '        ' x $level;
@@ -54,8 +61,10 @@ sub completion_commands {
 
     my ($param_args, $param_case) = $self->parameters(
         parameters => $args{parameters},
-        level => $level + 1,
+        level => $level,
         count => $level,
+        functions => $functions,
+        previous => $args{previous},
     );
 
     if ($param_args) {
@@ -89,6 +98,7 @@ sub completion_commands {
                 parameters => $cmd_spec->parameters,
                 level => $level + 1,
                 previous => [@$previous, $name],
+                functions => $functions,
             );
             $subcmds .= $sc;
             $subcmds .= $indent2 . ";;\n";
@@ -102,36 +112,44 @@ $indent# ---- Command: @$previous
 $arguments
 $param_case
 EOM
-    if ($cmds) {
         $body .= <<"EOM";
 ${indent}case \$state in
+EOM
+    if ($cmds) {
+        $body .= <<"EOM";
 ${indent}cmd$level)
 ${indent}    $cmds
 ${indent};;
+EOM
+    }
+        $body .= <<"EOM";
 ${indent}args)
 $subcmds
 ${indent};;
+${indent}*)
+$opt_comp
+${indent};;
 ${indent}esac
 EOM
-    }
 
     return $body;
 }
 
 sub parameters {
     my ($self, %args) = @_;
+    my $functions = $args{functions};
     my $spec = $self->spec;
     my $parameters = $args{parameters} || [];
     return ('','') unless @$parameters;
     my $level = $args{level};
     my $count = $args{count};
-    my $indent = '    ' x $level;
+    my $indent = '        ' x $level;
 
     my $arguments = '';
     my $case = $indent . "case \$state in\n";
     for my $p (@$parameters) {
         my $name = $p->name;
-        $arguments .= $indent . "        '$count: :->$name' \\\n";
+        $arguments .= $indent . "    '$count: :->$name' \\\n";
         $count++;
 
         my $completion = '';
@@ -151,44 +169,70 @@ sub parameters {
             $completion = '_hosts';
         }
         elsif ($p->completion) {
-            my $def = $p->completion;
-            my @args;
-            for my $arg (@$def) {
-                unless (ref $arg) {
-                    push @args, "'$arg'";
-                    next;
-                }
-                if (my $replace = $arg->{replace}) {
-                    if (ref $replace eq 'ARRAY') {
-                        my @repl = @$replace;
-                        if ($replace->[0] eq 'SHELL_WORDS') {
-                            my $num = $replace->[1];
-                            my $index = "\$CURRENT";
-                            if ($num ne 'CURRENT') {
-                                $index .= $num;
-                            }
-                            my $string = qq{"\$words\[$index\]"};
-                            push @args, $string;
-                        }
-                    }
-                }
-            }
-            my $varname = "__${name}_completion";
-            $completion = <<"EOM";
-$indent     local $varname
-$indent     IFS=\$'\\n' set -A $varname `\$program @args`
-$indent     compadd -X "$name:" \$$varname
-EOM
+            $completion = $self->dynamic_completion(
+                option => $p,
+                level => $level,
+                functions => $functions,
+                previous => $args{previous},
+            );
         }
         $case .= <<"EOM";
-${indent}    $name)
+${indent}$name)
 $completion
-${indent}    ;;
+${indent};;
 EOM
     }
     $case .= $indent . "esac\n";
 
     return ($arguments, $case);
+}
+
+sub dynamic_completion {
+    my ($self, %args) = @_;
+    my $functions = $args{functions};
+    my $previous = $args{previous};
+    my $p = $args{option};
+    my $level = $args{level};
+    my $indent = '        ' x $level;
+    my $name = $p->name;
+    my $def = $p->completion;
+    my @args;
+    for my $arg (@$def) {
+        unless (ref $arg) {
+            push @args, "'$arg'";
+            next;
+        }
+        if (my $replace = $arg->{replace}) {
+            if (ref $replace eq 'ARRAY') {
+                my @repl = @$replace;
+                if ($replace->[0] eq 'SHELL_WORDS') {
+                    my $num = $replace->[1];
+                    my $index = "\$CURRENT";
+                    if ($num ne 'CURRENT') {
+                        $index .= $num;
+                    }
+                    my $string = qq{"\$words\[$index\]"};
+                    push @args, $string;
+                }
+            }
+        }
+    }
+    my $varname = "__${name}_completion";
+
+    my $appname = $self->spec->name;
+    my $function_name = "_${appname}_"
+        . join ("_", @$previous)
+        . "_" . ($p->isa("App::Spec::Option") ? "option" : "param")
+        . "_" . $name . "_completion";
+    my $function = <<"EOM";
+$function_name() \{
+    local __dynamic_completion
+    IFS=\$'\\n' set -A __dynamic_completion `\$program @args`
+    compadd -X "$name:" \$__dynamic_completion
+\}
+EOM
+    push @$functions, $function;
+    return $function_name;
 }
 
 sub commands_alternative {
@@ -211,24 +255,44 @@ sub commands_alternative {
 
 sub options {
     my ($self, %args) = @_;
+    my $functions = $args{functions};
     my $spec = $self->spec;
     my $options = $args{options};
     my $level = $args{level};
     my $indent = '        ' x $level;
     my @options;
+    my @option_comp;
     for my $opt (@$options) {
         my $name = $opt->name;
         my $desc = $opt->description;
         my $type = $opt->type;
         my $aliases = $opt->aliases;
         my $values = '';
-        if (ref $type) {
+        if (my $def = $opt->completion) {
+            my @names = map {
+                length > 1 ? "--$_" : "-$_"
+            } ($name, @$aliases);
+            my $comp = $indent . join ('|', @names) . ")\n";
+            my $function_name = $self->dynamic_completion(
+                option => $opt,
+                level => $level,
+                functions => $functions,
+                previous => $args{previous},
+            );
+            $values = ":$name:$function_name";
+            $comp .= $indent . ";;\n";
+#            push @option_comp, $comp;
+        }
+        elsif (ref $type) {
             if (my $list = $type->{enum}) {
                 my @list = map { qq{"$_"} } @$list;
                 $values = ":$name:(@list)";
             }
         }
-        elsif ($type ne "bool") {
+        elsif ($type eq "file" or $type eq "dir") {
+            $values = ":$name:_files";
+        }
+        elsif (not ref $type and $type ne "bool") {
             $values = ":$name";
         }
         $desc =~ s/['`]/'"'"'/g;
@@ -247,8 +311,16 @@ sub options {
         my $str = "'$name_str\[$desc\]$values'";
         push @options, $indent . "    $str";
     }
+    my $option_comp;
+    if (@option_comp) {
+        $option_comp = <<"EOM";
+${indent}    case \$words[\$CURRENT-1] in
+@{[ join '', @option_comp ]}
+${indent}    esac
+EOM
+    }
     my $string = join " \\\n", @options;
-    return $string;
+    return $string, $option_comp;
 }
 
 

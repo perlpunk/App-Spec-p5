@@ -5,7 +5,7 @@ use warnings;
 use 5.010;
 use Data::Dumper;
 use FindBin '$Bin';
-package App::Spec::Eample::MyApp;
+package App::Spec::Example::MyApp;
 
 use base 'App::Spec::Run';
 
@@ -47,7 +47,7 @@ package main;
 use App::Spec;
 
 my $spec = App::Spec->read("$Bin/../myapp-spec.yaml");
-my $run = App::Spec::Eample::MyApp->new({
+my $run = App::Spec::Example::MyApp->new({
     spec => $spec,
 });
 $run->run;

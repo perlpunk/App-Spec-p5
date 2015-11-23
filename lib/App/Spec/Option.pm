@@ -12,6 +12,7 @@ has required => ( is => 'ro' );
 has description => ( is => 'ro' );
 has default => ( is => 'ro' );
 has filter => ( is => 'ro' );
+has completion => ( is => 'ro' );
 has aliases => ( is => 'ro' );
 
 sub build {
@@ -26,6 +27,7 @@ sub build {
         required => $args->{required} ? 1 : 0,
         description => $args->{description} // '',
         default => $args->{default},
+        completion => $args->{completion},
         aliases => $args->{aliases} || [],
     });
     return $self;

@@ -10,7 +10,7 @@ _myapp() {
         _arguments -s  \
             '1: :->cmd1' \
             '*: :->args' \
-            '(--verbose -v)'{--verbose,-v}'[]' \
+            '(--verbose -v)'{--verbose,-v}'[be verbose]' \
             '(--help -h)'{--help,-h}'[Show command help]' \
             && ret=0
 
@@ -49,6 +49,14 @@ _myapp() {
                             && ret=0
 
 
+                        case $state in
+                        args)
+
+                        ;;
+                        *)
+
+                        ;;
+                        esac
                     ;;
                     zsh)
 
@@ -60,8 +68,19 @@ _myapp() {
                             && ret=0
 
 
+                        case $state in
+                        args)
+
+                        ;;
+                        *)
+
+                        ;;
+                        esac
                     ;;
                     esac
+
+                ;;
+                *)
 
                 ;;
                 esac
@@ -77,12 +96,20 @@ _myapp() {
                     '(--sugar -s)'{--sugar,-s}'[add sugar]' \
                     && ret=0
 
-            case $state in
+                case $state in
                 drink)
-                    compadd -X 'drink:' 'tea' 'coffee'
+                        compadd -X 'drink:' 'tea' 'coffee'
                 ;;
-            esac
+                esac
 
+                case $state in
+                args)
+
+                ;;
+                *)
+
+                ;;
+                esac
             ;;
             help)
 
@@ -129,6 +156,14 @@ _myapp() {
                                     && ret=0
 
 
+                                case $state in
+                                args)
+
+                                ;;
+                                *)
+
+                                ;;
+                                esac
                             ;;
                             zsh)
 
@@ -141,8 +176,19 @@ _myapp() {
                                     && ret=0
 
 
+                                case $state in
+                                args)
+
+                                ;;
+                                *)
+
+                                ;;
+                                esac
                             ;;
                             esac
+
+                        ;;
+                        *)
 
                         ;;
                         esac
@@ -157,6 +203,14 @@ _myapp() {
                             && ret=0
 
 
+                        case $state in
+                        args)
+
+                        ;;
+                        *)
+
+                        ;;
+                        esac
                     ;;
                     weather)
 
@@ -186,6 +240,14 @@ _myapp() {
                                     && ret=0
 
 
+                                case $state in
+                                args)
+
+                                ;;
+                                *)
+
+                                ;;
+                                esac
                             ;;
                             countries)
 
@@ -198,6 +260,14 @@ _myapp() {
                                     && ret=0
 
 
+                                case $state in
+                                args)
+
+                                ;;
+                                *)
+
+                                ;;
+                                esac
                             ;;
                             show)
 
@@ -210,13 +280,27 @@ _myapp() {
                                     && ret=0
 
 
+                                case $state in
+                                args)
+
+                                ;;
+                                *)
+
+                                ;;
+                                esac
                             ;;
                             esac
+
+                        ;;
+                        *)
 
                         ;;
                         esac
                     ;;
                     esac
+
+                ;;
+                *)
 
                 ;;
                 esac
@@ -233,7 +317,7 @@ _myapp() {
 
                 case $state in
                 cmd2)
-                    _alternative 'args:cmd3:((cities\:"show list of cities" countries\:"show list of countries" show))'
+                    _alternative 'args:cmd3:((cities\:"show list of cities" countries\:"show list of countries" show\:"Show Weather forecast"))'
                 ;;
                 args)
                     case $line[2] in
@@ -244,10 +328,18 @@ _myapp() {
                             '1: :->cmd1' \
                             '2: :->cmd2' \
                             '*: :->args' \
-                            '--country[country name]:country' \
+                            '(--country -c)'{--country,-c}'[country name]:country:_myapp_weather_cities_option_country_completion' \
                             && ret=0
 
 
+                        case $state in
+                        args)
+
+                        ;;
+                        *)
+
+                        ;;
+                        esac
                     ;;
                     countries)
 
@@ -259,6 +351,14 @@ _myapp() {
                             && ret=0
 
 
+                        case $state in
+                        args)
+
+                        ;;
+                        *)
+
+                        ;;
+                        esac
                     ;;
                     show)
 
@@ -266,28 +366,33 @@ _myapp() {
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
-                        '3: :->country' \
-                        '4: :->city' \
+                            '3: :->country' \
+                            '4: :->city' \
                             '*: :->args' \
                             && ret=0
 
-                case $state in
-                    country)
-                     local __country_completion
-                     IFS=$'\n' set -A __country_completion `$program 'weather' 'countries'`
-                     compadd -X "country:" $__country_completion
+                        case $state in
+                        country)
+_myapp_weather_show_param_country_completion
+                        ;;
+                        city)
+_myapp_weather_show_param_city_completion
+                        ;;
+                        esac
 
-                    ;;
-                    city)
-                     local __city_completion
-                     IFS=$'\n' set -A __city_completion `$program 'weather' 'cities' '--country' "$words[$CURRENT-1]"`
-                     compadd -X "city:" $__city_completion
+                        case $state in
+                        args)
 
-                    ;;
-                esac
+                        ;;
+                        *)
 
+                        ;;
+                        esac
                     ;;
                     esac
+
+                ;;
+                *)
 
                 ;;
                 esac
@@ -295,7 +400,27 @@ _myapp() {
             esac
 
         ;;
+        *)
+
+        ;;
         esac
 
 }
+
+_myapp_weather_cities_option_country_completion() {
+    local __dynamic_completion
+    IFS=$'\n' set -A __dynamic_completion `$program 'weather' 'countries'`
+    compadd -X "country:" $__dynamic_completion
+}
+_myapp_weather_show_param_country_completion() {
+    local __dynamic_completion
+    IFS=$'\n' set -A __dynamic_completion `$program 'weather' 'countries'`
+    compadd -X "country:" $__dynamic_completion
+}
+_myapp_weather_show_param_city_completion() {
+    local __dynamic_completion
+    IFS=$'\n' set -A __dynamic_completion `$program 'weather' 'cities' '--country' "$words[$CURRENT-1]"`
+    compadd -X "city:" $__dynamic_completion
+}
+
 
