@@ -39,12 +39,14 @@ commands:
           -
             name: country
             required: true
+            summary: Specify country
             completion:
               - weather
               - countries
           -
             name: city
             required: true
+            summary: Specify city
             completion:
               - weather
               - cities

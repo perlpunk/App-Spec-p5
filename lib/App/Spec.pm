@@ -108,32 +108,80 @@ sub _add_subcommands {
 
 sub usage {
     my ($self, $cmds) = @_;
-    my $commands = $self->commands;
+    my $appname = $self->name;
 
-    my ($options, $parameters) = $self->gather_options_parameters($cmds);
-    warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\$options], ['options']);
-    warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\$parameters], ['parameters']);
-    my $usage = "Usage: @$cmds";
-    my $params = '';
-    for my $param (@$parameters) {
-        my $name = $param->{name};
-        $usage .= " <$name>";
-        $params .= "$name: $param->{description}";
-    }
-    $usage .= " [options]\nParameters:\n$params\n";
+    my ($options, $parameters, $subcmds) = $self->gather_options_parameters($cmds);
+    my $usage = "Usage: $appname @$cmds";
 
-    for my $opt (@$options) {
-        my $name;
-        if (ref $opt) {
-            $name = $opt->{name};
+    my $body = '';
+    if (keys %$subcmds) {
+        my $maxlength = 0;
+        my @table;
+        $usage .= " <subcommands>";
+        $body .= "Subcommands:\n";
+        for my $name (sort keys %$subcmds) {
+            my $cmd_spec = $subcmds->{ $name };
+            my $summary = $cmd_spec->summary;
+            push @table, [$name, $summary];
+            if (length $name > $maxlength) {
+                $maxlength = length $name;
+            }
         }
-        else {
-            $name = $opt;
-        }
+        $body .= $self->_output_table(\@table, [$maxlength]);
     }
 
-    return $usage;
+    if (@$parameters) {
+        my $maxlength = 0;
+        my @table;
+        for my $param (@$parameters) {
+            my $name = $param->{name};
+            my $summary = $param->summary;
+            $usage .= " <$name>";
+            push @table, [$name, $summary];
+            if (length $name > $maxlength) {
+                $maxlength = length $name;
+            }
+        }
+        $body .= "Parameters:\n";
+        $body .= $self->_output_table(\@table, [$maxlength]);
+    }
+
+    if (@$options) {
+        $usage .= " [options]";
+        my $maxlength = 0;
+        my @table;
+        for my $opt (sort { $a->name cmp $b->name } @$options) {
+            my $name = $opt->name;
+            my $aliases = $opt->aliases;
+            my $summary = $opt->summary;
+            my @names = map {
+                length $_ > 1 ? "--$_" : "-$_"
+            } ($name, @$aliases);
+            my $string = "@names";
+            if (length $string > $maxlength) {
+                $maxlength = length $string;
+            }
+            push @table, [$string, $summary];
+        }
+        $body .= "\nOptions:\n";
+        $body .= $self->_output_table(\@table, [$maxlength]);
+    }
+
+    return "$usage\n\n$body";
 }
+
+sub _output_table {
+    my ($self, $table, $lengths) = @_;
+    my $string = '';
+    my @lengths = map {
+        defined $lengths->[$_] ? "%-$lengths->[$_]s" : "%s"
+    } 0 .. @{ $table->[0] } - 1;
+    for my $row (@$table) {
+        $string .= sprintf join('  ', @lengths) . "\n", @$row;
+    }
+    return $string;
+}
+
 
 sub gather_options_parameters {
     my ($self, $cmds) = @_;
@@ -153,7 +201,7 @@ sub gather_options_parameters {
         $commands = $cmd_spec->subcommands || {};
 
     }
-    return \@options, \@parameters;
+    return \@options, \@parameters, $commands;
 }
 
 sub generate_completion {

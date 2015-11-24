@@ -9,6 +9,7 @@ use Moo;
 has name => ( is => 'ro' );
 has type => ( is => 'ro' );
 has required => ( is => 'ro' );
+has summary => ( is => 'ro' );
 has description => ( is => 'ro' );
 has default => ( is => 'ro' );
 has completion => ( is => 'ro' );
@@ -20,11 +21,16 @@ sub build {
     unless (ref $args) {
         $args = { name => $args };
     }
+    my $description = $args->{description};
+    my $summary = $args->{summary};
+    $summary //= $description;
+    $description //= $summary;
     my $self = $class->new({
         name => $args->{name},
         type => $args->{type} // 'string',
         required => $args->{required} ? 1 : 0,
-        description => $args->{description} // '',
+        summary => $summary,
+        description => $description,
         default => $args->{default},
         completion => $args->{completion},
         filter => $args->{filter},

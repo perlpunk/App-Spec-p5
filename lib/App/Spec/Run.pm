@@ -90,13 +90,15 @@ sub run {
     my ($ok) = $opt->process( \%errs, type => "parameters", app => $self );
     $ok &&= $opt->process( \%errs, type => "options", app => $self );
 
-    unless ($ok) {
-        warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\%errs], ['errs']);
-        die "sorry =(\n";
-    }
     $self->options(\%options);
     $self->parameters(\%parameters);
     $self->commands(\@cmds);
+    unless ($ok) {
+        warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\%errs], ['errs']);
+        my $help = $spec->usage(\@cmds);
+        say $help;
+        die "sorry =(\n";
+    }
     $self->$op;
 
 }
@@ -104,8 +106,10 @@ sub run {
 sub cmd_help {
     my ($self) = @_;
     my $spec = $self->spec;
-    my @cmds = @ARGV;
-    my $help = $spec->usage(\@cmds);
+    my $cmds = $self->commands;
+    shift @$cmds;
+    my $help = $spec->usage($cmds);
+    say $help;
 }
 
 sub cmd_self_completion_bash {
