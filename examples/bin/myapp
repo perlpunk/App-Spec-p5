@@ -23,6 +23,7 @@ sub cook {
 }
 
 sub weather {
+    say "rainy =(";
 }
 
 my %countries = (

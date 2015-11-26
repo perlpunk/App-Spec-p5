@@ -24,7 +24,7 @@ sub run {
         "help" => \my $help,
     );
 
-    if ($help) {
+    if ($help and not $ARGV[0] eq "help") {
         # call subcommand 'help'
         unshift @ARGV, "help";
     }
@@ -33,7 +33,6 @@ sub run {
         @ARGV = "help";
     }
 
-    my $commands = $spec->commands;
 
     my %options;
     my %option_specs;
@@ -41,22 +40,28 @@ sub run {
     my @getopt = $spec->make_getopt($global_options, \%options, \%option_specs);
     GetOptions(@getopt);
 
+    my $commands = $spec->commands;
     my $parameters;
     my @cmds;
     my %parameters;
     my $op;
     my $cmd_spec;
-    while (my $cmd = shift @ARGV) {
-        $cmd_spec = $commands->{ $cmd } or die "Unknown subcommand '$cmd'";
-        my $options = $cmd_spec->{options} || [];
+    while (keys %$commands) {
+        defined (my $cmd = shift @ARGV) or do {
+            say $spec->usage(\@cmds);
+            die "Missing subcommand(s)";
+        };
+        $cmd_spec = $commands->{ $cmd } or do {
+            say $spec->usage(\@cmds);
+            die "Unknown subcommand '$cmd'";
+        };
+        my $options = $cmd_spec->options;
         my @getopt = $spec->make_getopt($options, \%options, \%option_specs);
         GetOptions(@getopt);
         push @cmds, $cmd;
-        my $subcommands = $cmd_spec->subcommands || {};
-        $commands = $subcommands;
+        $commands = $cmd_spec->subcommands || {};
         $op = $cmd_spec->op if $cmd_spec->op;
         $parameters = $cmd_spec->parameters;
-        last unless %$subcommands;
     }
     unless ($op) {
         my $subcommands = $cmd_spec->subcommands || {};
