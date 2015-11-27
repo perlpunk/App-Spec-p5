@@ -47,10 +47,15 @@ sub run {
     my $op;
     my $cmd_spec;
     while (keys %$commands) {
-        defined (my $cmd = shift @ARGV) or do {
+        my @k = keys %$commands;
+        my $cmd = shift @ARGV;
+        if (not defined $cmd and not $op) {
             say $spec->usage(\@cmds);
             die "Missing subcommand(s)";
-        };
+        }
+        elsif (not defined $cmd) {
+            last;
+        }
         $cmd_spec = $commands->{ $cmd } or do {
             say $spec->usage(\@cmds);
             die "Unknown subcommand '$cmd'";

@@ -2,6 +2,12 @@
 name: myapp
 version: 1
 title: My Very Cool App
+abstract: This app can do very cool things
+description: |
+  This is a very useful description for myapp.
+  This is a very useful description for myapp.
+  This is a very useful description for myapp.
+  This is a very useful description for myapp.
 options:
   -
     name: verbose

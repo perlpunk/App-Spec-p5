@@ -20,6 +20,8 @@ has name => ( is => 'rw' );
 has title => ( is => 'rw' );
 has options => ( is => 'rw' );
 has subcommands => ( is => 'rw', default => sub { +{} } );
+has abstract => ( is => 'rw' );
+has description => ( is => 'rw' );
 
 my $DATA = do { local $/; <DATA> };
 my $default_spec;
@@ -88,6 +90,8 @@ sub read {
             App::Spec::Option->build($_)
         } @{ $spec->{options} || [] }],
         subcommands => $commands,
+        abstract => $spec->{abstract},
+        description => $spec->{description},
     });
     return $self;
 }
@@ -110,10 +114,17 @@ sub usage {
     my ($self, $cmds) = @_;
     my $appname = $self->name;
 
+    my $abstract = $self->abstract;
+    my $title = $self->title;
     my ($options, $parameters, $subcmds) = $self->gather_options_parameters($cmds);
-    my $usage = "Usage: $appname @$cmds";
+    my $usage = <<"EOM";
+$appname - $title
+$abstract
+
+EOM
 
     my $body = '';
+    $usage .= "Usage: $appname @$cmds";
     if (keys %$subcmds) {
         my $maxlength = 0;
         my @table;

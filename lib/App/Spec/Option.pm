@@ -24,7 +24,7 @@ sub build {
     }
     my $description = $args->{description};
     my $summary = $args->{summary};
-    $summary //= $description;
+    $summary //= $description // '';
     $description //= $summary;
     my $self = $class->new({
         name => $args->{name},

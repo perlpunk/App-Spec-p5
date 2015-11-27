@@ -11,6 +11,7 @@ use Moo;
 
 has name => ( is => 'ro' );
 has summary => ( is => 'ro' );
+has description => ( is => 'ro' );
 has options => ( is => 'ro' );
 has parameters => ( is => 'ro' );
 has op => ( is => 'ro' );
