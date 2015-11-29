@@ -11,8 +11,11 @@ I wait for your suggestions, wishes, bug reports.
 
 Write a specification for your command line application (currently in YAML) and get:
 * Subcommands (nested), options, parameters
-* a Perl 5 (and possibly other) framework that automatically calls the specified method for
-the subcommand, validates options and parameters, and outputs help
+* a Perl 5 (and possibly other) framework that
+ * automatically calls the specified method for the subcommand
+ * validates options and parameters
+ * outputs help
+* Automatic creation of pod, man pages
 * Automatic creation of zsh and bash completion scripts. Completion includes:
  * Subcommands, parameter values, option names and option values.
  * Description for completion items are shown, in zsh builtin, in bash with a cute little trick.
@@ -51,6 +54,7 @@ use App::Spec;
 # read YAML from __DATA__ section
 my $spec = App::Spec->read(\*DATA);
 my $run = App::Spec::Example::MyApp->new({ spec => $spec });
+# this will check input and call frobnicate
 $run->run;
 
 # specification follows:
@@ -59,7 +63,8 @@ __DATA__
 name: myapp # filename of the app
 version: 0.1 # app-spec schema version
 title: My Very Cool App
-options: # global options
+# global options. option 'help' will be generated for you
+options:
   - ...
   - ...
 commands:
@@ -127,9 +132,11 @@ I just want to do it once.
 
 ## TODO
 * Write a schema
+* Write tests
 * Complete the help output
 * Generate pod, man pages
 * Allow Getopt::Long, Getopt::Long::Descriptive, ... input as a specification
 * Allow caching of dynamic completion values that take long to compute
 * Options/parameters imply other options
 * Options with multiple values
+* Allow apps without subcommands
