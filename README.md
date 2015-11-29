@@ -29,6 +29,9 @@ For now just an example in the examples directory called "myapp".
 Just play with it and use your tab key!
 Also try zsh if you haven't yet.
 
+There is also a command line tool called app-spec <https://github.com/perlpunk/App-AppSpec-p5>
+which is useful if you only have a spec file but no app.
+
 For a first overview, here is how an app looks like:
 
 ```perl
