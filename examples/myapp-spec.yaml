@@ -8,7 +8,7 @@ options:
     description: be verbose
     type: bool
     aliases: ["v"]
-commands:
+subcommands:
   cook:
     summary: Cook something
     op: cook

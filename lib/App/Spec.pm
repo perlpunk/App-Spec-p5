@@ -19,7 +19,7 @@ use Moo;
 has name => ( is => 'rw' );
 has title => ( is => 'rw' );
 has options => ( is => 'rw' );
-has commands => ( is => 'rw' );
+has subcommands => ( is => 'rw', default => sub { +{} } );
 
 my $DATA = do { local $/; <DATA> };
 my $default_spec;
@@ -62,19 +62,19 @@ sub read {
             }
         }
 
-        for my $key (keys %{ $default->{commands} } ) {
-            my $cmd = $default->{commands}->{ $key };
-            $spec->{commands}->{ $key } ||= $cmd;
+        for my $key (keys %{ $default->{subcommands} } ) {
+            my $cmd = $default->{subcommands}->{ $key };
+            $spec->{subcommands}->{ $key } ||= $cmd;
         }
     }
 
     # add subcommands to help command
-    my $help_subcmds = $spec->{commands}->{help}->{subcommands} ||= {};
-    $class->_add_subcommands($help_subcmds, $spec->{commands});
+    my $help_subcmds = $spec->{subcommands}->{help}->{subcommands} ||= {};
+    $class->_add_subcommands($help_subcmds, $spec->{subcommands});
 
     my $commands;
-    for my $name (keys %{ $spec->{commands} || [] }) {
-        my $cmd = $spec->{commands}->{ $name };
+    for my $name (keys %{ $spec->{subcommands} || [] }) {
+        my $cmd = $spec->{subcommands}->{ $name };
         $commands->{ $name } = App::Spec::Command->build({
             name => $name,
             %$cmd,
@@ -87,7 +87,7 @@ sub read {
         options => [map {
             App::Spec::Option->build($_)
         } @{ $spec->{options} || [] }],
-        commands => $commands,
+        subcommands => $commands,
     });
     return $self;
 }
@@ -188,7 +188,7 @@ sub gather_options_parameters {
     my @options;
     my @parameters;
     my $global_options = $self->options;
-    my $commands = $self->commands;
+    my $commands = $self->subcommands;
     push @options, @$global_options;
 
     for my $cmd (@$cmds) {
@@ -247,7 +247,7 @@ options:
         type: bool
         aliases:
         - h
-commands:
+subcommands:
     help:
         op: cmd_help
         summary: Show command help

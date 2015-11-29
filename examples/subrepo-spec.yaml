@@ -1,8 +1,11 @@
 name: subrepo
 version: 1
 title: Git Submodule Alternative
+description: |
+  This is just an example for generating completion for an existing
+  command, https://github.com/ingydotnet/git-subrepo
 options: []
-commands:
+subcommands:
   clone:
     summary: Add a repository as a subrepo in a subdir of your repository.
     parameters:

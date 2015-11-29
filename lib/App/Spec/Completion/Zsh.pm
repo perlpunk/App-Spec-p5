@@ -10,7 +10,7 @@ sub generate_completion {
     my $name = $spec->name;
     my $functions = [];
     my $completion_outer = $self->completion_commands(
-        commands => $spec->commands,
+        commands => $spec->subcommands,
         options => $spec->options,
         level => 1,
         functions => $functions,

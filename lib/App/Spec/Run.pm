@@ -40,7 +40,7 @@ sub run {
     my @getopt = $spec->make_getopt($global_options, \%options, \%option_specs);
     GetOptions(@getopt);
 
-    my $commands = $spec->commands;
+    my $commands = $spec->subcommands;
     my $parameters;
     my @cmds;
     my %parameters;
@@ -64,7 +64,7 @@ sub run {
         $parameters = $cmd_spec->parameters;
     }
     unless ($op) {
-        my $subcommands = $cmd_spec->subcommands || {};
+        my $subcommands = $commands;
         my @names = sort keys %$subcommands;
         if (@names) {
             warn "Missing subcommand (one of (@names))\n";
