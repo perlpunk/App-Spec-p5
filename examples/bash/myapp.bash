@@ -52,7 +52,7 @@ _myapp() {
       cook)
         case $COMP_CWORD in
         2)
-                _drink_compreply "tea"$'\n'"coffee"
+                _myapp_compreply "tea"$'\n'"coffee"
         ;;
         *)
         case ${COMP_WORDS[$COMP_CWORD-1]} in
@@ -130,7 +130,7 @@ _myapp() {
         case $COMP_CWORD in
 
         2)
-            _myapp_compreply "cities -- show list of cities"$'\n'"countries -- show list of countries"$'\n'"show"
+            _myapp_compreply "cities -- show list of cities"$'\n'"countries -- show list of countries"$'\n'"show -- Show Weather forecast"
 
         ;;
         *)
@@ -140,11 +140,12 @@ _myapp() {
             case $COMP_CWORD in
             *)
             case ${COMP_WORDS[$COMP_CWORD-1]} in
-              --country)
+              --country|-c)
+                _myapp_weather_cities_option_country_completion
               ;;
 
               *)
-                _myapp_compreply "'--country -- country name'"
+                _myapp_compreply "'--country -- country name'"$'\n'"'-c -- country name'"
               ;;
             esac
             ;;
@@ -155,12 +156,10 @@ _myapp() {
           show)
             case $COMP_CWORD in
             3)
-                    local param_country=`$program 'weather' 'countries'`
-                    _myapp_compreply "$param_country"
+                    _myapp_weather_show_param_country_completion
             ;;
             4)
-                    local param_city=`$program 'weather' 'cities' '--country' "${COMP_WORDS[$COMP_CWORD-1]}"`
-                    _myapp_compreply "$param_city"
+                    _myapp_weather_show_param_city_completion
             ;;
             esac
           ;;
@@ -182,6 +181,20 @@ _myapp_compreply() {
         COMPREPLY=( ${COMPREPLY[0]%% -- *} ) #Remove ' -- ' and everything after
     fi
 }
+
+_myapp_weather_cities_option_country_completion() {
+    local param_country=`$program 'weather' 'countries'`
+    _myapp_compreply "$param_country"
+}
+_myapp_weather_show_param_country_completion() {
+    local param_country=`$program 'weather' 'countries'`
+    _myapp_compreply "$param_country"
+}
+_myapp_weather_show_param_city_completion() {
+    local param_city=`$program 'weather' 'cities' '--country' "${COMP_WORDS[$COMP_CWORD-1]}"`
+    _myapp_compreply "$param_city"
+}
+
 
 complete -o default -F _myapp myapp
 

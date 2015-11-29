@@ -10,10 +10,12 @@ sub generate_completion {
     my $name = $spec->name;
 
 
+    my $functions = [];
     my $completion_outer = $self->completion_commands(
         commands => $spec->commands,
         options => $spec->options,
         level => 1,
+        functions => $functions,
     );
 
     my $body = <<"EOM";
@@ -38,6 +40,8 @@ _${name}_compreply() \{
     fi
 \}
 
+@{[ join '', @$functions ]}
+
 complete -o default -F _$name $name
 EOM
     return $body;
@@ -47,6 +51,8 @@ sub completion_commands {
     my ($self, %args) = @_;
     my $spec = $self->spec;
     my $name = $spec->name;
+    my $functions = $args{functions};
+    my $previous = $args{previous} || [];
     my $commands = $args{commands};
     my $level = $args{level};
     my $indent = "    " x $level;
@@ -74,6 +80,8 @@ EOM
                 commands => $subcommands,
                 options => $spec->options,
                 level => $level + 1,
+                previous => [@$previous, $name],
+                functions => $functions,
             );
             $subc .= $comp;
         }
@@ -82,6 +90,8 @@ EOM
                 parameters => $parameters,
                 options => $options,
                 level => $level + 1,
+                previous => [@$previous, $name],
+                functions => $functions,
             );
         }
         $subc .= <<"EOM";
@@ -128,6 +138,8 @@ EOM
         $comp .= $self->completion_parameter(
             parameter => $param,
             level => $level + 1,
+            functions => $args{functions},
+            previous => $args{previous},
         );
         $comp .= $indent . ";;\n";
     }
@@ -175,6 +187,17 @@ EOM
             }
             elsif ($type eq "file" or $type eq "dir") {
             }
+            elsif (my $def = $opt->completion) {
+                my $function_name = $self->dynamic_completion(
+                    option => $opt,
+                    level => $level,
+                    previous => $args{previous},
+                    functions => $args{functions},
+                );
+                $comp_value .= <<"EOM";
+${indent}    $function_name
+EOM
+            }
             $comp_value .= $indent . "  ;;\n";
         }
 
@@ -194,6 +217,53 @@ EOM
     $comp .= $indent . "esac\n";
 }
 
+sub dynamic_completion {
+    my ($self, %args) = @_;
+    my $functions = $args{functions};
+    my $previous = $args{previous};
+    my $p = $args{option};
+    my $level = $args{level};
+    my $indent = '        ' x $level;
+    my $name = $p->name;
+    my $def = $p->completion;
+    my @args;
+    for my $arg (@$def) {
+        unless (ref $arg) {
+            push @args, "'$arg'";
+            next;
+        }
+        if (my $replace = $arg->{replace}) {
+            if (ref $replace eq 'ARRAY') {
+                my @repl = @$replace;
+                if ($replace->[0] eq 'SHELL_WORDS') {
+                    my $num = $replace->[1];
+                    my $index = "\$COMP_CWORD";
+                    if ($num ne 'CURRENT') {
+                        $index .= $num;
+                    }
+                    my $string = qq{"\$\{COMP_WORDS\[$index\]\}"};
+                    push @args, $string;
+                }
+            }
+        }
+    }
+    my $varname = "__${name}_completion";
+
+    my $appname = $self->spec->name;
+    my $function_name = "_${appname}_"
+        . join ("_", @$previous)
+        . "_" . ($p->isa("App::Spec::Option") ? "option" : "param")
+        . "_" . $name . "_completion";
+    my $function = <<"EOM";
+$function_name() \{
+    local param_$name=`\$program @args`
+    _${appname}_compreply "\$param_$name"
+\}
+EOM
+    push @$functions, $function;
+    return $function_name;
+}
+
 sub completion_parameter {
     my ($self, %args) = @_;
     my $spec = $self->spec;
@@ -210,37 +280,21 @@ sub completion_parameter {
         if (my $list = $type->{enum}) {
         local $" = q{"$'\\n'"};
         $comp = <<"EOM";
-${indent}    _${name}_compreply "@$list"
+${indent}    _${appname}_compreply "@$list"
 EOM
         }
     }
     elsif ($type eq "file" or $type eq "dir") {
     }
     elsif (my $def = $param->completion) {
-        my @args;
-        for my $arg (@$def) {
-            unless (ref $arg) {
-                push @args, "'$arg'";
-                next;
-            }
-            if (my $replace = $arg->{replace}) {
-                if (ref $replace eq 'ARRAY') {
-                    my @repl = @$replace;
-                    if ($replace->[0] eq 'SHELL_WORDS') {
-                        my $num = $replace->[1];
-                        my $index = "\$COMP_CWORD";
-                        if ($num ne 'CURRENT') {
-                            $index .= $num;
-                        }
-                        my $string = qq{"\$\{COMP_WORDS\[$index\]\}"};
-                        push @args, $string;
-                    }
-                }
-            }
-        }
+        my $function_name = $self->dynamic_completion(
+            option => $param,
+            level => $level,
+            previous => $args{previous},
+            functions => $args{functions},
+        );
         $comp .= <<"EOM";
-${indent}    local param_$name=`\$program @args`
-${indent}    _${appname}_compreply "\$param_$name"
+${indent}    $function_name
 EOM
     }
     return $comp;
