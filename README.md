@@ -23,6 +23,10 @@ Write a specification for your command line application (currently in YAML) and 
  command returning possible completion values
 * Possibly even creating a specification for your favourite app which lacks shell completion
 
+Writing the specification in YAML takes advantage of YAML aliases, for example when you have
+options or parameters which are not global, but are used in more than one place. Alternatively the
+spec could allow to create definitions which you can just link to, kind of like Swagger does it.
+
 ## Documentation
 
 For now just an example in the examples directory called "myapp".
