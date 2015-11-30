@@ -50,8 +50,11 @@ sub process {
         }
 
         if (my $filter = $spec->filter) {
-            my $method = $filter->{method} or warn "Missing method for filter for $type '$name'";
-            $value = $app->$method($name => $value, $self->parameters, $self->options);
+            my $method = $filter->{method}
+                or warn "Missing method for filter for $type '$name'";
+            $value = $app->$method(
+                $name => $value, $self->parameters, $self->options,
+            );
         }
 
         my $param_type = $spec->{type};
@@ -59,13 +62,14 @@ sub process {
         if (ref $param_type eq 'HASH') {
             ($param_type, $def) = %$param_type;
         }
-        my $code = $validate{ $param_type } or die "Missing method for validation type $param_type";;
+        my $code = $validate{ $param_type }
+            or die "Missing method for validation type $param_type";
         my $ok = $code->($value, $def);
         unless ($ok) {
             $errs->{ $type }->{ $name } = "invalid $param_type";
         }
     }
-    return keys %$errs ? (0, $errs) : (1);
+    return (keys %$errs) ? 0 : 1;
 }
 
 1;
