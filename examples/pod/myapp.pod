@@ -1,0 +1,126 @@
+=head1 NAME
+
+myapp - My Very Cool App
+
+=head1 ABSTRACT
+
+This app can do very cool things
+
+=head1 DESCRIPTION
+
+This is a very useful description for myapp.
+This is a very useful description for myapp.
+This is a very useful description for myapp.
+This is a very useful description for myapp.
+
+
+=head1 COMMANDS
+
+=head2  _complete
+
+    myapp  _complete <subcommands> [options]
+
+Generate self completion
+
+
+
+Options:
+
+    --name
+
+
+=head2 _complete bash
+
+    myapp _complete bash [options]
+
+for bash
+
+
+
+Options:
+
+    --without-description
+
+
+=head2 _complete zsh
+
+    myapp _complete zsh
+
+for zsh
+
+
+
+
+
+=head2  cook
+
+    myapp  cook <drink> [options]
+
+Cook something
+
+
+
+Options:
+
+    --with
+    --sugar -s
+
+
+=head2  help
+
+    myapp  help <subcommands> [options]
+
+Show command help
+
+
+
+Options:
+
+    --all
+
+
+=head2  weather
+
+    myapp  weather <subcommands>
+
+Weather
+
+
+
+
+
+=head2 weather cities
+
+    myapp weather cities [options]
+
+show list of cities
+
+
+
+Options:
+
+    --country -c
+
+
+=head2 weather countries
+
+    myapp weather countries
+
+show list of countries
+
+
+
+
+
+=head2 weather show
+
+    myapp weather show <country> <city>
+
+Show Weather forecast
+
+
+
+
+
+
+

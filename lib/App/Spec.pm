@@ -181,6 +181,101 @@ EOM
     return "$usage\n\n$body";
 }
 
+sub generate_pod {
+    my ($self) = @_;
+
+    my $appname = $self->name;
+    my $title = $self->title;
+    my $abstract = $self->abstract;
+    my $description = $self->description;
+    my $subcmds = $self->subcommands;
+
+    my @subcmd_pod = $self->subcommand_pod(
+        commands => $subcmds,
+    );
+
+    my $pod = <<"EOM";
+\=head1 NAME
+
+$appname - $title
+
+\=head1 ABSTRACT
+
+$abstract
+
+\=head1 DESCRIPTION
+
+$description
+
+\=head1 COMMANDS
+
+@{[ join '', @subcmd_pod ]}
+EOM
+}
+
+sub subcommand_pod {
+    my ($self, %args) = @_;
+    my $appname = $self->name;
+    my $commands = $args{commands};
+    my $previous = $args{previous} || [];
+
+    my @pod;
+    for my $name (sort keys %$commands) {
+        my $cmd_spec = $commands->{ $name };
+        my $name = $cmd_spec->name;
+        my $summary = $cmd_spec->summary;
+        my $description = $cmd_spec->description;
+        my $subcmds = $cmd_spec->subcommands;
+        my $parameters = $cmd_spec->parameters;
+        my $options = $cmd_spec->options;
+
+
+        my $usage = "$appname @$previous $name";
+        if (keys %$subcmds) {
+            $usage .= " <subcommands>";
+        }
+        for my $param (@$parameters) {
+            my $name = $param->name;
+            $usage .= " <$name>";
+        }
+
+        my $option_string = '';
+        if (@$options) {
+            $option_string = "Options:\n\n";
+            $usage .= " [options]";
+            for my $opt (@$options) {
+                my $name = $opt->name;
+                my $aliases = $opt->aliases;
+                my @names = map {
+                    length $_ > 1 ? "--$_" : "-$_"
+                } ($name, @$aliases);
+                $option_string .= "    @names\n";
+            }
+        }
+        my $pod = <<"EOM";
+\=head2 @$previous $name
+
+    $usage
+
+$summary
+
+$description
+
+$option_string
+
+EOM
+        if (keys %$subcmds and $name ne "help") {
+            my @sub = $self->subcommand_pod(
+                previous => [@$previous, $name],
+                commands => $subcmds,
+            );
+            $pod .= join '', @sub;
+        }
+        push @pod, $pod;
+    }
+    return @pod;
+}
+
 sub _output_table {
     my ($self, $table, $lengths) = @_;
     my $string = '';
