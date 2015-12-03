@@ -1,0 +1,141 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title></title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:tina@iggy" />
+</head>
+
+<body style="background-color: white">
+
+
+
+<ul id="index">
+  <li><a href="#NAME">NAME</a></li>
+  <li><a href="#ABSTRACT">ABSTRACT</a></li>
+  <li><a href="#DESCRIPTION">DESCRIPTION</a>
+    <ul>
+      <li><a href="#GLOBAL-OPTIONS">GLOBAL OPTIONS</a></li>
+      <li><a href="#SUBCOMMANDS">SUBCOMMANDS</a>
+        <ul>
+          <li><a href="#diff">diff</a></li>
+          <li><a href="#features">features</a></li>
+          <li><a href="#module">module</a></li>
+          <li><a href="#modules">modules</a></li>
+          <li><a href="#perl">perl</a></li>
+          <li><a href="#help">help</a></li>
+          <li><a href="#complete">_complete</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="NAME">NAME</h1>
+
+<p>pcorelist - corelist with shell completion</p>
+
+<h1 id="ABSTRACT">ABSTRACT</h1>
+
+<p>This is a wrapper around the corelist tool which adds shell completion</p>
+
+<h1 id="DESCRIPTION">DESCRIPTION</h1>
+
+<h2 id="GLOBAL-OPTIONS">GLOBAL OPTIONS</h2>
+
+<pre><code>    --help -h   Show command help</code></pre>
+
+<h2 id="SUBCOMMANDS">SUBCOMMANDS</h2>
+
+<h3 id="diff">diff</h3>
+
+<pre><code>    pcorelist  diff [options] &lt;perl1&gt; &lt;perl2&gt;</code></pre>
+
+<p>Show diff between two Perl versions</p>
+
+<p>Options:</p>
+
+<pre><code>    --added     Show only added modules  
+    --removed   Show only removed modules</code></pre>
+
+<p>Parameters:</p>
+
+<pre><code>    perl1  * Perl version 1
+    perl2  * Perl version 2</code></pre>
+
+<h3 id="features">features</h3>
+
+<pre><code>    pcorelist  features [options] [&lt;feature&gt;]</code></pre>
+
+<p>List features with perl versions</p>
+
+<p>Options:</p>
+
+<pre><code>    --raw   List only feature names</code></pre>
+
+<p>Parameters:</p>
+
+<pre><code>    feature   feature name</code></pre>
+
+<h3 id="module">module</h3>
+
+<pre><code>    pcorelist  module [options] &lt;module&gt;</code></pre>
+
+<p>Show for which perl version the module was first released</p>
+
+<p>Options:</p>
+
+<pre><code>    --all -a    Show all perl and module versions
+    --date -d   Show by date                     
+    --perl -p   Show by Perl Version             </code></pre>
+
+<p>Parameters:</p>
+
+<pre><code>    module  * Module name</code></pre>
+
+<h3 id="modules">modules</h3>
+
+<pre><code>    pcorelist  modules</code></pre>
+
+<p>List all modules</p>
+
+<h3 id="perl">perl</h3>
+
+<pre><code>    pcorelist  perl [options]</code></pre>
+
+<p>Perl Versions</p>
+
+<p>Options:</p>
+
+<pre><code>    --raw -r    Show raw output without header
+    --release   Show perl releases with dates </code></pre>
+
+<h3 id="help">help</h3>
+
+<pre><code>    pcorelist  help &lt;subcommands&gt; [options]</code></pre>
+
+<p>Show command help</p>
+
+<p>Options:</p>
+
+<pre><code>    --all   </code></pre>
+
+<h3 id="complete">_complete</h3>
+
+<pre><code>    pcorelist  _complete [options]</code></pre>
+
+<p>Generate self completion</p>
+
+<p>Options:</p>
+
+<pre><code>    --name   name of the program
+    --zsh    for zsh            
+    --bash   for bash           </code></pre>
+
+
+</body>
+
+</html>
+
+

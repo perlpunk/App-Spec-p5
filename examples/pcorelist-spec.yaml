@@ -1,0 +1,104 @@
+---
+name: pcorelist
+appspec: { "version": 0.001 }
+title: corelist with shell completion
+abstract: This is a wrapper around the corelist tool which adds shell completion
+options: []
+subcommands:
+  module:
+    summary: Show for which perl version the module was first released
+    op: module
+    options:
+      -
+        name: all
+        summary: Show all perl and module versions
+        type: bool
+        aliases: ["a"]
+      -
+        name: date
+        summary: Show by date
+        type: bool
+        aliases: ["d"]
+      -
+        name: perl
+        summary: Show by Perl Version
+        type: string
+        aliases: ["p"]
+        completion: &complete_perl_version
+          command:
+            - replace: SELF
+            - perl
+            - "--raw"
+    parameters:
+      -
+        name: module
+        summary: Module name
+        type: string
+        required: true
+        completion:
+          command:
+            - replace: SELF
+            - modules
+  perl:
+    summary: Perl Versions
+    op: perl
+    options:
+      -
+        name: raw
+        summary: Show raw output without header
+        type: bool
+        aliases: ["r"]
+      -
+        name: release
+        summary: Show perl releases with dates
+        type: bool
+  diff:
+    summary: Show diff between two Perl versions
+    op: diff
+    options:
+      -
+        name: added
+        summary: Show only added modules
+        type: bool
+      -
+        name: removed
+        summary: Show only removed modules
+        type: bool
+    parameters:
+      -
+        name: perl1
+        summary: Perl version 1
+        type: string
+        required: true
+        completion: *complete_perl_version
+      -
+        name: perl2
+        summary: Perl version 2
+        type: string
+        required: true
+        completion: *complete_perl_version
+  features:
+    summary: List features with perl versions
+    description: |
+      If given a feature name as a parameter, show the
+      perl feature bundle it was first released with.
+    op: features
+    parameters:
+      -
+        name: feature
+        summary: feature name
+        completion:
+          command:
+            - replace: SELF
+            - features
+            - '--raw'
+    options:
+      -
+        name: raw
+        summary: List only feature names
+        type: bool
+  modules:
+    summary: List all modules
+    op: modules
+# vim:et:sts=2:sws=2:sw=2:foldmethod=indent
+

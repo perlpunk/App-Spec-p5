@@ -1,0 +1,110 @@
+=head1 NAME
+
+pcorelist - corelist with shell completion
+
+=head1 ABSTRACT
+
+This is a wrapper around the corelist tool which adds shell completion
+
+=head1 DESCRIPTION
+
+
+
+=head2 GLOBAL OPTIONS
+
+    --help -h   Show command help
+
+
+=head2 SUBCOMMANDS
+
+=head3  diff
+
+    pcorelist  diff [options] <perl1> <perl2>
+
+Show diff between two Perl versions
+
+Options:
+
+    --added     Show only added modules  
+    --removed   Show only removed modules
+
+Parameters:
+
+    perl1  * Perl version 1
+    perl2  * Perl version 2
+
+=head3  features
+
+    pcorelist  features [options] [<feature>]
+
+List features with perl versions
+
+Options:
+
+    --raw   List only feature names
+
+Parameters:
+
+    feature   feature name
+
+=head3  module
+
+    pcorelist  module [options] <module>
+
+Show for which perl version the module was first released
+
+Options:
+
+    --all -a    Show all perl and module versions
+    --date -d   Show by date                     
+    --perl -p   Show by Perl Version             
+
+Parameters:
+
+    module  * Module name
+
+=head3  modules
+
+    pcorelist  modules
+
+List all modules
+
+
+=head3  perl
+
+    pcorelist  perl [options]
+
+Perl Versions
+
+Options:
+
+    --raw -r    Show raw output without header
+    --release   Show perl releases with dates 
+
+
+=head3  help
+
+    pcorelist  help <subcommands> [options]
+
+Show command help
+
+Options:
+
+    --all   
+
+
+=head3  _complete
+
+    pcorelist  _complete [options]
+
+Generate self completion
+
+Options:
+
+    --name   name of the program
+    --zsh    for zsh            
+    --bash   for bash           
+
+
+
+

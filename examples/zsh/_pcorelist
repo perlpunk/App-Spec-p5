@@ -1,0 +1,339 @@
+#compdef pcorelist
+
+_pcorelist() {
+    local program=pcorelist
+    typeset -A opt_args
+    local curcontext="$curcontext" state line context
+
+
+        # ---- Command: 
+        _arguments -s  \
+            '1: :->cmd1' \
+            '*: :->args' \
+            '(--help -h)'{--help,-h}'[Show command help]' \
+            && ret=0
+
+
+        case $state in
+        cmd1)
+            _alternative 'args:cmd2:((_complete\:"Generate self completion" diff\:"Show diff between two Perl versions" features\:"List features with perl versions" help\:"Show command help" module\:"Show for which perl version the module was first released" modules\:"List all modules" perl\:"Perl Versions"))'
+        ;;
+        args)
+            case $line[1] in
+            _complete)
+
+                # ---- Command: _complete
+                _arguments -s -C \
+                    '1: :->cmd1' \
+                    '*: :->args' \
+                    '--name[name of the program]:name' \
+                    '--zsh[for zsh]' \
+                    '--bash[for bash]' \
+                    && ret=0
+
+
+                case $state in
+                args)
+
+                ;;
+                *)
+
+                ;;
+                esac
+            ;;
+            diff)
+
+                # ---- Command: diff
+                _arguments -s -C \
+                    '1: :->cmd1' \
+                    '2: :->perl1' \
+                    '3: :->perl2' \
+                    '*: :->args' \
+                    '--added[Show only added modules]' \
+                    '--removed[Show only removed modules]' \
+                    && ret=0
+
+                case $state in
+                perl1)
+_pcorelist_diff_param_perl1_completion
+                ;;
+                perl2)
+_pcorelist_diff_param_perl2_completion
+                ;;
+                esac
+
+                case $state in
+                args)
+
+                ;;
+                *)
+
+                ;;
+                esac
+            ;;
+            features)
+
+                # ---- Command: features
+                _arguments -s -C \
+                    '1: :->cmd1' \
+                    '2: :->feature' \
+                    '*: :->args' \
+                    '--raw[List only feature names]' \
+                    && ret=0
+
+                case $state in
+                feature)
+_pcorelist_features_param_feature_completion
+                ;;
+                esac
+
+                case $state in
+                args)
+
+                ;;
+                *)
+
+                ;;
+                esac
+            ;;
+            help)
+
+                # ---- Command: help
+                _arguments -s -C \
+                    '1: :->cmd1' \
+                    '2: :->cmd2' \
+                    '*: :->args' \
+                    '--all[]' \
+                    && ret=0
+
+
+                case $state in
+                cmd2)
+                    _alternative 'args:cmd3:((_complete diff features module modules perl))'
+                ;;
+                args)
+                    case $line[2] in
+                    _complete)
+
+                        # ---- Command: help _complete
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '*: :->args' \
+                            && ret=0
+
+
+                        case $state in
+                        args)
+
+                        ;;
+                        *)
+
+                        ;;
+                        esac
+                    ;;
+                    diff)
+
+                        # ---- Command: help diff
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '*: :->args' \
+                            && ret=0
+
+
+                        case $state in
+                        args)
+
+                        ;;
+                        *)
+
+                        ;;
+                        esac
+                    ;;
+                    features)
+
+                        # ---- Command: help features
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '*: :->args' \
+                            && ret=0
+
+
+                        case $state in
+                        args)
+
+                        ;;
+                        *)
+
+                        ;;
+                        esac
+                    ;;
+                    module)
+
+                        # ---- Command: help module
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '*: :->args' \
+                            && ret=0
+
+
+                        case $state in
+                        args)
+
+                        ;;
+                        *)
+
+                        ;;
+                        esac
+                    ;;
+                    modules)
+
+                        # ---- Command: help modules
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '*: :->args' \
+                            && ret=0
+
+
+                        case $state in
+                        args)
+
+                        ;;
+                        *)
+
+                        ;;
+                        esac
+                    ;;
+                    perl)
+
+                        # ---- Command: help perl
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '*: :->args' \
+                            && ret=0
+
+
+                        case $state in
+                        args)
+
+                        ;;
+                        *)
+
+                        ;;
+                        esac
+                    ;;
+                    esac
+
+                ;;
+                *)
+
+                ;;
+                esac
+            ;;
+            module)
+
+                # ---- Command: module
+                _arguments -s -C \
+                    '1: :->cmd1' \
+                    '2: :->module' \
+                    '*: :->args' \
+                    '(--all -a)'{--all,-a}'[Show all perl and module versions]' \
+                    '(--date -d)'{--date,-d}'[Show by date]' \
+                    '(--perl -p)'{--perl,-p}'[Show by Perl Version]:perl:_pcorelist_module_option_perl_completion' \
+                    && ret=0
+
+                case $state in
+                module)
+_pcorelist_module_param_module_completion
+                ;;
+                esac
+
+                case $state in
+                args)
+
+                ;;
+                *)
+
+                ;;
+                esac
+            ;;
+            modules)
+
+                # ---- Command: modules
+                _arguments -s -C \
+                    '1: :->cmd1' \
+                    '*: :->args' \
+                    && ret=0
+
+
+                case $state in
+                args)
+
+                ;;
+                *)
+
+                ;;
+                esac
+            ;;
+            perl)
+
+                # ---- Command: perl
+                _arguments -s -C \
+                    '1: :->cmd1' \
+                    '*: :->args' \
+                    '(--raw -r)'{--raw,-r}'[Show raw output without header]' \
+                    '--release[Show perl releases with dates]' \
+                    && ret=0
+
+
+                case $state in
+                args)
+
+                ;;
+                *)
+
+                ;;
+                esac
+            ;;
+            esac
+
+        ;;
+        *)
+
+        ;;
+        esac
+
+}
+
+_pcorelist_diff_param_perl1_completion() {
+    local __dynamic_completion
+    IFS=$'\n' set -A __dynamic_completion `$program 'perl' '--raw'`
+    compadd -X "perl1:" $__dynamic_completion
+}
+_pcorelist_diff_param_perl2_completion() {
+    local __dynamic_completion
+    IFS=$'\n' set -A __dynamic_completion `$program 'perl' '--raw'`
+    compadd -X "perl2:" $__dynamic_completion
+}
+_pcorelist_features_param_feature_completion() {
+    local __dynamic_completion
+    IFS=$'\n' set -A __dynamic_completion `$program 'features' '--raw'`
+    compadd -X "feature:" $__dynamic_completion
+}
+_pcorelist_module_option_perl_completion() {
+    local __dynamic_completion
+    IFS=$'\n' set -A __dynamic_completion `$program 'perl' '--raw'`
+    compadd -X "perl:" $__dynamic_completion
+}
+_pcorelist_module_param_module_completion() {
+    local __dynamic_completion
+    IFS=$'\n' set -A __dynamic_completion `$program 'modules'`
+    compadd -X "module:" $__dynamic_completion
+}
+
+
