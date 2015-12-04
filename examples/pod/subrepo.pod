@@ -1,0 +1,198 @@
+=head1 NAME
+
+subrepo - Git Submodule Alternative
+
+=head1 ABSTRACT
+
+
+
+=head1 DESCRIPTION
+
+This is just an example for generating completion for an existing
+command, https://github.com/ingydotnet/git-subrepo
+
+
+=head2 GLOBAL OPTIONS
+
+    --help -h   Show command help
+
+
+=head2 SUBCOMMANDS
+
+=head3  branch
+
+    subrepo  branch [options] <subrepo>
+
+Create a branch with local subrepo commits since last pull.
+
+Options:
+
+    --all   All subrepos
+
+Parameters:
+
+    subrepo  * Subrepo
+
+=head3  clean
+
+    subrepo  clean [options] <subrepo>
+
+Remove artifacts created by fetch and branch commands.
+
+Options:
+
+    --all   All subrepos
+
+Parameters:
+
+    subrepo  * Subrepo
+
+=head3  clone
+
+    subrepo  clone [options] <repository> [<subdir>]
+
+Add a repository as a subrepo in a subdir of your repository.
+
+Options:
+
+    --branch -b   Upstream branch                                 
+    --force -f    reclone (completely replace) an existing subdir.
+
+Parameters:
+
+    repository  * 
+    subdir        
+
+=head3  commit
+
+    subrepo  commit <subrepo> [<subreporef>]
+
+Add subrepo branch to current history as a single commit.
+
+Parameters:
+
+    subrepo     * Subrepo    
+    subreporef    Subrepo ref
+
+=head3  fetch
+
+    subrepo  fetch [options] <subrepo>
+
+Fetch the remote/upstream content for a subrepo.
+
+Options:
+
+    --all   All subrepos
+
+Parameters:
+
+    subrepo  * Subrepo
+
+=head3  init
+
+    subrepo  init [options] <subdir>
+
+Turn an existing subdirectory into a subrepo.
+
+Options:
+
+    --remote -r   Specify remote repository
+    --branch -b   Upstream branch          
+
+Parameters:
+
+    subdir  * 
+
+=head3  pull
+
+    subrepo  pull [options] <subrepo>
+
+Update the subrepo subdir with the latest upstream changes.
+
+Options:
+
+    --all         All subrepos             
+    --branch -b   Upstream branch          
+    --remote -r   Specify remote repository
+    --update -u   update                   
+
+Parameters:
+
+    subrepo  * Subrepo
+
+=head3  push
+
+    subrepo  push [options] <subrepo>
+
+Push a properly merged subrepo branch back upstream.
+
+Options:
+
+    --all         All subrepos             
+    --branch -b   Upstream branch          
+    --remote -r   Specify remote repository
+    --update -u   update                   
+
+Parameters:
+
+    subrepo  * Subrepo
+
+=head3  status
+
+    subrepo  status [options] <subrepo>
+
+Get the status of a subrepo.
+
+Options:
+
+    --quiet -q   Just print names
+
+Parameters:
+
+    subrepo  * Subrepo
+
+=head3  version
+
+    subrepo  version
+
+display version information about git-subrepo
+
+
+=head3  help
+
+    subrepo  help <subcommands>
+
+Same as git help subrepo
+
+
+=head3  _complete
+
+    subrepo  _complete <subcommands> [options]
+
+Generate self completion
+
+Options:
+
+    --name   name of the program
+
+
+=head3 _complete bash
+
+    subrepo _complete bash [options]
+
+for bash
+
+Options:
+
+    --without-description   generate without description
+
+
+=head3 _complete zsh
+
+    subrepo _complete zsh
+
+for zsh
+
+
+
+

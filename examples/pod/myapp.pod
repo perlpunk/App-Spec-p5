@@ -14,112 +14,103 @@ This is a very useful description for myapp.
 This is a very useful description for myapp.
 
 
-=head1 COMMANDS
+=head2 GLOBAL OPTIONS
 
-=head2  _complete
-
-    myapp  _complete <subcommands> [options]
-
-Generate self completion
+    --verbose -v   be verbose       
+    --help -h      Show command help
 
 
+=head2 SUBCOMMANDS
 
-Options:
+=head3  cook
 
-    --name
-
-
-=head2 _complete bash
-
-    myapp _complete bash [options]
-
-for bash
-
-
-
-Options:
-
-    --without-description
-
-
-=head2 _complete zsh
-
-    myapp _complete zsh
-
-for zsh
-
-
-
-
-
-=head2  cook
-
-    myapp  cook <drink> [options]
+    myapp  cook [options] <drink>
 
 Cook something
 
-
-
 Options:
 
-    --with
-    --sugar -s
+    --with       Drink with ...
+    --sugar -s   add sugar     
 
+Parameters:
 
-=head2  help
+    drink  * 
 
-    myapp  help <subcommands> [options]
-
-Show command help
-
-
-
-Options:
-
-    --all
-
-
-=head2  weather
+=head3  weather
 
     myapp  weather <subcommands>
 
 Weather
 
 
-
-
-
-=head2 weather cities
+=head3 weather cities
 
     myapp weather cities [options]
 
 show list of cities
 
-
-
 Options:
 
-    --country -c
+    --country -c   country name
 
 
-=head2 weather countries
+=head3 weather countries
 
     myapp weather countries
 
 show list of countries
 
 
-
-
-
-=head2 weather show
+=head3 weather show
 
     myapp weather show <country> <city>
 
 Show Weather forecast
 
+Parameters:
+
+    country  * Specify country
+    city     * Specify city   
+
+=head3  help
+
+    myapp  help <subcommands> [options]
+
+Show command help
+
+Options:
+
+    --all   
 
 
+=head3  _complete
+
+    myapp  _complete <subcommands> [options]
+
+Generate self completion
+
+Options:
+
+    --name   name of the program
+
+
+=head3 _complete bash
+
+    myapp _complete bash [options]
+
+for bash
+
+Options:
+
+    --without-description   generate without description
+
+
+=head3 _complete zsh
+
+    myapp _complete zsh
+
+for zsh
 
 
 

@@ -1,0 +1,233 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title></title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:tina@iggy" />
+</head>
+
+<body style="background-color: white">
+
+
+
+<ul id="index">
+  <li><a href="#NAME">NAME</a></li>
+  <li><a href="#ABSTRACT">ABSTRACT</a></li>
+  <li><a href="#DESCRIPTION">DESCRIPTION</a>
+    <ul>
+      <li><a href="#GLOBAL-OPTIONS">GLOBAL OPTIONS</a></li>
+      <li><a href="#SUBCOMMANDS">SUBCOMMANDS</a>
+        <ul>
+          <li><a href="#branch">branch</a></li>
+          <li><a href="#clean">clean</a></li>
+          <li><a href="#clone">clone</a></li>
+          <li><a href="#commit">commit</a></li>
+          <li><a href="#fetch">fetch</a></li>
+          <li><a href="#init">init</a></li>
+          <li><a href="#pull">pull</a></li>
+          <li><a href="#push">push</a></li>
+          <li><a href="#status">status</a></li>
+          <li><a href="#version">version</a></li>
+          <li><a href="#help">help</a></li>
+          <li><a href="#complete">_complete</a></li>
+          <li><a href="#complete-bash">_complete bash</a></li>
+          <li><a href="#complete-zsh">_complete zsh</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="NAME">NAME</h1>
+
+<p>subrepo - Git Submodule Alternative</p>
+
+<h1 id="ABSTRACT">ABSTRACT</h1>
+
+<h1 id="DESCRIPTION">DESCRIPTION</h1>
+
+<p>This is just an example for generating completion for an existing command, https://github.com/ingydotnet/git-subrepo</p>
+
+<h2 id="GLOBAL-OPTIONS">GLOBAL OPTIONS</h2>
+
+<pre><code>    --help -h   Show command help</code></pre>
+
+<h2 id="SUBCOMMANDS">SUBCOMMANDS</h2>
+
+<h3 id="branch">branch</h3>
+
+<pre><code>    subrepo  branch [options] &lt;subrepo&gt;</code></pre>
+
+<p>Create a branch with local subrepo commits since last pull.</p>
+
+<p>Options:</p>
+
+<pre><code>    --all   All subrepos</code></pre>
+
+<p>Parameters:</p>
+
+<pre><code>    subrepo  * Subrepo</code></pre>
+
+<h3 id="clean">clean</h3>
+
+<pre><code>    subrepo  clean [options] &lt;subrepo&gt;</code></pre>
+
+<p>Remove artifacts created by fetch and branch commands.</p>
+
+<p>Options:</p>
+
+<pre><code>    --all   All subrepos</code></pre>
+
+<p>Parameters:</p>
+
+<pre><code>    subrepo  * Subrepo</code></pre>
+
+<h3 id="clone">clone</h3>
+
+<pre><code>    subrepo  clone [options] &lt;repository&gt; [&lt;subdir&gt;]</code></pre>
+
+<p>Add a repository as a subrepo in a subdir of your repository.</p>
+
+<p>Options:</p>
+
+<pre><code>    --branch -b   Upstream branch                                 
+    --force -f    reclone (completely replace) an existing subdir.</code></pre>
+
+<p>Parameters:</p>
+
+<pre><code>    repository  * 
+    subdir        </code></pre>
+
+<h3 id="commit">commit</h3>
+
+<pre><code>    subrepo  commit &lt;subrepo&gt; [&lt;subreporef&gt;]</code></pre>
+
+<p>Add subrepo branch to current history as a single commit.</p>
+
+<p>Parameters:</p>
+
+<pre><code>    subrepo     * Subrepo    
+    subreporef    Subrepo ref</code></pre>
+
+<h3 id="fetch">fetch</h3>
+
+<pre><code>    subrepo  fetch [options] &lt;subrepo&gt;</code></pre>
+
+<p>Fetch the remote/upstream content for a subrepo.</p>
+
+<p>Options:</p>
+
+<pre><code>    --all   All subrepos</code></pre>
+
+<p>Parameters:</p>
+
+<pre><code>    subrepo  * Subrepo</code></pre>
+
+<h3 id="init">init</h3>
+
+<pre><code>    subrepo  init [options] &lt;subdir&gt;</code></pre>
+
+<p>Turn an existing subdirectory into a subrepo.</p>
+
+<p>Options:</p>
+
+<pre><code>    --remote -r   Specify remote repository
+    --branch -b   Upstream branch          </code></pre>
+
+<p>Parameters:</p>
+
+<pre><code>    subdir  * </code></pre>
+
+<h3 id="pull">pull</h3>
+
+<pre><code>    subrepo  pull [options] &lt;subrepo&gt;</code></pre>
+
+<p>Update the subrepo subdir with the latest upstream changes.</p>
+
+<p>Options:</p>
+
+<pre><code>    --all         All subrepos             
+    --branch -b   Upstream branch          
+    --remote -r   Specify remote repository
+    --update -u   update                   </code></pre>
+
+<p>Parameters:</p>
+
+<pre><code>    subrepo  * Subrepo</code></pre>
+
+<h3 id="push">push</h3>
+
+<pre><code>    subrepo  push [options] &lt;subrepo&gt;</code></pre>
+
+<p>Push a properly merged subrepo branch back upstream.</p>
+
+<p>Options:</p>
+
+<pre><code>    --all         All subrepos             
+    --branch -b   Upstream branch          
+    --remote -r   Specify remote repository
+    --update -u   update                   </code></pre>
+
+<p>Parameters:</p>
+
+<pre><code>    subrepo  * Subrepo</code></pre>
+
+<h3 id="status">status</h3>
+
+<pre><code>    subrepo  status [options] &lt;subrepo&gt;</code></pre>
+
+<p>Get the status of a subrepo.</p>
+
+<p>Options:</p>
+
+<pre><code>    --quiet -q   Just print names</code></pre>
+
+<p>Parameters:</p>
+
+<pre><code>    subrepo  * Subrepo</code></pre>
+
+<h3 id="version">version</h3>
+
+<pre><code>    subrepo  version</code></pre>
+
+<p>display version information about git-subrepo</p>
+
+<h3 id="help">help</h3>
+
+<pre><code>    subrepo  help &lt;subcommands&gt;</code></pre>
+
+<p>Same as git help subrepo</p>
+
+<h3 id="complete">_complete</h3>
+
+<pre><code>    subrepo  _complete &lt;subcommands&gt; [options]</code></pre>
+
+<p>Generate self completion</p>
+
+<p>Options:</p>
+
+<pre><code>    --name   name of the program</code></pre>
+
+<h3 id="complete-bash">_complete bash</h3>
+
+<pre><code>    subrepo _complete bash [options]</code></pre>
+
+<p>for bash</p>
+
+<p>Options:</p>
+
+<pre><code>    --without-description   generate without description</code></pre>
+
+<h3 id="complete-zsh">_complete zsh</h3>
+
+<pre><code>    subrepo _complete zsh</code></pre>
+
+<p>for zsh</p>
+
+
+</body>
+
+</html>
+
+

@@ -14,18 +14,22 @@
 <ul id="index">
   <li><a href="#NAME">NAME</a></li>
   <li><a href="#ABSTRACT">ABSTRACT</a></li>
-  <li><a href="#DESCRIPTION">DESCRIPTION</a></li>
-  <li><a href="#COMMANDS">COMMANDS</a>
+  <li><a href="#DESCRIPTION">DESCRIPTION</a>
     <ul>
-      <li><a href="#complete">_complete</a></li>
-      <li><a href="#complete-bash">_complete bash</a></li>
-      <li><a href="#complete-zsh">_complete zsh</a></li>
-      <li><a href="#cook">cook</a></li>
-      <li><a href="#help">help</a></li>
-      <li><a href="#weather">weather</a></li>
-      <li><a href="#weather-cities">weather cities</a></li>
-      <li><a href="#weather-countries">weather countries</a></li>
-      <li><a href="#weather-show">weather show</a></li>
+      <li><a href="#GLOBAL-OPTIONS">GLOBAL OPTIONS</a></li>
+      <li><a href="#SUBCOMMANDS">SUBCOMMANDS</a>
+        <ul>
+          <li><a href="#cook">cook</a></li>
+          <li><a href="#weather">weather</a></li>
+          <li><a href="#weather-cities">weather cities</a></li>
+          <li><a href="#weather-countries">weather countries</a></li>
+          <li><a href="#weather-show">weather show</a></li>
+          <li><a href="#help">help</a></li>
+          <li><a href="#complete">_complete</a></li>
+          <li><a href="#complete-bash">_complete bash</a></li>
+          <li><a href="#complete-zsh">_complete zsh</a></li>
+        </ul>
+      </li>
     </ul>
   </li>
 </ul>
@@ -42,62 +46,35 @@
 
 <p>This is a very useful description for myapp. This is a very useful description for myapp. This is a very useful description for myapp. This is a very useful description for myapp.</p>
 
-<h1 id="COMMANDS">COMMANDS</h1>
+<h2 id="GLOBAL-OPTIONS">GLOBAL OPTIONS</h2>
 
-<h2 id="complete">_complete</h2>
+<pre><code>    --verbose -v   be verbose       
+    --help -h      Show command help</code></pre>
 
-<pre><code>    myapp  _complete &lt;subcommands&gt; [options]</code></pre>
+<h2 id="SUBCOMMANDS">SUBCOMMANDS</h2>
 
-<p>Generate self completion</p>
+<h3 id="cook">cook</h3>
 
-<p>Options:</p>
-
-<pre><code>    --name</code></pre>
-
-<h2 id="complete-bash">_complete bash</h2>
-
-<pre><code>    myapp _complete bash [options]</code></pre>
-
-<p>for bash</p>
-
-<p>Options:</p>
-
-<pre><code>    --without-description</code></pre>
-
-<h2 id="complete-zsh">_complete zsh</h2>
-
-<pre><code>    myapp _complete zsh</code></pre>
-
-<p>for zsh</p>
-
-<h2 id="cook">cook</h2>
-
-<pre><code>    myapp  cook &lt;drink&gt; [options]</code></pre>
+<pre><code>    myapp  cook [options] &lt;drink&gt;</code></pre>
 
 <p>Cook something</p>
 
 <p>Options:</p>
 
-<pre><code>    --with
-    --sugar -s</code></pre>
+<pre><code>    --with       Drink with ...
+    --sugar -s   add sugar     </code></pre>
 
-<h2 id="help">help</h2>
+<p>Parameters:</p>
 
-<pre><code>    myapp  help &lt;subcommands&gt; [options]</code></pre>
+<pre><code>    drink  * </code></pre>
 
-<p>Show command help</p>
-
-<p>Options:</p>
-
-<pre><code>    --all</code></pre>
-
-<h2 id="weather">weather</h2>
+<h3 id="weather">weather</h3>
 
 <pre><code>    myapp  weather &lt;subcommands&gt;</code></pre>
 
 <p>Weather</p>
 
-<h2 id="weather-cities">weather cities</h2>
+<h3 id="weather-cities">weather cities</h3>
 
 <pre><code>    myapp weather cities [options]</code></pre>
 
@@ -105,19 +82,60 @@
 
 <p>Options:</p>
 
-<pre><code>    --country -c</code></pre>
+<pre><code>    --country -c   country name</code></pre>
 
-<h2 id="weather-countries">weather countries</h2>
+<h3 id="weather-countries">weather countries</h3>
 
 <pre><code>    myapp weather countries</code></pre>
 
 <p>show list of countries</p>
 
-<h2 id="weather-show">weather show</h2>
+<h3 id="weather-show">weather show</h3>
 
 <pre><code>    myapp weather show &lt;country&gt; &lt;city&gt;</code></pre>
 
 <p>Show Weather forecast</p>
+
+<p>Parameters:</p>
+
+<pre><code>    country  * Specify country
+    city     * Specify city   </code></pre>
+
+<h3 id="help">help</h3>
+
+<pre><code>    myapp  help &lt;subcommands&gt; [options]</code></pre>
+
+<p>Show command help</p>
+
+<p>Options:</p>
+
+<pre><code>    --all   </code></pre>
+
+<h3 id="complete">_complete</h3>
+
+<pre><code>    myapp  _complete &lt;subcommands&gt; [options]</code></pre>
+
+<p>Generate self completion</p>
+
+<p>Options:</p>
+
+<pre><code>    --name   name of the program</code></pre>
+
+<h3 id="complete-bash">_complete bash</h3>
+
+<pre><code>    myapp _complete bash [options]</code></pre>
+
+<p>for bash</p>
+
+<p>Options:</p>
+
+<pre><code>    --without-description   generate without description</code></pre>
+
+<h3 id="complete-zsh">_complete zsh</h3>
+
+<pre><code>    myapp _complete zsh</code></pre>
+
+<p>for zsh</p>
 
 
 </body>
