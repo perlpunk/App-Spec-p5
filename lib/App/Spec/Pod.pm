@@ -13,10 +13,14 @@ sub generate {
     my $spec = $self->spec;
     my $appname = $spec->name;
     my $title = $spec->title;
+    my $markup = $spec->markup;
     my $abstract = $spec->abstract;
     my $description = $spec->description;
     my $subcmds = $spec->subcommands;
     my $global_options = $spec->options;
+
+    $self->markup(text => \$abstract);
+    $self->markup(text => \$description);
 
     my @subcmd_pod = $self->subcommand_pod(
         commands => $subcmds,
@@ -81,6 +85,9 @@ sub subcommand_pod {
         my $subcmds = $cmd_spec->subcommands;
         my $parameters = $cmd_spec->parameters;
         my $options = $cmd_spec->options;
+
+        $self->markup(text => \$summary);
+        $self->markup(text => \$description);
 
         my $desc = '';
         if (length $summary) {
@@ -171,6 +178,22 @@ sub options2pod {
     }
     $tb->load(@rows);
     return "$tb";
+}
+
+sub markup {
+    my ($self, %args) = @_;
+    my $text = $args{text};
+    return unless defined $$text;
+    my $markup = $self->spec->markup;
+    if ($markup eq "swim") {
+        $$text = $self->swim2pod($$text);
+    }
+}
+sub swim2pod {
+    my ($self, $text) = @_;
+    require Swim;
+    my $swim = Swim->new(text => $text);
+    my $pod = $swim->to_pod;
 }
 
 1;

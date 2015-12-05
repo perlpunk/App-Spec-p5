@@ -18,6 +18,7 @@ use Moo;
 
 has name => ( is => 'rw' );
 has title => ( is => 'rw' );
+has markup => ( is => 'rw', default => 'pod' );
 has options => ( is => 'rw' );
 has subcommands => ( is => 'rw', default => sub { +{} } );
 has abstract => ( is => 'rw' );
@@ -86,6 +87,7 @@ sub read {
     my $self = $class->new({
         name => $spec->{name},
         title => $spec->{title},
+        markup => $spec->{markup},
         options => [map {
             App::Spec::Option->build($_)
         } @{ $spec->{options} || [] }],

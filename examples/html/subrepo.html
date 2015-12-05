@@ -14,7 +14,8 @@
 <ul id="index">
   <li><a href="#NAME">NAME</a></li>
   <li><a href="#ABSTRACT">ABSTRACT</a></li>
-  <li><a href="#DESCRIPTION">DESCRIPTION</a>
+  <li><a href="#DESCRIPTION">DESCRIPTION</a></li>
+  <li><a href="#Benefits">Benefits</a>
     <ul>
       <li><a href="#GLOBAL-OPTIONS">GLOBAL OPTIONS</a></li>
       <li><a href="#SUBCOMMANDS">SUBCOMMANDS</a>
@@ -47,7 +48,13 @@
 
 <h1 id="DESCRIPTION">DESCRIPTION</h1>
 
-<p>This is just an example for generating completion for an existing command, https://github.com/ingydotnet/git-subrepo</p>
+<p>This is just an example for generating completion for an existing command, <a href="https://github.com/ingydotnet/git-subrepo">https://github.com/ingydotnet/git-subrepo</a></p>
+
+<p>This git command &quot;clones&quot; an external git repo into a subdirectory of your repo. Later on, upstream changes can be pulled in, and local changes can be pushed back. Simple.</p>
+
+<h1 id="Benefits">Benefits</h1>
+
+<p>This command is an improvement from <code>git-submodule</code> and <code>git-subtree</code>; two other git commands with similar goals, but various problems.</p>
 
 <h2 id="GLOBAL-OPTIONS">GLOBAL OPTIONS</h2>
 
@@ -73,7 +80,7 @@
 
 <pre><code>    subrepo  clean [options] &lt;subrepo&gt;</code></pre>
 
-<p>Remove artifacts created by fetch and branch commands.</p>
+<p>Remove artifacts created by <code>fetch</code> and <code>branch</code> commands.</p>
 
 <p>Options:</p>
 
@@ -197,7 +204,7 @@
 
 <pre><code>    subrepo  help &lt;subcommands&gt;</code></pre>
 
-<p>Same as git help subrepo</p>
+<p>Same as <code>git help subrepo</code></p>
 
 <h3 id="complete">_complete</h3>
 

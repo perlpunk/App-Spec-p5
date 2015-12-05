@@ -8,8 +8,13 @@ subrepo - Git Submodule Alternative
 
 =head1 DESCRIPTION
 
-This is just an example for generating completion for an existing
-command, https://github.com/ingydotnet/git-subrepo
+This is just an example for generating completion for an existing command, L<https://github.com/ingydotnet/git-subrepo>
+
+This git command "clones" an external git repo into a subdirectory of your repo. Later on, upstream changes can be pulled in, and local changes can be pushed back. Simple.
+
+=head1 Benefits
+
+This command is an improvement from C<git-submodule> and C<git-subtree>; two other git commands with similar goals, but various problems.
 
 
 =head2 GLOBAL OPTIONS
@@ -25,6 +30,7 @@ command, https://github.com/ingydotnet/git-subrepo
 
 Create a branch with local subrepo commits since last pull.
 
+
 Options:
 
     --all   All subrepos
@@ -37,7 +43,8 @@ Parameters:
 
     subrepo  clean [options] <subrepo>
 
-Remove artifacts created by fetch and branch commands.
+Remove artifacts created by C<fetch> and C<branch> commands.
+
 
 Options:
 
@@ -52,6 +59,7 @@ Parameters:
     subrepo  clone [options] <repository> [<subdir>]
 
 Add a repository as a subrepo in a subdir of your repository.
+
 
 Options:
 
@@ -69,6 +77,7 @@ Parameters:
 
 Add subrepo branch to current history as a single commit.
 
+
 Parameters:
 
     subrepo     * Subrepo    
@@ -79,6 +88,7 @@ Parameters:
     subrepo  fetch [options] <subrepo>
 
 Fetch the remote/upstream content for a subrepo.
+
 
 Options:
 
@@ -94,6 +104,7 @@ Parameters:
 
 Turn an existing subdirectory into a subrepo.
 
+
 Options:
 
     --remote -r   Specify remote repository
@@ -108,6 +119,7 @@ Parameters:
     subrepo  pull [options] <subrepo>
 
 Update the subrepo subdir with the latest upstream changes.
+
 
 Options:
 
@@ -126,6 +138,7 @@ Parameters:
 
 Push a properly merged subrepo branch back upstream.
 
+
 Options:
 
     --all         All subrepos             
@@ -143,6 +156,7 @@ Parameters:
 
 Get the status of a subrepo.
 
+
 Options:
 
     --quiet -q   Just print names
@@ -158,11 +172,13 @@ Parameters:
 display version information about git-subrepo
 
 
+
 =head3  help
 
     subrepo  help <subcommands>
 
-Same as git help subrepo
+Same as C<git help subrepo>
+
 
 
 =head3  _complete
@@ -170,6 +186,7 @@ Same as git help subrepo
     subrepo  _complete <subcommands> [options]
 
 Generate self completion
+
 
 Options:
 
@@ -182,6 +199,7 @@ Options:
 
 for bash
 
+
 Options:
 
     --without-description   generate without description
@@ -192,6 +210,7 @@ Options:
     subrepo _complete zsh
 
 for zsh
+
 
 
 

@@ -1,9 +1,20 @@
 name: subrepo
 version: 1
 title: Git Submodule Alternative
+markup: swim
 description: |
   This is just an example for generating completion for an existing
   command, https://github.com/ingydotnet/git-subrepo
+
+  This git command "clones" an external git repo into a subdirectory of your
+  repo. Later on, upstream changes can be pulled in, and local changes can be
+  pushed back. Simple.
+
+  = Benefits
+
+  This command is an improvement from `git-submodule` and `git-subtree`; two
+  other git commands with similar goals, but various problems.
+
 options: []
 subcommands:
   clone:
@@ -99,13 +110,13 @@ subcommands:
         aliases: ["q"]
         description: Just print names
   clean:
-    summary: 'Remove artifacts created by fetch and branch commands.'
+    summary: 'Remove artifacts created by `fetch` and `branch` commands.'
     parameters:
       -   *param_subrepo_optional
     options:
       -   *option_all
   help:
-    summary: 'Same as git help subrepo'
+    summary: 'Same as `git help subrepo`'
   version:
     summary: 'display version information about git-subrepo'
 # vim:et:sts=2:sws=2:sw=2:foldmethod=indent
