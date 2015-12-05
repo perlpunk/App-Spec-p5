@@ -162,18 +162,7 @@ EOM
         for my $param (@$parameters) {
             my $name = $param->name;
             my $summary = $param->summary;
-            if ($param->multiple and $param->required) {
-                $usage .= " <$name>+";
-            }
-            elsif ($param->multiple) {
-                $usage .= " [<$name>+]";
-            }
-            elsif ($param->required) {
-                $usage .= " <$name>";
-            }
-            else {
-                $usage .= " [<$name>]";
-            }
+            $usage .= " " . $param->to_usage_header;
             my ($req, $multi) = (' ', '  ');
             if ($param->required) {
                 $req = "*";

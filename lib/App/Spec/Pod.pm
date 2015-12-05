@@ -122,7 +122,7 @@ sub subcommand_pod {
             for my $param (@$parameters) {
                 my $name = $param->name;
                 my $required = $param->required;
-                $usage .= $required ? " <$name>" : " [<$name>]";
+                $usage .= " " . $param->to_usage_header;
             }
         }
         if (length $param_string) {
@@ -155,7 +155,11 @@ sub params2pod {
     my $tb = Text::Table->new;
     for my $param (@$params) {
         my $required = $param->required ? '*' : '';
-        push @rows, ["    " . $param->name, " " . $required, $param->description];
+        my $multi = '';
+        if ($param->multiple) {
+            $multi = '[]';
+        }
+        push @rows, ["    " . $param->name, " " . $required, $multi, $param->description];
     }
     $tb->load(@rows);
     return "$tb";
@@ -171,10 +175,14 @@ sub options2pod {
         my $aliases = $opt->aliases;
         my $description = $opt->description;
         my $required = $opt->required ? '*' : '';
+        my $multi = '';
+        if ($opt->multiple) {
+            $multi = '[]';
+        }
         my @names = map {
             length $_ > 1 ? "--$_" : "-$_"
         } ($name, @$aliases);
-        push @rows, ["    @names", " " . $required, $description];
+        push @rows, ["    @names", " " . $required, $multi, $description];
     }
     $tb->load(@rows);
     return "$tb";

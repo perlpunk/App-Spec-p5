@@ -19,40 +19,40 @@ This command is an improvement from C<git-submodule> and C<git-subtree>; two oth
 
 =head2 GLOBAL OPTIONS
 
-    --help -h   Show command help
+    --help -h    Show command help
 
 
 =head2 SUBCOMMANDS
 
 =head3  branch
 
-    subrepo  branch [options] <subrepo>
+    subrepo  branch [options] [<subrepo>]
 
 Create a branch with local subrepo commits since last pull.
 
 
 Options:
 
-    --all   All subrepos
+    --all    All subrepos
 
 Parameters:
 
-    subrepo  * Subrepo
+    subrepo    Subrepo
 
 =head3  clean
 
-    subrepo  clean [options] <subrepo>
+    subrepo  clean [options] [<subrepo>]
 
 Remove artifacts created by C<fetch> and C<branch> commands.
 
 
 Options:
 
-    --all   All subrepos
+    --all    All subrepos
 
 Parameters:
 
-    subrepo  * Subrepo
+    subrepo    Subrepo
 
 =head3  clone
 
@@ -63,13 +63,13 @@ Add a repository as a subrepo in a subdir of your repository.
 
 Options:
 
-    --branch -b   Upstream branch                                 
-    --force -f    reclone (completely replace) an existing subdir.
+    --branch -b    Upstream branch                                 
+    --force -f     reclone (completely replace) an existing subdir.
 
 Parameters:
 
-    repository  * 
-    subdir        
+    repository  *  
+    subdir         
 
 =head3  commit
 
@@ -80,23 +80,23 @@ Add subrepo branch to current history as a single commit.
 
 Parameters:
 
-    subrepo     * Subrepo    
-    subreporef    Subrepo ref
+    subrepo     *  Subrepo    
+    subreporef     Subrepo ref
 
 =head3  fetch
 
-    subrepo  fetch [options] <subrepo>
+    subrepo  fetch [options] [<subrepo>]
 
 Fetch the remote/upstream content for a subrepo.
 
 
 Options:
 
-    --all   All subrepos
+    --all    All subrepos
 
 Parameters:
 
-    subrepo  * Subrepo
+    subrepo    Subrepo
 
 =head3  init
 
@@ -107,63 +107,63 @@ Turn an existing subdirectory into a subrepo.
 
 Options:
 
-    --remote -r   Specify remote repository
-    --branch -b   Upstream branch          
+    --remote -r    Specify remote repository
+    --branch -b    Upstream branch          
 
 Parameters:
 
-    subdir  * 
+    subdir  *  
 
 =head3  pull
 
-    subrepo  pull [options] <subrepo>
+    subrepo  pull [options] [<subrepo>]
 
 Update the subrepo subdir with the latest upstream changes.
 
 
 Options:
 
-    --all         All subrepos             
-    --branch -b   Upstream branch          
-    --remote -r   Specify remote repository
-    --update -u   update                   
+    --all          All subrepos             
+    --branch -b    Upstream branch          
+    --remote -r    Specify remote repository
+    --update -u    update                   
 
 Parameters:
 
-    subrepo  * Subrepo
+    subrepo    Subrepo
 
 =head3  push
 
-    subrepo  push [options] <subrepo>
+    subrepo  push [options] [<subrepo>]
 
 Push a properly merged subrepo branch back upstream.
 
 
 Options:
 
-    --all         All subrepos             
-    --branch -b   Upstream branch          
-    --remote -r   Specify remote repository
-    --update -u   update                   
+    --all          All subrepos             
+    --branch -b    Upstream branch          
+    --remote -r    Specify remote repository
+    --update -u    update                   
 
 Parameters:
 
-    subrepo  * Subrepo
+    subrepo    Subrepo
 
 =head3  status
 
-    subrepo  status [options] <subrepo>
+    subrepo  status [options] [<subrepo>]
 
 Get the status of a subrepo.
 
 
 Options:
 
-    --quiet -q   Just print names
+    --quiet -q    Just print names
 
 Parameters:
 
-    subrepo  * Subrepo
+    subrepo    Subrepo
 
 =head3  version
 
@@ -190,9 +190,9 @@ Generate self completion
 
 Options:
 
-    --name   name of the program
-    --zsh    for zsh            
-    --bash   for bash           
+    --name    name of the program
+    --zsh     for zsh            
+    --bash    for bash           
 
 
 
