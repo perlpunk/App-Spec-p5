@@ -253,6 +253,8 @@ sub commands_alternative {
         my $name = $cmd->name;
         $name =~ s/:/\\\\:/g;
         my $summary = $cmd->summary // '';
+        $summary =~ s/['`]/'"'"'/g;
+        $summary =~ s/\$/\\\$/g;
         push @subcommands, length $summary ? qq{$name\\:"$summary"} : $name;
     }
     my $string = qq{_alternative 'args:cmd$level:((@subcommands))'};
@@ -302,6 +304,7 @@ sub options {
             $values = ":$name";
         }
         $desc =~ s/['`]/'"'"'/g;
+        $desc =~ s/\$/\\\$/g;
 #        '(-c --count)'{-c,--count}'[Number of list items to show]:c' \
 #        '(-a --all)'{-a,--all}'[Show all list items]' \
         my $name_str;

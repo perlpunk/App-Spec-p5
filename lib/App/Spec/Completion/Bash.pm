@@ -61,7 +61,11 @@ sub completion_commands {
         my $summary = $commands->{ $_ }->summary;
         length $summary ? "$_ -- " . $summary : $_
     } sort keys %$commands;
-    my $cmds = join q{"$'\\n'"}, @commands;
+    for (@commands) {
+        s/['`]/'"'"'/g;
+        s/\$/\\\$/g;
+    }
+    my $cmds = join q{'$'\\n''}, @commands;
 
     my $subc = <<"EOM";
 $indent# subcmds
@@ -106,7 +110,7 @@ EOM
 ${indent}case \$COMP_CWORD in
 
 ${indent}$level)
-${indent}    _${name}_compreply "$cmds"
+${indent}    _${name}_compreply '$cmds'
 
 ${indent};;
 ${indent}*)
@@ -164,6 +168,8 @@ EOM
             for my $n (@names) {
                 my $dash = length $n > 1 ? "--" : "-";
                 my $option_string = "$dash$n";
+                $summary =~ s/['`]/'"'"'/g;
+                $summary =~ s/\$/\\\$/g;
                 my $string = length $summary
                     ? qq{'$option_string -- $summary'}
                     : qq{'$option_string'};
@@ -178,6 +184,10 @@ EOM
                 if (my $list = $type->{enum}) {
                     my @list = map { s/ /\\ /g; "'$_'" } @$list;
                     local $" = q{"$'\\n'"};
+                    for (@list) {
+                        s/['`]/'"'"'/g;
+                        s/\$/\\\$/g;
+                    }
                     $comp_value .= <<"EOM";
 ${indent}    _${appname}_compreply "@list"
 EOM
@@ -284,8 +294,12 @@ sub completion_parameter {
     my $type = $param->type;
     if (ref $type) {
         if (my $list = $type->{enum}) {
-        local $" = q{"$'\\n'"};
-        $comp = <<"EOM";
+            local $" = q{"$'\\n'"};
+            for (@$list) {
+                s/['`]/'"'"'/g;
+                s/\$/\\\$/g;
+            }
+            $comp = <<"EOM";
 ${indent}    _${appname}_compreply "@$list"
 EOM
         }

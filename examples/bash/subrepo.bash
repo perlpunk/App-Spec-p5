@@ -12,7 +12,7 @@ _subrepo() {
     case $COMP_CWORD in
 
     1)
-        _subrepo_compreply "_complete -- Generate self completion"$'\n'"branch -- Create a branch with local subrepo commits since last pull."$'\n'"clean -- Remove artifacts created by `fetch` and `branch` commands."$'\n'"clone -- Add a repository as a subrepo in a subdir of your repository."$'\n'"commit -- Add subrepo branch to current history as a single commit."$'\n'"fetch -- Fetch the remote/upstream content for a subrepo."$'\n'"help -- Same as `git help subrepo`"$'\n'"init -- Turn an existing subdirectory into a subrepo."$'\n'"pull -- Update the subrepo subdir with the latest upstream changes."$'\n'"push -- Push a properly merged subrepo branch back upstream."$'\n'"status -- Get the status of a subrepo."$'\n'"version -- display version information about git-subrepo"
+        _subrepo_compreply '_complete -- Generate self completion'$'\n''branch -- Create a branch with local subrepo commits since last pull.'$'\n''clean -- Remove artifacts created by '"'"'fetch'"'"' and '"'"'branch'"'"' commands.'$'\n''clone -- Add a repository as a subrepo in a subdir of your repository.'$'\n''commit -- Add subrepo branch to current history as a single commit.'$'\n''fetch -- Fetch the remote/upstream content for a subrepo.'$'\n''help -- Same as '"'"'git help subrepo'"'"''$'\n''init -- Turn an existing subdirectory into a subrepo.'$'\n''pull -- Update the subrepo subdir with the latest upstream changes.'$'\n''push -- Push a properly merged subrepo branch back upstream.'$'\n''status -- Get the status of a subrepo.'$'\n''version -- display version information about git-subrepo'
 
     ;;
     *)
@@ -120,7 +120,7 @@ _subrepo() {
         case $COMP_CWORD in
 
         2)
-            _subrepo_compreply "_complete"$'\n'"branch"$'\n'"clean"$'\n'"clone"$'\n'"commit"$'\n'"fetch"$'\n'"init"$'\n'"pull"$'\n'"push"$'\n'"status"$'\n'"version"
+            _subrepo_compreply '_complete'$'\n''branch'$'\n''clean'$'\n''clone'$'\n''commit'$'\n''fetch'$'\n''init'$'\n''pull'$'\n''push'$'\n''status'$'\n''version'
 
         ;;
         *)

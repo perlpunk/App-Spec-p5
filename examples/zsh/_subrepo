@@ -16,7 +16,7 @@ _subrepo() {
 
         case $state in
         cmd1)
-            _alternative 'args:cmd2:((_complete\:"Generate self completion" branch\:"Create a branch with local subrepo commits since last pull." clean\:"Remove artifacts created by `fetch` and `branch` commands." clone\:"Add a repository as a subrepo in a subdir of your repository." commit\:"Add subrepo branch to current history as a single commit." fetch\:"Fetch the remote/upstream content for a subrepo." help\:"Same as `git help subrepo`" init\:"Turn an existing subdirectory into a subrepo." pull\:"Update the subrepo subdir with the latest upstream changes." push\:"Push a properly merged subrepo branch back upstream." status\:"Get the status of a subrepo." version\:"display version information about git-subrepo"))'
+            _alternative 'args:cmd2:((_complete\:"Generate self completion" branch\:"Create a branch with local subrepo commits since last pull." clean\:"Remove artifacts created by '"'"'fetch'"'"' and '"'"'branch'"'"' commands." clone\:"Add a repository as a subrepo in a subdir of your repository." commit\:"Add subrepo branch to current history as a single commit." fetch\:"Fetch the remote/upstream content for a subrepo." help\:"Same as '"'"'git help subrepo'"'"'" init\:"Turn an existing subdirectory into a subrepo." pull\:"Update the subrepo subdir with the latest upstream changes." push\:"Push a properly merged subrepo branch back upstream." status\:"Get the status of a subrepo." version\:"display version information about git-subrepo"))'
         ;;
         args)
             case $line[1] in
