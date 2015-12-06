@@ -122,25 +122,16 @@ sub cmd_help {
     say $help;
 }
 
-sub cmd_self_completion_bash {
+sub cmd_self_completion {
     my ($self) = @_;
     my $options = $self->options;
+    my $shell = $options->{zsh} ? "zsh" : $options->{bash} ? "bash" : '';
+    die "Specify which shell" unless $shell;
     my $spec = $self->spec;
     my $completion = $spec->generate_completion(
-        shell => "bash",
+        shell => $shell,
     );
     say $completion;
 }
-
-sub cmd_self_completion_zsh {
-    my ($self) = @_;
-
-    my $spec = $self->spec;
-    my $completion = $spec->generate_completion(
-        shell => "zsh",
-    );
-    say $completion;
-}
-
 
 1;

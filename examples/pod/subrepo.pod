@@ -183,7 +183,7 @@ Same as C<git help subrepo>
 
 =head3  _complete
 
-    subrepo  _complete <subcommands> [options]
+    subrepo  _complete [options]
 
 Generate self completion
 
@@ -191,26 +191,8 @@ Generate self completion
 Options:
 
     --name   name of the program
-
-
-=head3 _complete bash
-
-    subrepo _complete bash [options]
-
-for bash
-
-
-Options:
-
-    --without-description   generate without description
-
-
-=head3 _complete zsh
-
-    subrepo _complete zsh
-
-for zsh
-
+    --zsh    for zsh            
+    --bash   for bash           
 
 
 

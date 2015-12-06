@@ -86,31 +86,15 @@ Options:
 
 =head3  _complete
 
-    myapp  _complete <subcommands> [options]
+    myapp  _complete [options]
 
 Generate self completion
 
 Options:
 
     --name   name of the program
-
-
-=head3 _complete bash
-
-    myapp _complete bash [options]
-
-for bash
-
-Options:
-
-    --without-description   generate without description
-
-
-=head3 _complete zsh
-
-    myapp _complete zsh
-
-for zsh
+    --zsh    for zsh            
+    --bash   for bash           
 
 
 

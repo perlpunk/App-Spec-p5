@@ -20,32 +20,19 @@ _subrepo() {
     case ${COMP_WORDS[1]} in
       _complete)
         case $COMP_CWORD in
-
-        2)
-            _subrepo_compreply "bash -- for bash"$'\n'"zsh -- for zsh"
-
-        ;;
         *)
-        # subcmds
-        case ${COMP_WORDS[2]} in
-          bash)
-            case $COMP_CWORD in
-            *)
-            case ${COMP_WORDS[$COMP_CWORD-1]} in
-              --without-description)
-              ;;
-
-              *)
-                _subrepo_compreply "'--without-description -- generate without description'"
-              ;;
-            esac
-            ;;
-            esac
+        case ${COMP_WORDS[$COMP_CWORD-1]} in
+          --name)
           ;;
-          zsh)
+          --zsh)
+          ;;
+          --bash)
+          ;;
+
+          *)
+            _subrepo_compreply "'--name -- name of the program'"$'\n'"'--zsh -- for zsh'"$'\n'"'--bash -- for bash'"
           ;;
         esac
-
         ;;
         esac
       ;;
@@ -140,23 +127,6 @@ _subrepo() {
         # subcmds
         case ${COMP_WORDS[2]} in
           _complete)
-            case $COMP_CWORD in
-
-            3)
-                _subrepo_compreply "bash"$'\n'"zsh"
-
-            ;;
-            *)
-            # subcmds
-            case ${COMP_WORDS[3]} in
-              bash)
-              ;;
-              zsh)
-              ;;
-            esac
-
-            ;;
-            esac
           ;;
           branch)
           ;;

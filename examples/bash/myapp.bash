@@ -20,32 +20,19 @@ _myapp() {
     case ${COMP_WORDS[1]} in
       _complete)
         case $COMP_CWORD in
-
-        2)
-            _myapp_compreply "bash -- for bash"$'\n'"zsh -- for zsh"
-
-        ;;
         *)
-        # subcmds
-        case ${COMP_WORDS[2]} in
-          bash)
-            case $COMP_CWORD in
-            *)
-            case ${COMP_WORDS[$COMP_CWORD-1]} in
-              --without-description)
-              ;;
-
-              *)
-                _myapp_compreply "'--without-description -- generate without description'"
-              ;;
-            esac
-            ;;
-            esac
+        case ${COMP_WORDS[$COMP_CWORD-1]} in
+          --name)
           ;;
-          zsh)
+          --zsh)
+          ;;
+          --bash)
+          ;;
+
+          *)
+            _myapp_compreply "'--name -- name of the program'"$'\n'"'--zsh -- for zsh'"$'\n'"'--bash -- for bash'"
           ;;
         esac
-
         ;;
         esac
       ;;
@@ -80,23 +67,6 @@ _myapp() {
         # subcmds
         case ${COMP_WORDS[2]} in
           _complete)
-            case $COMP_CWORD in
-
-            3)
-                _myapp_compreply "bash"$'\n'"zsh"
-
-            ;;
-            *)
-            # subcmds
-            case ${COMP_WORDS[3]} in
-              bash)
-              ;;
-              zsh)
-              ;;
-            esac
-
-            ;;
-            esac
           ;;
           cook)
           ;;

@@ -26,58 +26,15 @@ _myapp() {
                 # ---- Command: _complete
                 _arguments -s -C \
                     '1: :->cmd1' \
-                    '2: :->cmd2' \
                     '*: :->args' \
                     '--name[name of the program]:name' \
+                    '--zsh[for zsh]' \
+                    '--bash[for bash]' \
                     && ret=0
 
 
                 case $state in
-                cmd2)
-                    _alternative 'args:cmd3:((bash\:"for bash" zsh\:"for zsh"))'
-                ;;
                 args)
-                    case $line[2] in
-                    bash)
-
-                        # ---- Command: _complete bash
-                        _arguments -s -C \
-                            '1: :->cmd1' \
-                            '2: :->cmd2' \
-                            '*: :->args' \
-                            '--without-description[generate without description]' \
-                            && ret=0
-
-
-                        case $state in
-                        args)
-
-                        ;;
-                        *)
-
-                        ;;
-                        esac
-                    ;;
-                    zsh)
-
-                        # ---- Command: _complete zsh
-                        _arguments -s -C \
-                            '1: :->cmd1' \
-                            '2: :->cmd2' \
-                            '*: :->args' \
-                            && ret=0
-
-
-                        case $state in
-                        args)
-
-                        ;;
-                        *)
-
-                        ;;
-                        esac
-                    ;;
-                    esac
 
                 ;;
                 *)
@@ -134,58 +91,12 @@ _myapp() {
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
-                            '3: :->cmd3' \
                             '*: :->args' \
                             && ret=0
 
 
                         case $state in
-                        cmd3)
-                            _alternative 'args:cmd4:((bash zsh))'
-                        ;;
                         args)
-                            case $line[3] in
-                            bash)
-
-                                # ---- Command: help _complete bash
-                                _arguments -s -C \
-                                    '1: :->cmd1' \
-                                    '2: :->cmd2' \
-                                    '3: :->cmd3' \
-                                    '*: :->args' \
-                                    && ret=0
-
-
-                                case $state in
-                                args)
-
-                                ;;
-                                *)
-
-                                ;;
-                                esac
-                            ;;
-                            zsh)
-
-                                # ---- Command: help _complete zsh
-                                _arguments -s -C \
-                                    '1: :->cmd1' \
-                                    '2: :->cmd2' \
-                                    '3: :->cmd3' \
-                                    '*: :->args' \
-                                    && ret=0
-
-
-                                case $state in
-                                args)
-
-                                ;;
-                                *)
-
-                                ;;
-                                esac
-                            ;;
-                            esac
 
                         ;;
                         *)

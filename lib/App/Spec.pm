@@ -294,18 +294,17 @@ subcommands:
             type: bool
     _complete:
         summary: Generate self completion
+        op: cmd_self_completion
         options:
             -   name: name
                 description: name of the program
-        subcommands:
-            zsh:
-                op: cmd_self_completion_zsh
-                summary: for zsh
-            bash:
-                op: cmd_self_completion_bash
-                summary: for bash
-                options:
-                    -   name: without-description
-                        type: bool
-                        default: false
-                        description: generate without description
+            -   name: zsh
+                description: for zsh
+                type: bool
+            -   name: bash
+                description: for bash
+                type: bool
+#            -   name: without-description
+#                type: bool
+#                default: false
+#                description: generate without description
