@@ -1,6 +1,7 @@
 ---
 name: myapp
-version: 1
+appspec: { "version": 0.001 }
+class: App::Spec::Example::MyApp
 title: My Very Cool App
 abstract: This app can do very cool things
 description: |
@@ -47,18 +48,22 @@ subcommands:
             required: true
             summary: Specify country
             completion:
-              - weather
-              - countries
+              command:
+                - replace: SELF
+                - weather
+                - countries
           -
             name: city
             required: true
             summary: Specify city
             completion:
-              - weather
-              - cities
-              - '--country'
-              -
-                replace: ["SHELL_WORDS", "-1"]
+              command:
+                - replace: SELF
+                - weather
+                - cities
+                - '--country'
+                -
+                  replace: ["SHELL_WORDS", "-1"]
       countries:
         summary: show list of countries
         op: countries
@@ -71,6 +76,8 @@ subcommands:
             aliases: ["c"]
             description: country name
             completion:
-              - weather
-              - countries
+              command:
+                - replace: SELF
+                - weather
+                - countries
 # vim:et:sts=2:sws=2:sw=2:foldmethod=indent

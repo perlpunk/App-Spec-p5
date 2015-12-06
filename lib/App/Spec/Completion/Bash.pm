@@ -187,7 +187,7 @@ EOM
             }
             elsif ($type eq "file" or $type eq "dir") {
             }
-            elsif (my $def = $opt->completion) {
+            elsif ($opt->completion) {
                 my $function_name = $self->dynamic_completion(
                     option => $opt,
                     level => $level,
@@ -226,8 +226,9 @@ sub dynamic_completion {
     my $indent = '        ' x $level;
     my $name = $p->name;
     my $def = $p->completion;
+    my $command = $def->{command};
     my @args;
-    for my $arg (@$def) {
+    for my $arg (@$command) {
         unless (ref $arg) {
             push @args, "'$arg'";
             next;
@@ -245,6 +246,11 @@ sub dynamic_completion {
                     push @args, $string;
                 }
             }
+            else {
+                if ($replace eq "SELF") {
+                    push @args, "\$program";
+                }
+            }
         }
     }
     my $varname = "__${name}_completion";
@@ -256,7 +262,7 @@ sub dynamic_completion {
         . "_" . $name . "_completion";
     my $function = <<"EOM";
 $function_name() \{
-    local param_$name=`\$program @args`
+    local param_$name=`@args`
     _${appname}_compreply "\$param_$name"
 \}
 EOM
@@ -286,7 +292,7 @@ EOM
     }
     elsif ($type eq "file" or $type eq "dir") {
     }
-    elsif (my $def = $param->completion) {
+    elsif ($param->completion) {
         my $function_name = $self->dynamic_completion(
             option => $param,
             level => $level,

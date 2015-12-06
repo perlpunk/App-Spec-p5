@@ -1,5 +1,5 @@
 name: subrepo
-version: 1
+appspec: { "version": 0.001 }
 title: Git Submodule Alternative
 markup: swim
 description: |
@@ -58,8 +58,10 @@ subcommands:
         required: false
         description: Subrepo
         completion:
-          - status
-          - '--quiet'
+          command:
+            - replace: SELF
+            - status
+            - '--quiet'
     options: &pull_options
       - &option_all
         name: all
@@ -95,8 +97,10 @@ subcommands:
         required: true
         description: Subrepo
         completion:
-          - status
-          - '--quiet'
+          command:
+            - replace: SELF
+            - status
+            - '--quiet'
       -
         name: subreporef
         description: Subrepo ref

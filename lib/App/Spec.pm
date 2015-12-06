@@ -17,6 +17,8 @@ use YAML::Syck ();
 use Moo;
 
 has name => ( is => 'rw' );
+has appspec => ( is => 'rw' );
+has class => ( is => 'rw' );
 has title => ( is => 'rw' );
 has markup => ( is => 'rw', default => 'pod' );
 has options => ( is => 'rw' );
@@ -30,6 +32,15 @@ my $default_spec;
 sub _read_default_spec {
     $default_spec ||= YAML::Syck::Load($DATA);
     return $default_spec;
+}
+
+sub runner {
+    my ($self) = @_;
+    my $class = $self->class;
+    my $run = $class->new({
+        spec => $self
+    });
+    return $run;
 }
 
 sub read {
@@ -86,6 +97,8 @@ sub read {
 
     my $self = $class->new({
         name => $spec->{name},
+        appspec => $spec->{appspec},
+        class => $spec->{class},
         title => $spec->{title},
         markup => $spec->{markup},
         options => [map {

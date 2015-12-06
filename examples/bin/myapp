@@ -48,9 +48,11 @@ package main;
 use App::Spec;
 
 my $spec = App::Spec->read("$Bin/../myapp-spec.yaml");
-my $run = App::Spec::Example::MyApp->new({
-    spec => $spec,
-});
+my $run = $spec->runner;
+# or:
+#my $run = App::Spec::Example::MyApp->new({
+#    spec => $spec,
+#});
 $run->run;
 
 

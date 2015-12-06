@@ -196,8 +196,9 @@ sub dynamic_completion {
     my $indent = '        ' x $level;
     my $name = $p->name;
     my $def = $p->completion;
+    my $command = $def->{command};
     my @args;
-    for my $arg (@$def) {
+    for my $arg (@$command) {
         unless (ref $arg) {
             push @args, "'$arg'";
             next;
@@ -215,6 +216,11 @@ sub dynamic_completion {
                     push @args, $string;
                 }
             }
+            else {
+                if ($replace eq "SELF") {
+                    push @args, "\$program";
+                }
+            }
         }
     }
     my $varname = "__${name}_completion";
@@ -227,7 +233,7 @@ sub dynamic_completion {
     my $function = <<"EOM";
 $function_name() \{
     local __dynamic_completion
-    IFS=\$'\\n' set -A __dynamic_completion `\$program @args`
+    IFS=\$'\\n' set -A __dynamic_completion `@args`
     compadd -X "$name:" \$__dynamic_completion
 \}
 EOM
@@ -268,7 +274,7 @@ sub options {
         my $type = $opt->type;
         my $aliases = $opt->aliases;
         my $values = '';
-        if (my $def = $opt->completion) {
+        if ($opt->completion) {
             my @names = map {
                 length > 1 ? "--$_" : "-$_"
             } ($name, @$aliases);
