@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 package App::Spec::Run;
+use Data::Dumper;
 
 use 5.010;
 
@@ -50,14 +51,14 @@ sub run {
         my @k = keys %$commands;
         my $cmd = shift @ARGV;
         if (not defined $cmd and not $op) {
-            say $spec->usage(\@cmds);
+            warn $spec->usage(\@cmds);
             die "Missing subcommand(s)";
         }
         elsif (not defined $cmd) {
             last;
         }
         $cmd_spec = $commands->{ $cmd } or do {
-            say $spec->usage(\@cmds);
+            warn $spec->usage(\@cmds);
             die "Unknown subcommand '$cmd'";
         };
         my $options = $cmd_spec->options;
@@ -78,7 +79,7 @@ sub run {
             warn "Missing op for commands (@cmds)\n";
         }
         my $help = $spec->usage(\@cmds);
-        say $help;
+        warn $help;
         exit;
     }
 
@@ -104,10 +105,10 @@ sub run {
     $self->parameters(\%parameters);
     $self->commands(\@cmds);
     unless ($ok) {
-        warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\%errs], ['errs']);
+        my $err = Data::Dumper->Dump([\%errs], ['errs']);
         my $help = $spec->usage(\@cmds);
-        say $help;
-        die "sorry =(\n";
+        warn $help;
+        die "$err\nsorry =(\n";
     }
     $self->$op;
 
