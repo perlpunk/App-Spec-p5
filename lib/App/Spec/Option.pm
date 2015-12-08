@@ -8,6 +8,7 @@ use Moo;
 
 has name => ( is => 'ro' );
 has type => ( is => 'ro' );
+has multiple => ( is => 'ro' );
 has required => ( is => 'ro' );
 has summary => ( is => 'ro' );
 has description => ( is => 'ro' );
@@ -29,6 +30,7 @@ sub build {
     my $self = $class->new({
         name => $args->{name},
         type => $args->{type} // 'string',
+        multiple => $args->{multiple} ? 1 : 0,
         required => $args->{required} ? 1 : 0,
         summary => $summary,
         description => $description,

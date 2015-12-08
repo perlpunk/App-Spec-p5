@@ -23,7 +23,13 @@ sub cook {
 }
 
 sub weather {
-    say "rainy =(";
+    my ($self) = @_;
+    my $param = $self->parameters;
+    my $country = $param->{country};
+    my $cities = $param->{city};
+    for my $city (@$cities) {
+        say "It's rainy in $country/$city =(";
+    }
 }
 
 my %countries = (
@@ -39,7 +45,7 @@ sub countries {
 sub cities {
     my ($self) = @_;
     my $country = $self->{options}->{country};
-    my @countries = defined $country ? $country : sort keys %countries;
+    my @countries = @$country ? @$country : sort keys %countries;
     say for map { sort @$_ } @countries{ @countries };
 }
 

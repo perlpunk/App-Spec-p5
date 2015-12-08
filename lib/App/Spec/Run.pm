@@ -87,7 +87,20 @@ sub run {
     for my $p (@$parameters) {
         my $name = $p->name;
         my $type = $p->type;
-        my $value = shift @ARGV;
+        my $multiple = $p->multiple;
+        my $required = $p->required;
+        my $value;
+        unless (@ARGV) {
+            warn $spec->usage(\@cmds);
+            die "Missing parameter $name";
+        }
+        if ($multiple) {
+            $value = [@ARGV];
+            @ARGV = ();
+        }
+        else {
+            $value = shift @ARGV;
+        }
         $parameters{ $name } = $value;
         $param_specs{ $name } = $p;
     }

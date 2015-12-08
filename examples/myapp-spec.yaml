@@ -55,7 +55,8 @@ subcommands:
           -
             name: city
             required: true
-            summary: Specify city
+            multiple: 1
+            summary: Specify city or cities
             completion:
               command:
                 - replace: SELF
@@ -74,7 +75,8 @@ subcommands:
           -
             name: country
             aliases: ["c"]
-            description: country name
+            multiple: 1
+            description: country name(s)
             completion:
               command:
                 - replace: SELF

@@ -12,7 +12,7 @@ use App::Spec::Parameter;
 use App::Spec::Completion::Zsh;
 use App::Spec::Completion::Bash;
 use List::Util qw/ any /;
-use YAML::Syck ();
+use YAML::XS ();
 
 use Moo;
 
@@ -30,7 +30,7 @@ my $DATA = do { local $/; <DATA> };
 my $default_spec;
 
 sub _read_default_spec {
-    $default_spec ||= YAML::Syck::Load($DATA);
+    $default_spec ||= YAML::XS::Load($DATA);
     return $default_spec;
 }
 
@@ -52,10 +52,10 @@ sub read {
     my $spec;
     if (ref $file eq 'GLOB') {
         my $data = do { local $/; <$file> };
-        $spec = eval { YAML::Syck::Load($data) };
+        $spec = eval { YAML::XS::Load($data) };
     }
     elsif (not ref $file) {
-        $spec = eval { YAML::Syck::LoadFile($file) };
+        $spec = eval { YAML::XS::LoadFile($file) };
     }
     elsif (ref $file eq 'HASH') {
         $spec = $file;
@@ -160,10 +160,28 @@ EOM
         my $maxlength = 0;
         my @table;
         for my $param (@$parameters) {
-            my $name = $param->{name};
+            my $name = $param->name;
             my $summary = $param->summary;
-            $usage .= " <$name>";
-            push @table, [$name, $summary];
+            if ($param->multiple and $param->required) {
+                $usage .= " <$name>+";
+            }
+            elsif ($param->multiple) {
+                $usage .= " [<$name>+]";
+            }
+            elsif ($param->required) {
+                $usage .= " <$name>";
+            }
+            else {
+                $usage .= " [<$name>]";
+            }
+            my ($req, $multi) = (' ', '  ');
+            if ($param->required) {
+                $req = "*";
+            }
+            if ($param->multiple) {
+                $multi = '[]';
+            }
+            push @table, [$name, $req, $multi, $summary];
             if (length $name > $maxlength) {
                 $maxlength = length $name;
             }
@@ -187,7 +205,14 @@ EOM
             if (length $string > $maxlength) {
                 $maxlength = length $string;
             }
-            push @table, [$string, $summary];
+            my ($req, $multi) = (' ', '  ');
+            if ($opt->required) {
+                $req = "*";
+            }
+            if ($opt->multiple) {
+                $multi = '[]';
+            }
+            push @table, [$string, $req, $multi, $summary];
         }
         $body .= "\nOptions:\n";
         $body .= $self->_output_table(\@table, [$maxlength]);
@@ -271,6 +296,10 @@ sub make_getopt {
             $spec .= "=s";
         }
         $specs->{ $name } = $opt;
+        if ($opt->multiple) {
+            $result->{ $name } = [];
+            $spec .= '@';
+        }
         push @getopt, $spec, \$result->{ $name },
     }
     return @getopt;
