@@ -40,7 +40,7 @@ sub completion_commands {
     my $commands = $args{commands};
     my $level = $args{level};
     my $previous = $args{previous} || [];
-    my ($opt, $opt_comp) = $self->options(
+    my ($opt) = $self->options(
         options => $args{options},
         level => $level,
         functions => $functions,
@@ -70,11 +70,10 @@ sub completion_commands {
     if ($param_args) {
         $arguments .= "$param_args";
     }
-    my $default_args = '*: :->args';
-    unless (keys %$commands) {
-#        $default_args = "*::file:_files";
+    if (keys %$commands) {
+        $arguments .= $indent2 . "'*: :->args' \\\n";
     }
-    $arguments .= $indent2 . "'$default_args' \\\n";
+
     if ($opt) {
         $arguments .= "$opt \\\n";
     }
@@ -112,25 +111,35 @@ $indent# ---- Command: @$previous
 $arguments
 $param_case
 EOM
-        $body .= <<"EOM";
-${indent}case \$state in
-EOM
+    my $cmd_state = '';
     if ($cmds) {
-        $body .= <<"EOM";
+        $cmd_state = <<"EOM";
 ${indent}cmd$level)
 ${indent}    $cmds
 ${indent};;
 EOM
     }
-        $body .= <<"EOM";
+
+    my $subcmd_state = '';
+    if (keys %$commands) {
+        $subcmd_state = <<"EOM";
 ${indent}args)
 $subcmds
 ${indent};;
-${indent}*)
-$opt_comp
-${indent};;
+EOM
+    }
+
+    if ($cmd_state or $subcmd_state) {
+        $body .= <<"EOM";
+${indent}case \$state in
+EOM
+
+        $body .= <<"EOM";
+$cmd_state
+$subcmd_state
 ${indent}esac
 EOM
+    }
 
     return $body;
 }
@@ -149,7 +158,11 @@ sub parameters {
     my $case = $indent . "case \$state in\n";
     for my $p (@$parameters) {
         my $name = $p->name;
-        $arguments .= $indent . "    '$count: :->$name' \\\n";
+        my $num = $count;
+        if ($p->multiple) {
+            $num = "*";
+        }
+        $arguments .= $indent . "    '$num: :->$name' \\\n";
         $count++;
 
         my $completion = '';
@@ -210,7 +223,12 @@ sub dynamic_completion {
                     my $num = $replace->[1];
                     my $index = "\$CURRENT";
                     if ($num ne 'CURRENT') {
-                        $index .= $num;
+                        if ($num =~ m/^-/) {
+                            $index .= $num;
+                        }
+                        else {
+                            $index = $num;
+                        }
                     }
                     my $string = qq{"\$words\[$index\]"};
                     push @args, $string;
@@ -269,7 +287,6 @@ sub options {
     my $level = $args{level};
     my $indent = '        ' x $level;
     my @options;
-    my @option_comp;
     for my $opt (@$options) {
         my $name = $opt->name;
         my $desc = $opt->description;
@@ -289,7 +306,6 @@ sub options {
             );
             $values = ":$name:$function_name";
             $comp .= $indent . ";;\n";
-#            push @option_comp, $comp;
         }
         elsif (ref $type) {
             if (my $list = $type->{enum}) {
@@ -305,31 +321,20 @@ sub options {
         }
         $desc =~ s/['`]/'"'"'/g;
         $desc =~ s/\$/\\\$/g;
+
+        my $multiple = $opt->multiple ? "*" : "";
 #        '(-c --count)'{-c,--count}'[Number of list items to show]:c' \
 #        '(-a --all)'{-a,--all}'[Show all list items]' \
-        my $name_str;
-        if (@$aliases) {
-            my @names = map {
-                length > 1 ? "--$_" : "-$_"
-            } ($name, @$aliases);
-            $name_str = "(@names)'\{" . join(',', @names) . "\}'";
+        my @names = map {
+            length > 1 ? "--$_" : "-$_"
+        } ($name, @$aliases);
+        for my $name (@names) {
+            my $str = "'$multiple$name\[$desc\]$values'";
+            push @options, $indent . "    $str";
         }
-        else {
-            $name_str = "--$name";
-        }
-        my $str = "'$name_str\[$desc\]$values'";
-        push @options, $indent . "    $str";
-    }
-    my $option_comp;
-    if (@option_comp) {
-        $option_comp = <<"EOM";
-${indent}    case \$words[\$CURRENT-1] in
-@{[ join '', @option_comp ]}
-${indent}    esac
-EOM
     }
     my $string = join " \\\n", @options;
-    return $string, $option_comp;
+    return $string;
 }
 
 

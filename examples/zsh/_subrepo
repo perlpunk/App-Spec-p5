@@ -10,7 +10,8 @@ _subrepo() {
         _arguments -s  \
             '1: :->cmd1' \
             '*: :->args' \
-            '(--help -h)'{--help,-h}'[Show command help]' \
+            '--help[Show command help]' \
+            '-h[Show command help]' \
             && ret=0
 
 
@@ -18,6 +19,7 @@ _subrepo() {
         cmd1)
             _alternative 'args:cmd2:((_complete\:"Generate self completion" branch\:"Create a branch with local subrepo commits since last pull." clean\:"Remove artifacts created by '"'"'fetch'"'"' and '"'"'branch'"'"' commands." clone\:"Add a repository as a subrepo in a subdir of your repository." commit\:"Add subrepo branch to current history as a single commit." fetch\:"Fetch the remote/upstream content for a subrepo." help\:"Same as '"'"'git help subrepo'"'"'" init\:"Turn an existing subdirectory into a subrepo." pull\:"Update the subrepo subdir with the latest upstream changes." push\:"Push a properly merged subrepo branch back upstream." status\:"Get the status of a subrepo." version\:"display version information about git-subrepo"))'
         ;;
+
         args)
             case $line[1] in
             _complete)
@@ -25,21 +27,12 @@ _subrepo() {
                 # ---- Command: _complete
                 _arguments -s -C \
                     '1: :->cmd1' \
-                    '*: :->args' \
                     '--name[name of the program]:name' \
                     '--zsh[for zsh]' \
                     '--bash[for bash]' \
                     && ret=0
 
 
-                case $state in
-                args)
-
-                ;;
-                *)
-
-                ;;
-                esac
             ;;
             branch)
 
@@ -47,7 +40,6 @@ _subrepo() {
                 _arguments -s -C \
                     '1: :->cmd1' \
                     '2: :->subrepo' \
-                    '*: :->args' \
                     '--all[All subrepos]' \
                     && ret=0
 
@@ -57,14 +49,6 @@ _subrepo_branch_param_subrepo_completion
                 ;;
                 esac
 
-                case $state in
-                args)
-
-                ;;
-                *)
-
-                ;;
-                esac
             ;;
             clean)
 
@@ -72,7 +56,6 @@ _subrepo_branch_param_subrepo_completion
                 _arguments -s -C \
                     '1: :->cmd1' \
                     '2: :->subrepo' \
-                    '*: :->args' \
                     '--all[All subrepos]' \
                     && ret=0
 
@@ -82,14 +65,6 @@ _subrepo_clean_param_subrepo_completion
                 ;;
                 esac
 
-                case $state in
-                args)
-
-                ;;
-                *)
-
-                ;;
-                esac
             ;;
             clone)
 
@@ -98,9 +73,10 @@ _subrepo_clean_param_subrepo_completion
                     '1: :->cmd1' \
                     '2: :->repository' \
                     '3: :->subdir' \
-                    '*: :->args' \
-                    '(--branch -b)'{--branch,-b}'[Upstream branch]:branch' \
-                    '(--force -f)'{--force,-f}'[reclone (completely replace) an existing subdir.]' \
+                    '--branch[Upstream branch]:branch' \
+                    '-b[Upstream branch]:branch' \
+                    '--force[reclone (completely replace) an existing subdir.]' \
+                    '-f[reclone (completely replace) an existing subdir.]' \
                     && ret=0
 
                 case $state in
@@ -112,14 +88,6 @@ _files
                 ;;
                 esac
 
-                case $state in
-                args)
-
-                ;;
-                *)
-
-                ;;
-                esac
             ;;
             commit)
 
@@ -128,7 +96,6 @@ _files
                     '1: :->cmd1' \
                     '2: :->subrepo' \
                     '3: :->subreporef' \
-                    '*: :->args' \
                     && ret=0
 
                 case $state in
@@ -140,14 +107,6 @@ _subrepo_commit_param_subrepo_completion
                 ;;
                 esac
 
-                case $state in
-                args)
-
-                ;;
-                *)
-
-                ;;
-                esac
             ;;
             fetch)
 
@@ -155,7 +114,6 @@ _subrepo_commit_param_subrepo_completion
                 _arguments -s -C \
                     '1: :->cmd1' \
                     '2: :->subrepo' \
-                    '*: :->args' \
                     '--all[All subrepos]' \
                     && ret=0
 
@@ -165,14 +123,6 @@ _subrepo_fetch_param_subrepo_completion
                 ;;
                 esac
 
-                case $state in
-                args)
-
-                ;;
-                *)
-
-                ;;
-                esac
             ;;
             help)
 
@@ -188,6 +138,7 @@ _subrepo_fetch_param_subrepo_completion
                 cmd2)
                     _alternative 'args:cmd3:((_complete branch clean clone commit fetch init pull push status version))'
                 ;;
+
                 args)
                     case $line[2] in
                     _complete)
@@ -196,18 +147,9 @@ _subrepo_fetch_param_subrepo_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
-                            '*: :->args' \
                             && ret=0
 
 
-                        case $state in
-                        args)
-
-                        ;;
-                        *)
-
-                        ;;
-                        esac
                     ;;
                     branch)
 
@@ -215,18 +157,9 @@ _subrepo_fetch_param_subrepo_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
-                            '*: :->args' \
                             && ret=0
 
 
-                        case $state in
-                        args)
-
-                        ;;
-                        *)
-
-                        ;;
-                        esac
                     ;;
                     clean)
 
@@ -234,18 +167,9 @@ _subrepo_fetch_param_subrepo_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
-                            '*: :->args' \
                             && ret=0
 
 
-                        case $state in
-                        args)
-
-                        ;;
-                        *)
-
-                        ;;
-                        esac
                     ;;
                     clone)
 
@@ -253,18 +177,9 @@ _subrepo_fetch_param_subrepo_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
-                            '*: :->args' \
                             && ret=0
 
 
-                        case $state in
-                        args)
-
-                        ;;
-                        *)
-
-                        ;;
-                        esac
                     ;;
                     commit)
 
@@ -272,18 +187,9 @@ _subrepo_fetch_param_subrepo_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
-                            '*: :->args' \
                             && ret=0
 
 
-                        case $state in
-                        args)
-
-                        ;;
-                        *)
-
-                        ;;
-                        esac
                     ;;
                     fetch)
 
@@ -291,18 +197,9 @@ _subrepo_fetch_param_subrepo_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
-                            '*: :->args' \
                             && ret=0
 
 
-                        case $state in
-                        args)
-
-                        ;;
-                        *)
-
-                        ;;
-                        esac
                     ;;
                     init)
 
@@ -310,18 +207,9 @@ _subrepo_fetch_param_subrepo_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
-                            '*: :->args' \
                             && ret=0
 
 
-                        case $state in
-                        args)
-
-                        ;;
-                        *)
-
-                        ;;
-                        esac
                     ;;
                     pull)
 
@@ -329,18 +217,9 @@ _subrepo_fetch_param_subrepo_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
-                            '*: :->args' \
                             && ret=0
 
 
-                        case $state in
-                        args)
-
-                        ;;
-                        *)
-
-                        ;;
-                        esac
                     ;;
                     push)
 
@@ -348,18 +227,9 @@ _subrepo_fetch_param_subrepo_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
-                            '*: :->args' \
                             && ret=0
 
 
-                        case $state in
-                        args)
-
-                        ;;
-                        *)
-
-                        ;;
-                        esac
                     ;;
                     status)
 
@@ -367,18 +237,9 @@ _subrepo_fetch_param_subrepo_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
-                            '*: :->args' \
                             && ret=0
 
 
-                        case $state in
-                        args)
-
-                        ;;
-                        *)
-
-                        ;;
-                        esac
                     ;;
                     version)
 
@@ -386,25 +247,14 @@ _subrepo_fetch_param_subrepo_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
-                            '*: :->args' \
                             && ret=0
 
 
-                        case $state in
-                        args)
-
-                        ;;
-                        *)
-
-                        ;;
-                        esac
                     ;;
                     esac
 
                 ;;
-                *)
 
-                ;;
                 esac
             ;;
             init)
@@ -413,9 +263,10 @@ _subrepo_fetch_param_subrepo_completion
                 _arguments -s -C \
                     '1: :->cmd1' \
                     '2: :->subdir' \
-                    '*: :->args' \
-                    '(--remote -r)'{--remote,-r}'[Specify remote repository]:remote' \
-                    '(--branch -b)'{--branch,-b}'[Upstream branch]:branch' \
+                    '--remote[Specify remote repository]:remote' \
+                    '-r[Specify remote repository]:remote' \
+                    '--branch[Upstream branch]:branch' \
+                    '-b[Upstream branch]:branch' \
                     && ret=0
 
                 case $state in
@@ -424,14 +275,6 @@ _files
                 ;;
                 esac
 
-                case $state in
-                args)
-
-                ;;
-                *)
-
-                ;;
-                esac
             ;;
             pull)
 
@@ -439,11 +282,13 @@ _files
                 _arguments -s -C \
                     '1: :->cmd1' \
                     '2: :->subrepo' \
-                    '*: :->args' \
                     '--all[All subrepos]' \
-                    '(--branch -b)'{--branch,-b}'[Upstream branch]:branch' \
-                    '(--remote -r)'{--remote,-r}'[Specify remote repository]:remote' \
-                    '(--update -u)'{--update,-u}'[update]:update' \
+                    '--branch[Upstream branch]:branch' \
+                    '-b[Upstream branch]:branch' \
+                    '--remote[Specify remote repository]:remote' \
+                    '-r[Specify remote repository]:remote' \
+                    '--update[update]:update' \
+                    '-u[update]:update' \
                     && ret=0
 
                 case $state in
@@ -452,14 +297,6 @@ _subrepo_pull_param_subrepo_completion
                 ;;
                 esac
 
-                case $state in
-                args)
-
-                ;;
-                *)
-
-                ;;
-                esac
             ;;
             push)
 
@@ -467,11 +304,13 @@ _subrepo_pull_param_subrepo_completion
                 _arguments -s -C \
                     '1: :->cmd1' \
                     '2: :->subrepo' \
-                    '*: :->args' \
                     '--all[All subrepos]' \
-                    '(--branch -b)'{--branch,-b}'[Upstream branch]:branch' \
-                    '(--remote -r)'{--remote,-r}'[Specify remote repository]:remote' \
-                    '(--update -u)'{--update,-u}'[update]:update' \
+                    '--branch[Upstream branch]:branch' \
+                    '-b[Upstream branch]:branch' \
+                    '--remote[Specify remote repository]:remote' \
+                    '-r[Specify remote repository]:remote' \
+                    '--update[update]:update' \
+                    '-u[update]:update' \
                     && ret=0
 
                 case $state in
@@ -480,14 +319,6 @@ _subrepo_push_param_subrepo_completion
                 ;;
                 esac
 
-                case $state in
-                args)
-
-                ;;
-                *)
-
-                ;;
-                esac
             ;;
             status)
 
@@ -495,8 +326,8 @@ _subrepo_push_param_subrepo_completion
                 _arguments -s -C \
                     '1: :->cmd1' \
                     '2: :->subrepo' \
-                    '*: :->args' \
-                    '(--quiet -q)'{--quiet,-q}'[Just print names]:quiet' \
+                    '--quiet[Just print names]:quiet' \
+                    '-q[Just print names]:quiet' \
                     && ret=0
 
                 case $state in
@@ -505,39 +336,20 @@ _subrepo_status_param_subrepo_completion
                 ;;
                 esac
 
-                case $state in
-                args)
-
-                ;;
-                *)
-
-                ;;
-                esac
             ;;
             version)
 
                 # ---- Command: version
                 _arguments -s -C \
                     '1: :->cmd1' \
-                    '*: :->args' \
                     && ret=0
 
 
-                case $state in
-                args)
-
-                ;;
-                *)
-
-                ;;
-                esac
             ;;
             esac
 
         ;;
-        *)
 
-        ;;
         esac
 
 }

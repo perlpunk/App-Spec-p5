@@ -64,7 +64,7 @@ subcommands:
                 - cities
                 - '--country'
                 -
-                  replace: ["SHELL_WORDS", "-1"]
+                  replace: ["SHELL_WORDS", "4"]
       countries:
         summary: show list of countries
         op: countries
