@@ -10,10 +10,6 @@ _myapp() {
         _arguments -s  \
             '1: :->cmd1' \
             '*: :->args' \
-            '--verbose[be verbose]' \
-            '-v[be verbose]' \
-            '--help[Show command help]' \
-            '-h[Show command help]' \
             && ret=0
 
 
@@ -29,6 +25,10 @@ _myapp() {
                 # ---- Command: _complete
                 _arguments -s -C \
                     '1: :->cmd1' \
+                    '--verbose[be verbose]' \
+                    '-v[be verbose]' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
                     '--name[name of the program]:name' \
                     '--zsh[for zsh]' \
                     '--bash[for bash]' \
@@ -42,6 +42,10 @@ _myapp() {
                 _arguments -s -C \
                     '1: :->cmd1' \
                     '2: :->drink' \
+                    '--verbose[be verbose]' \
+                    '-v[be verbose]' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
                     '--with[Drink with ...]:with:("almond milk" "soy milk" "oat milk" "spelt milk" "cow milk")' \
                     '--sugar[add sugar]' \
                     '-s[add sugar]' \
@@ -61,7 +65,6 @@ _myapp() {
                     '1: :->cmd1' \
                     '2: :->cmd2' \
                     '*: :->args' \
-                    '--all[]' \
                     && ret=0
 
 
@@ -78,6 +81,11 @@ _myapp() {
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
+                            '--verbose[be verbose]' \
+                            '-v[be verbose]' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
+                            '--all[]' \
                             && ret=0
 
 
@@ -88,6 +96,11 @@ _myapp() {
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
+                            '--verbose[be verbose]' \
+                            '-v[be verbose]' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
+                            '--all[]' \
                             && ret=0
 
 
@@ -117,6 +130,11 @@ _myapp() {
                                     '1: :->cmd1' \
                                     '2: :->cmd2' \
                                     '3: :->cmd3' \
+                                    '--verbose[be verbose]' \
+                                    '-v[be verbose]' \
+                                    '--help[Show command help]' \
+                                    '-h[Show command help]' \
+                                    '--all[]' \
                                     && ret=0
 
 
@@ -128,6 +146,11 @@ _myapp() {
                                     '1: :->cmd1' \
                                     '2: :->cmd2' \
                                     '3: :->cmd3' \
+                                    '--verbose[be verbose]' \
+                                    '-v[be verbose]' \
+                                    '--help[Show command help]' \
+                                    '-h[Show command help]' \
+                                    '--all[]' \
                                     && ret=0
 
 
@@ -139,6 +162,11 @@ _myapp() {
                                     '1: :->cmd1' \
                                     '2: :->cmd2' \
                                     '3: :->cmd3' \
+                                    '--verbose[be verbose]' \
+                                    '-v[be verbose]' \
+                                    '--help[Show command help]' \
+                                    '-h[Show command help]' \
+                                    '--all[]' \
                                     && ret=0
 
 
@@ -178,6 +206,10 @@ _myapp() {
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
+                            '--verbose[be verbose]' \
+                            '-v[be verbose]' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
                             '*--country[country name(s)]:country:_myapp_weather_cities_option_country_completion' \
                             '*-c[country name(s)]:country:_myapp_weather_cities_option_country_completion' \
                             && ret=0
@@ -190,6 +222,10 @@ _myapp() {
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
+                            '--verbose[be verbose]' \
+                            '-v[be verbose]' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
                             && ret=0
 
 
@@ -202,6 +238,10 @@ _myapp() {
                             '2: :->cmd2' \
                             '3: :->country' \
                             '*: :->city' \
+                            '--verbose[be verbose]' \
+                            '-v[be verbose]' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
                             && ret=0
 
                         case $state in

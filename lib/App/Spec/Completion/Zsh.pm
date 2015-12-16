@@ -38,14 +38,9 @@ sub completion_commands {
     my $functions = $args{functions};
     my $spec = $self->spec;
     my $commands = $args{commands};
+    my $options = $args{options};
     my $level = $args{level};
     my $previous = $args{previous} || [];
-    my ($opt) = $self->options(
-        options => $args{options},
-        level => $level,
-        functions => $functions,
-        previous => $args{previous},
-    );
 
     my $indent = '        ' x $level;
     my $indent2 = '        ' x $level . '    ';
@@ -74,7 +69,13 @@ sub completion_commands {
         $arguments .= $indent2 . "'*: :->args' \\\n";
     }
 
-    if ($opt) {
+    if (@$options and not keys %$commands) {
+        my ($opt) = $self->options(
+            options => $options,
+            level => $level,
+            functions => $functions,
+            previous => $args{previous},
+        );
         $arguments .= "$opt \\\n";
     }
     $arguments .= $indent2 . "&& ret=0\n";
@@ -93,7 +94,7 @@ sub completion_commands {
             $subcmds .= $indent2 . "$name)\n";
             my $sc = $self->completion_commands(
                 commands => $cmd_spec->subcommands || [],
-                options => $cmd_spec->options,
+                options => [ @$options, @{ $cmd_spec->options } ],
                 parameters => $cmd_spec->parameters,
                 level => $level + 1,
                 previous => [@$previous, $name],
