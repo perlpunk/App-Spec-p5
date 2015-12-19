@@ -140,7 +140,10 @@ sub cmd_self_completion {
     my ($self) = @_;
     my $options = $self->options;
     my $shell = $options->{zsh} ? "zsh" : $options->{bash} ? "bash" : '';
-    die "Specify which shell" unless $shell;
+    unless ($shell) {
+        my $ppid = getppid();
+        chomp($shell = `ps --no-headers -o cmd $ppid`);
+    }
     my $spec = $self->spec;
     my $completion = $spec->generate_completion(
         shell => $shell,
