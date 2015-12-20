@@ -1,14 +1,12 @@
 use strict;
 use warnings;
 package App::Spec::Run;
-use Data::Dumper;
-
 use 5.010;
-
 our $VERSION = '0.000'; # VERSION
 
+use List::Util qw/ any /;
+use Data::Dumper;
 use App::Spec::Options;
-
 use Getopt::Long qw/ :config pass_through /;
 use Moo;
 
@@ -165,6 +163,9 @@ sub cmd_self_completion {
     unless ($shell) {
         my $ppid = getppid();
         chomp($shell = `ps --no-headers -o cmd $ppid`);
+    }
+    unless (any { $_ eq $shell } qw/ bash zsh / ) {
+        die "Specify which shell, '$shell' not supported";
     }
     my $spec = $self->spec;
     my $completion = $spec->generate_completion(
