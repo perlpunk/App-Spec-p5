@@ -91,6 +91,7 @@ sub process_commands_options {
     my $commands = $spec->subcommands;
     my $op;
     my $cmd_spec;
+    my $subcommand_required = 1;
     while (keys %$commands) {
         my @k = keys %$commands;
         my $cmd = shift @ARGV;
@@ -105,6 +106,7 @@ sub process_commands_options {
             warn $spec->usage(\@cmds);
             die "Unknown subcommand '$cmd'";
         };
+        $subcommand_required = $cmd_spec->{subcommand_required} // 1;
         my $cmd_options = $cmd_spec->options;
         my @getopt = $spec->make_getopt($cmd_options, \%options, $option_specs);
         GetOptions(@getopt);
@@ -113,18 +115,16 @@ sub process_commands_options {
         $op = $cmd_spec->op if $cmd_spec->op;
         @$param_list = @{ $cmd_spec->parameters };
     }
-    unless ($op) {
-        my $subcommands = $commands;
-        my @names = sort keys %$subcommands;
-        if (@names) {
-            warn "Missing subcommand (one of (@names))\n";
-        }
-        else {
-            warn "Missing op for commands (@cmds)\n";
-        }
+    my @names = sort keys %$commands;
+    if (@names and $subcommand_required) {
+        warn "Missing subcommand\n";
         my $help = $spec->usage(\@cmds);
-        warn $help;
-        exit;
+        die $help;
+    }
+    unless ($op) {
+        warn "Missing op for commands (@cmds)\n";
+        my $help = $spec->usage(\@cmds);
+        die $help;
     }
     $self->commands(\@cmds);
     $self->options(\%options);
