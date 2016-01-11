@@ -46,7 +46,13 @@ sub process {
                 $errs->{ $type }->{ $name } = "missing";
                 next;
             }
-            next;
+            if (defined (my $default = $spec->default)) {
+                $value = $default;
+                $items->{ $name } = $value;
+            }
+            else {
+                next;
+            }
         }
 
         if (my $filter = $spec->filter) {

@@ -230,6 +230,7 @@ sub _output_table {
         defined $lengths->[$_] ? "%-$lengths->[$_]s" : "%s"
     } 0 .. @{ $table->[0] } - 1;
     for my $row (@$table) {
+        no warnings 'uninitialized';
         $string .= sprintf join('  ', @lengths) . "\n", @$row;
     }
     return $string;
