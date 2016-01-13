@@ -40,4 +40,22 @@ sub build {
     return $self;
 }
 
+sub to_usage_header {
+    my ($self) = @_;
+    my $name = $self->name;
+    my $usage = '';
+    if ($self->multiple and $self->required) {
+        $usage = "<$name>+";
+    }
+    elsif ($self->multiple) {
+        $usage = "[<$name>+]";
+    }
+    elsif ($self->required) {
+        $usage = "<$name>";
+    }
+    else {
+        $usage = "[<$name>]";
+    }
+}
+
 1;

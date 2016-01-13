@@ -12,7 +12,7 @@ This is a wrapper around the corelist tool which adds shell completion
 
 =head2 GLOBAL OPTIONS
 
-    --help -h   Show command help
+    --help -h    Show command help
 
 
 =head2 SUBCOMMANDS
@@ -25,13 +25,13 @@ Show diff between two Perl versions
 
 Options:
 
-    --added     Show only added modules  
-    --removed   Show only removed modules
+    --added      Show only added modules  
+    --removed    Show only removed modules
 
 Parameters:
 
-    perl1  * Perl version 1
-    perl2  * Perl version 2
+    perl1  *  Perl version 1
+    perl2  *  Perl version 2
 
 =head3  features
 
@@ -39,13 +39,17 @@ Parameters:
 
 List features with perl versions
 
+If given a feature name as a parameter, show the
+perl feature bundle it was first released with.
+
+
 Options:
 
-    --raw   List only feature names
+    --raw    List only feature names
 
 Parameters:
 
-    feature   feature name
+    feature    feature name
 
 =head3  module
 
@@ -55,13 +59,13 @@ Show for which perl version the module was first released
 
 Options:
 
-    --all -a    Show all perl and module versions
-    --date -d   Show by date                     
-    --perl -p   Show by Perl Version             
+    --all -a     Show all perl and module versions
+    --date -d    Show by date                     
+    --perl -p    Show by Perl Version             
 
 Parameters:
 
-    module  * Module name
+    module  *  Module name
 
 =head3  modules
 
@@ -78,8 +82,8 @@ Perl Versions
 
 Options:
 
-    --raw -r    Show raw output without header
-    --release   Show perl releases with dates 
+    --raw -r     Show raw output without header
+    --release    Show perl releases with dates 
 
 
 =head3  help
@@ -90,7 +94,7 @@ Show command help
 
 Options:
 
-    --all   
+    --all    
 
 
 =head3  _complete
@@ -101,9 +105,9 @@ Generate self completion
 
 Options:
 
-    --name   name of the program
-    --zsh    for zsh            
-    --bash   for bash           
+    --name    name of the program
+    --zsh     for zsh            
+    --bash    for bash           
 
 
 

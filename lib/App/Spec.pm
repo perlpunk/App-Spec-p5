@@ -84,7 +84,7 @@ sub read {
 
     # add subcommands to help command
     my $help_subcmds = $spec->{subcommands}->{help}->{subcommands} ||= {};
-    $class->_add_subcommands($help_subcmds, $spec->{subcommands});
+    $class->_add_subcommands($help_subcmds, $spec->{subcommands}, { subcommand_required => 0 });
 
     my $commands;
     for my $name (keys %{ $spec->{subcommands} || [] }) {
@@ -112,16 +112,17 @@ sub read {
 }
 
 sub _add_subcommands {
-    my ($self, $commands1, $commands2) = @_;
+    my ($self, $commands1, $commands2, $ref) = @_;
     for my $name (keys %{ $commands2 || {} }) {
         next if $name eq "help";
         my $cmd = $commands2->{ $name };
         $commands1->{ $name } = {
             name => $name,
             subcommands => {},
+            %$ref,
         };
         my $subcmds = $cmd->{subcommands} || {};
-        $self->_add_subcommands($commands1->{ $name }->{subcommands}, $subcmds);
+        $self->_add_subcommands($commands1->{ $name }->{subcommands}, $subcmds, $ref);
     }
 }
 
@@ -162,18 +163,7 @@ EOM
         for my $param (@$parameters) {
             my $name = $param->name;
             my $summary = $param->summary;
-            if ($param->multiple and $param->required) {
-                $usage .= " <$name>+";
-            }
-            elsif ($param->multiple) {
-                $usage .= " [<$name>+]";
-            }
-            elsif ($param->required) {
-                $usage .= " <$name>";
-            }
-            else {
-                $usage .= " [<$name>]";
-            }
+            $usage .= " " . $param->to_usage_header;
             my ($req, $multi) = (' ', '  ');
             if ($param->required) {
                 $req = "*";
@@ -240,6 +230,7 @@ sub _output_table {
         defined $lengths->[$_] ? "%-$lengths->[$_]s" : "%s"
     } 0 .. @{ $table->[0] } - 1;
     for my $row (@$table) {
+        no warnings 'uninitialized';
         $string .= sprintf join('  ', @lengths) . "\n", @$row;
     }
     return $string;
@@ -318,6 +309,7 @@ subcommands:
     help:
         op: cmd_help
         summary: Show command help
+        subcommand_required: 0
         options:
         -   name: all
             type: bool

@@ -54,7 +54,7 @@ subtest valid => sub {
                 my $run = $spec->runner;
                 $run->run;
             };
-        }, $stdout, "@$input");
+        }, $stdout, "args: (@$input)");
     }
 };
 
@@ -72,8 +72,8 @@ subtest invalid => sub {
                 $run->run;
             };
             $err = $@;
-        }, $stderr, "@$input");
-        cmp_ok($@, '=~', $eval_error, "@$input");
+        }, $stderr, "stderr - args: (@$input)");
+        cmp_ok($@, '=~', $eval_error, "eval error - args: (@$input)");
     }
 };
 

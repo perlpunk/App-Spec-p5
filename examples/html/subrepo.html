@@ -56,37 +56,37 @@
 
 <h2 id="GLOBAL-OPTIONS">GLOBAL OPTIONS</h2>
 
-<pre><code>    --help -h   Show command help</code></pre>
+<pre><code>    --help -h    Show command help</code></pre>
 
 <h2 id="SUBCOMMANDS">SUBCOMMANDS</h2>
 
 <h3 id="branch">branch</h3>
 
-<pre><code>    subrepo  branch [options] &lt;subrepo&gt;</code></pre>
+<pre><code>    subrepo  branch [options] [&lt;subrepo&gt;]</code></pre>
 
 <p>Create a branch with local subrepo commits since last pull.</p>
 
 <p>Options:</p>
 
-<pre><code>    --all   All subrepos</code></pre>
+<pre><code>    --all    All subrepos</code></pre>
 
 <p>Parameters:</p>
 
-<pre><code>    subrepo  * Subrepo</code></pre>
+<pre><code>    subrepo    Subrepo</code></pre>
 
 <h3 id="clean">clean</h3>
 
-<pre><code>    subrepo  clean [options] &lt;subrepo&gt;</code></pre>
+<pre><code>    subrepo  clean [options] [&lt;subrepo&gt;]</code></pre>
 
 <p>Remove artifacts created by <code>fetch</code> and <code>branch</code> commands.</p>
 
 <p>Options:</p>
 
-<pre><code>    --all   All subrepos</code></pre>
+<pre><code>    --all    All subrepos</code></pre>
 
 <p>Parameters:</p>
 
-<pre><code>    subrepo  * Subrepo</code></pre>
+<pre><code>    subrepo    Subrepo</code></pre>
 
 <h3 id="clone">clone</h3>
 
@@ -96,13 +96,13 @@
 
 <p>Options:</p>
 
-<pre><code>    --branch -b   Upstream branch                                 
-    --force -f    reclone (completely replace) an existing subdir.</code></pre>
+<pre><code>    --branch -b    Upstream branch                                 
+    --force -f     reclone (completely replace) an existing subdir.</code></pre>
 
 <p>Parameters:</p>
 
-<pre><code>    repository  * 
-    subdir        </code></pre>
+<pre><code>    repository  *  
+    subdir         </code></pre>
 
 <h3 id="commit">commit</h3>
 
@@ -112,22 +112,22 @@
 
 <p>Parameters:</p>
 
-<pre><code>    subrepo     * Subrepo    
-    subreporef    Subrepo ref</code></pre>
+<pre><code>    subrepo     *  Subrepo    
+    subreporef     Subrepo ref</code></pre>
 
 <h3 id="fetch">fetch</h3>
 
-<pre><code>    subrepo  fetch [options] &lt;subrepo&gt;</code></pre>
+<pre><code>    subrepo  fetch [options] [&lt;subrepo&gt;]</code></pre>
 
 <p>Fetch the remote/upstream content for a subrepo.</p>
 
 <p>Options:</p>
 
-<pre><code>    --all   All subrepos</code></pre>
+<pre><code>    --all    All subrepos</code></pre>
 
 <p>Parameters:</p>
 
-<pre><code>    subrepo  * Subrepo</code></pre>
+<pre><code>    subrepo    Subrepo</code></pre>
 
 <h3 id="init">init</h3>
 
@@ -137,60 +137,60 @@
 
 <p>Options:</p>
 
-<pre><code>    --remote -r   Specify remote repository
-    --branch -b   Upstream branch          </code></pre>
+<pre><code>    --remote -r    Specify remote repository
+    --branch -b    Upstream branch          </code></pre>
 
 <p>Parameters:</p>
 
-<pre><code>    subdir  * </code></pre>
+<pre><code>    subdir  *  </code></pre>
 
 <h3 id="pull">pull</h3>
 
-<pre><code>    subrepo  pull [options] &lt;subrepo&gt;</code></pre>
+<pre><code>    subrepo  pull [options] [&lt;subrepo&gt;]</code></pre>
 
 <p>Update the subrepo subdir with the latest upstream changes.</p>
 
 <p>Options:</p>
 
-<pre><code>    --all         All subrepos             
-    --branch -b   Upstream branch          
-    --remote -r   Specify remote repository
-    --update -u   update                   </code></pre>
+<pre><code>    --all          All subrepos             
+    --branch -b    Upstream branch          
+    --remote -r    Specify remote repository
+    --update -u    update                   </code></pre>
 
 <p>Parameters:</p>
 
-<pre><code>    subrepo  * Subrepo</code></pre>
+<pre><code>    subrepo    Subrepo</code></pre>
 
 <h3 id="push">push</h3>
 
-<pre><code>    subrepo  push [options] &lt;subrepo&gt;</code></pre>
+<pre><code>    subrepo  push [options] [&lt;subrepo&gt;]</code></pre>
 
 <p>Push a properly merged subrepo branch back upstream.</p>
 
 <p>Options:</p>
 
-<pre><code>    --all         All subrepos             
-    --branch -b   Upstream branch          
-    --remote -r   Specify remote repository
-    --update -u   update                   </code></pre>
+<pre><code>    --all          All subrepos             
+    --branch -b    Upstream branch          
+    --remote -r    Specify remote repository
+    --update -u    update                   </code></pre>
 
 <p>Parameters:</p>
 
-<pre><code>    subrepo  * Subrepo</code></pre>
+<pre><code>    subrepo    Subrepo</code></pre>
 
 <h3 id="status">status</h3>
 
-<pre><code>    subrepo  status [options] &lt;subrepo&gt;</code></pre>
+<pre><code>    subrepo  status [options] [&lt;subrepo&gt;]</code></pre>
 
 <p>Get the status of a subrepo.</p>
 
 <p>Options:</p>
 
-<pre><code>    --quiet -q   Just print names</code></pre>
+<pre><code>    --quiet -q    Just print names</code></pre>
 
 <p>Parameters:</p>
 
-<pre><code>    subrepo  * Subrepo</code></pre>
+<pre><code>    subrepo    Subrepo</code></pre>
 
 <h3 id="version">version</h3>
 
@@ -212,9 +212,9 @@
 
 <p>Options:</p>
 
-<pre><code>    --name   name of the program
-    --zsh    for zsh            
-    --bash   for bash           </code></pre>
+<pre><code>    --name    name of the program
+    --zsh     for zsh            
+    --bash    for bash           </code></pre>
 
 
 </body>
