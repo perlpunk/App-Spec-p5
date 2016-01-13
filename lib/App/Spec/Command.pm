@@ -48,6 +48,7 @@ sub build {
         parameters => \@parameters,
         op => $args->{op},
         subcommands => \%subcommands,
+        description => $args->{description},
     });
     return $self;
 }

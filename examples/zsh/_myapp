@@ -10,8 +10,6 @@ _myapp() {
         _arguments -s  \
             '1: :->cmd1' \
             '*: :->args' \
-            '(--verbose -v)'{--verbose,-v}'[be verbose]' \
-            '(--help -h)'{--help,-h}'[Show command help]' \
             && ret=0
 
 
@@ -19,6 +17,7 @@ _myapp() {
         cmd1)
             _alternative 'args:cmd2:((_complete\:"Generate self completion" cook\:"Cook something" help\:"Show command help" weather\:"Weather"))'
         ;;
+
         args)
             case $line[1] in
             _complete)
@@ -26,21 +25,16 @@ _myapp() {
                 # ---- Command: _complete
                 _arguments -s -C \
                     '1: :->cmd1' \
-                    '*: :->args' \
+                    '--verbose[be verbose]' \
+                    '-v[be verbose]' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
                     '--name[name of the program]:name' \
                     '--zsh[for zsh]' \
                     '--bash[for bash]' \
                     && ret=0
 
 
-                case $state in
-                args)
-
-                ;;
-                *)
-
-                ;;
-                esac
             ;;
             cook)
 
@@ -48,9 +42,13 @@ _myapp() {
                 _arguments -s -C \
                     '1: :->cmd1' \
                     '2: :->drink' \
-                    '*: :->args' \
+                    '--verbose[be verbose]' \
+                    '-v[be verbose]' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
                     '--with[Drink with ...]:with:("almond milk" "soy milk" "oat milk" "spelt milk" "cow milk")' \
-                    '(--sugar -s)'{--sugar,-s}'[add sugar]' \
+                    '--sugar[add sugar]' \
+                    '-s[add sugar]' \
                     && ret=0
 
                 case $state in
@@ -59,14 +57,6 @@ _myapp() {
                 ;;
                 esac
 
-                case $state in
-                args)
-
-                ;;
-                *)
-
-                ;;
-                esac
             ;;
             help)
 
@@ -75,7 +65,6 @@ _myapp() {
                     '1: :->cmd1' \
                     '2: :->cmd2' \
                     '*: :->args' \
-                    '--all[]' \
                     && ret=0
 
 
@@ -83,6 +72,7 @@ _myapp() {
                 cmd2)
                     _alternative 'args:cmd3:((_complete cook weather))'
                 ;;
+
                 args)
                     case $line[2] in
                     _complete)
@@ -91,18 +81,14 @@ _myapp() {
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
-                            '*: :->args' \
+                            '--verbose[be verbose]' \
+                            '-v[be verbose]' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
+                            '--all[]' \
                             && ret=0
 
 
-                        case $state in
-                        args)
-
-                        ;;
-                        *)
-
-                        ;;
-                        esac
                     ;;
                     cook)
 
@@ -110,18 +96,14 @@ _myapp() {
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
-                            '*: :->args' \
+                            '--verbose[be verbose]' \
+                            '-v[be verbose]' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
+                            '--all[]' \
                             && ret=0
 
 
-                        case $state in
-                        args)
-
-                        ;;
-                        *)
-
-                        ;;
-                        esac
                     ;;
                     weather)
 
@@ -138,6 +120,7 @@ _myapp() {
                         cmd3)
                             _alternative 'args:cmd4:((cities countries show))'
                         ;;
+
                         args)
                             case $line[3] in
                             cities)
@@ -147,18 +130,14 @@ _myapp() {
                                     '1: :->cmd1' \
                                     '2: :->cmd2' \
                                     '3: :->cmd3' \
-                                    '*: :->args' \
+                                    '--verbose[be verbose]' \
+                                    '-v[be verbose]' \
+                                    '--help[Show command help]' \
+                                    '-h[Show command help]' \
+                                    '--all[]' \
                                     && ret=0
 
 
-                                case $state in
-                                args)
-
-                                ;;
-                                *)
-
-                                ;;
-                                esac
                             ;;
                             countries)
 
@@ -167,18 +146,14 @@ _myapp() {
                                     '1: :->cmd1' \
                                     '2: :->cmd2' \
                                     '3: :->cmd3' \
-                                    '*: :->args' \
+                                    '--verbose[be verbose]' \
+                                    '-v[be verbose]' \
+                                    '--help[Show command help]' \
+                                    '-h[Show command help]' \
+                                    '--all[]' \
                                     && ret=0
 
 
-                                case $state in
-                                args)
-
-                                ;;
-                                *)
-
-                                ;;
-                                esac
                             ;;
                             show)
 
@@ -187,33 +162,25 @@ _myapp() {
                                     '1: :->cmd1' \
                                     '2: :->cmd2' \
                                     '3: :->cmd3' \
-                                    '*: :->args' \
+                                    '--verbose[be verbose]' \
+                                    '-v[be verbose]' \
+                                    '--help[Show command help]' \
+                                    '-h[Show command help]' \
+                                    '--all[]' \
                                     && ret=0
 
 
-                                case $state in
-                                args)
-
-                                ;;
-                                *)
-
-                                ;;
-                                esac
                             ;;
                             esac
 
                         ;;
-                        *)
 
-                        ;;
                         esac
                     ;;
                     esac
 
                 ;;
-                *)
 
-                ;;
                 esac
             ;;
             weather)
@@ -230,6 +197,7 @@ _myapp() {
                 cmd2)
                     _alternative 'args:cmd3:((cities\:"show list of cities" countries\:"show list of countries" show\:"Show Weather forecast"))'
                 ;;
+
                 args)
                     case $line[2] in
                     cities)
@@ -238,19 +206,15 @@ _myapp() {
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
-                            '*: :->args' \
-                            '(--country -c)'{--country,-c}'[country name]:country:_myapp_weather_cities_option_country_completion' \
+                            '--verbose[be verbose]' \
+                            '-v[be verbose]' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
+                            '*--country[country name(s)]:country:_myapp_weather_cities_option_country_completion' \
+                            '*-c[country name(s)]:country:_myapp_weather_cities_option_country_completion' \
                             && ret=0
 
 
-                        case $state in
-                        args)
-
-                        ;;
-                        *)
-
-                        ;;
-                        esac
                     ;;
                     countries)
 
@@ -258,18 +222,13 @@ _myapp() {
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
-                            '*: :->args' \
+                            '--verbose[be verbose]' \
+                            '-v[be verbose]' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
                             && ret=0
 
 
-                        case $state in
-                        args)
-
-                        ;;
-                        *)
-
-                        ;;
-                        esac
                     ;;
                     show)
 
@@ -278,8 +237,11 @@ _myapp() {
                             '1: :->cmd1' \
                             '2: :->cmd2' \
                             '3: :->country' \
-                            '4: :->city' \
-                            '*: :->args' \
+                            '*: :->city' \
+                            '--verbose[be verbose]' \
+                            '-v[be verbose]' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
                             && ret=0
 
                         case $state in
@@ -291,29 +253,17 @@ _myapp_weather_show_param_city_completion
                         ;;
                         esac
 
-                        case $state in
-                        args)
-
-                        ;;
-                        *)
-
-                        ;;
-                        esac
                     ;;
                     esac
 
                 ;;
-                *)
 
-                ;;
                 esac
             ;;
             esac
 
         ;;
-        *)
 
-        ;;
         esac
 
 }
@@ -330,7 +280,7 @@ _myapp_weather_show_param_country_completion() {
 }
 _myapp_weather_show_param_city_completion() {
     local __dynamic_completion
-    IFS=$'\n' set -A __dynamic_completion `$program 'weather' 'cities' '--country' "$words[$CURRENT-1]"`
+    IFS=$'\n' set -A __dynamic_completion `$program 'weather' 'cities' '--country' "$words[4]"`
     compadd -X "city:" $__dynamic_completion
 }
 

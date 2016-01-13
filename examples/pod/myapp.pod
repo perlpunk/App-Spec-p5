@@ -16,8 +16,8 @@ This is a very useful description for myapp.
 
 =head2 GLOBAL OPTIONS
 
-    --verbose -v   be verbose       
-    --help -h      Show command help
+    --verbose -v    be verbose       
+    --help -h       Show command help
 
 
 =head2 SUBCOMMANDS
@@ -30,12 +30,12 @@ Cook something
 
 Options:
 
-    --with       Drink with ...
-    --sugar -s   add sugar     
+    --with        Drink with ...
+    --sugar -s    add sugar     
 
 Parameters:
 
-    drink  * 
+    drink  *  
 
 =head3  weather
 
@@ -52,7 +52,7 @@ show list of cities
 
 Options:
 
-    --country -c   country name
+    --country -c   [] country name(s)
 
 
 =head3 weather countries
@@ -64,14 +64,14 @@ show list of countries
 
 =head3 weather show
 
-    myapp weather show <country> <city>
+    myapp weather show <country> <city>+
 
 Show Weather forecast
 
 Parameters:
 
-    country  * Specify country
-    city     * Specify city   
+    country  *    Specify country       
+    city     * [] Specify city or cities
 
 =head3  help
 
@@ -81,7 +81,7 @@ Show command help
 
 Options:
 
-    --all   
+    --all    
 
 
 =head3  _complete
@@ -92,9 +92,9 @@ Generate self completion
 
 Options:
 
-    --name   name of the program
-    --zsh    for zsh            
-    --bash   for bash           
+    --name    name of the program
+    --zsh     for zsh            
+    --bash    for bash           
 
 
 
