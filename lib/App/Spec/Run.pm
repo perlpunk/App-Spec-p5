@@ -163,6 +163,8 @@ sub cmd_self_completion {
     unless ($shell) {
         my $ppid = getppid();
         chomp($shell = `ps --no-headers -o cmd $ppid`);
+        $shell =~ s/.*\W(\w*sh).*$/$1/; #handling case of '-zsh' or '/bin/bash'
+                                        #or bash -i -rs
     }
     unless (any { $_ eq $shell } qw/ bash zsh / ) {
         die "Specify which shell, '$shell' not supported";
