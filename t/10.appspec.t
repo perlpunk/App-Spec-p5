@@ -17,10 +17,6 @@ my @valid = (
         input => [qw/ cook tea --with /, "almond milk" ],
         stdout => qr/Starting to cook tea with almond milk/,
     },
-    {
-        input => [qw/ /],
-        stdout => qr/Usage: myapp *<subcommands>/,
-    },
 );
 
 my @invalid = (
@@ -40,6 +36,11 @@ my @invalid = (
         input => [qw/ cook tea --with salt /],
         eval_error => qr/with.*invalid/s,
         stderr => qr/Usage: myapp cook <drink> \[options\]/,
+    },
+    {
+        input => [qw/ /],
+        eval_error => qr/Missing subcommand/s,
+        stderr => qr/Usage: myapp *<subcommands>/,
     },
 );
 

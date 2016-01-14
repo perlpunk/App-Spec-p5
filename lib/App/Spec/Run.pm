@@ -141,9 +141,6 @@ sub check_help {
         unshift @ARGV, "help";
     }
 
-    unless (@ARGV) {
-        @ARGV = "help";
-    }
 }
 
 
