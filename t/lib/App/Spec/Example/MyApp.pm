@@ -62,9 +62,11 @@ sub weather {
         my $info = $countries{ $param->{country} }->{ $city };
         my $output = sprintf "Weather in %s/%s: %s", $param->{country}, $city, $info->{weather};
         if ($self->options->{temperature}) {
+            my $unit = $self->options->{"temperature-unit"};
+            ($unit) = keys %$unit;
             my $temp = $info->{temperature};
             my $label = "°C";
-            if ($self->options->{fahrenheit}) {
+            if ($unit eq "fahrenheit") {
               $temp = int($temp * 9 / 5 + 32);
               $label = "F";
             }
@@ -73,6 +75,7 @@ sub weather {
         say $output;
     }
 }
+
 
 sub countries {
     say for sort keys %countries;

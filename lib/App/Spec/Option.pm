@@ -4,6 +4,7 @@ package App::Spec::Option;
 
 our $VERSION = '0.000'; # VERSION
 
+use App::Spec::OptionGroup;
 use Moo;
 
 has name => ( is => 'ro' );
@@ -17,6 +18,7 @@ has filter => ( is => 'ro' );
 has completion => ( is => 'ro' );
 has aliases => ( is => 'ro' );
 has enum => ( is => 'ro' );
+has requires => ( is => 'ro' );
 
 sub build {
     my ($class, $args) = @_;
@@ -29,6 +31,12 @@ sub build {
     $summary //= $description // '';
     $description //= $summary;
     my $type = $args->{type} // 'string';
+
+    if ($args->{group}) {
+        my $group = App::Spec::OptionGroup->build($args);
+        return $group;
+    }
+
     my $self = $class->new({
         name => $args->{name},
         type => $type,
@@ -40,6 +48,7 @@ sub build {
         completion => $args->{completion},
         aliases => $args->{aliases} || [],
         enum => $args->{enum},
+        requires => $args->{requires} || [],
     });
     return $self;
 }

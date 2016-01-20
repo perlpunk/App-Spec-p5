@@ -39,8 +39,13 @@ sub process {
         $items = $self->options;
         $specs = $self->option_specs;
     }
+    my @groups;
     for my $name (sort keys %$specs) {
         my $spec = $specs->{ $name };
+        if ($spec->isa("App::Spec::OptionGroup")) {
+            push @groups, $spec;
+            next;
+        }
         my $value = $items->{ $name };
 
         if (not defined $value) {
@@ -93,6 +98,30 @@ sub process {
             $items->{ $name } = $value;
         }
     }
+
+    for my $group (@groups) {
+        my $option_names = $group->options;
+        my $allowed = $group->allowed_number;
+
+        my $count = 0;
+        my %values;
+        for my $name (@$option_names) {
+            if (defined $items->{ $name }) {
+                $count++;
+                $values{ $name } = $items->{ $name };
+            }
+        }
+
+        if (not any { $count == $_ } @$allowed) {
+            my $error = join(",", @$allowed[ 0 .. @$allowed -2 ])
+              . (@$allowed > 1 ? " or $allowed->[-1]" : "");
+            $error = "Specify only $error of these options: "
+                . join ", ", sort keys %values;
+            $errs->{ $type }->{ $group->name } = $error;
+        }
+        $items->{ $group->name } = \%values;
+    }
+
     return (keys %$errs) ? 0 : 1;
 }
 

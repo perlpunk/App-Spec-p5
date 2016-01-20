@@ -231,6 +231,9 @@ EOM
         my @table;
         for my $opt (sort { $a->name cmp $b->name } @$options) {
             my $name = $opt->name;
+            if ($opt->isa("App::Spec::OptionGroup")) {
+                next;
+            }
             my $highlight = $highlights{options}->{ $name };
             push @highlights, ($color and $highlight) ? 1 : 0;
             my $aliases = $opt->aliases;
@@ -366,11 +369,14 @@ sub make_getopt {
     my @getopt;
     for my $opt (@$options) {
         my $name = $opt->name;
+        $specs->{ $name } = $opt;
+        if ($opt->isa("App::Spec::OptionGroup")) {
+            next;
+        }
         my $spec = $name;
         unless ($opt->type eq 'flag') {
             $spec .= "=s";
         }
-        $specs->{ $name } = $opt;
         if ($opt->multiple) {
             $result->{ $name } = [];
             $spec .= '@';

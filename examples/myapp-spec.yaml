@@ -44,10 +44,16 @@ subcommands:
         summary: Show Weather forecast
         op: weather
         options:
+          - group: temperature-unit
+            options: [celsius, fahrenheit]
+            allowed_number: [0, 1]
+            hidden: true
           - name: temperature
             description: show temperature
             aliases: [T]
             type: flag
+            requires:
+              - temperature-unit
           - name: celsius
             description: show temperature in celsius
             aliases: [C]

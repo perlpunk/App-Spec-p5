@@ -22,11 +22,27 @@ properties:
         '$ref': '#/definitions/command'
 definitions:
   optionTypeSimple:
-    enum: [flag, string]
+    enum: [flag, string, group]
   options:
     type: array
     items:
-      '$ref': '#/definitions/option'
+      oneOf:
+        - '$ref': '#/definitions/optiongroup'
+        - '$ref': '#/definitions/option'
+  optiongroup:
+    type: object
+    additionalProperties: false
+    required: [group, options]
+    properties:
+      group: { type: string }
+      hidden: { '$ref': '#/definitions/bool' }
+      options:
+        type: array
+        items: { type: string }
+      allowed_number:
+        type: array
+        items:
+          type: integer
   option:
     type: object
     additionalProperties: false
@@ -36,6 +52,9 @@ definitions:
       summary: { type: string }
       description: { type: string }
       multiple: { '$ref': '#/definitions/bool' }
+      aliases:
+        type: array
+        items: { type: string }
       type:
         oneOf:
           - '$ref': '#/definitions/optionTypeSimple'
@@ -43,6 +62,9 @@ definitions:
         type: array
         items: { type: string }
       aliases:
+        type: array
+        items: { type: string }
+      requires:
         type: array
         items: { type: string }
       required: { '$ref': '#/definitions/bool' }
@@ -61,7 +83,7 @@ definitions:
         properties:
           name: { type: string }
           required: { '$ref': '#/definitions/bool' }
-          type: { type: object }
+#          type: { type: object }
       options: { '$ref': '#/definitions/options' }
       subcommands:
         type: object

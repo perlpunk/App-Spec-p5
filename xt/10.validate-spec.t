@@ -2,6 +2,7 @@ use strict;
 use warnings;
 use Test::More tests => 3;
 use FindBin '$Bin';
+use App::Spec;
 my $v = eval "use App::AppSpec::Schema::Validator; 1";
 SKIP: {
     skip "App::AppSpec::Schema::Validator not installed", 3 unless $v;
