@@ -1,0 +1,49 @@
+---
+type: object
+required: [name, appspec]
+properties:
+  name: { type: string }
+  appspec:
+    type: object
+    required: [version]
+    properties:
+      version: { type: number }
+  title: { type: string }
+  abstract: { type: string }
+  description: { type: string }
+  options: &def_options
+    type: array
+    items:
+      type: object
+      properties:
+        name: { type: string }
+        description: { type: string }
+        type:
+          oneOf:
+            -
+              enum: [bool, string]
+            -
+              type: object
+              properties:
+                enum:
+                  type: array
+        aliases:
+          type: array
+          items: { type: string }
+  subcommands:
+    type: object
+    patternProperties:
+      "^[a-zA-Z0-9_]+$":
+        type: object
+        properties:
+          summary: { type: string }
+          op: { type: string }
+          parameters:
+            type: array
+            properties:
+              name: { type: string }
+              required: { type: bool }
+              type:
+                type: object
+          options: *def_options
+
