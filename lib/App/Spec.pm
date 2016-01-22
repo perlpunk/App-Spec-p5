@@ -9,8 +9,6 @@ our $VERSION = '0.000'; # VERSION
 use App::Spec::Command;
 use App::Spec::Option;
 use App::Spec::Parameter;
-use App::Spec::Completion::Zsh;
-use App::Spec::Completion::Bash;
 use List::Util qw/ any /;
 use YAML::XS ();
 
@@ -261,6 +259,8 @@ sub gather_options_parameters {
 sub generate_completion {
     my ($self, %args) = @_;
     my $shell = delete $args{shell};
+    require App::Spec::Completion::Zsh;
+    require App::Spec::Completion::Bash;
 
     if ($shell eq "zsh") {
         my $completer = App::Spec::Completion::Zsh->new({
