@@ -16,6 +16,7 @@ has options => ( is => 'ro' );
 has parameters => ( is => 'ro' );
 has op => ( is => 'ro' );
 has subcommands => ( is => 'ro' );
+has subcommand_required => ( is => 'ro' );
 
 sub build {
     my ($class, $args) = @_;
@@ -49,6 +50,7 @@ sub build {
         op => $args->{op},
         subcommands => \%subcommands,
         description => $args->{description},
+        subcommand_required => $args->{subcommand_required},
     });
     return $self;
 }
