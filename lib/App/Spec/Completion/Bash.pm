@@ -54,6 +54,7 @@ sub completion_commands {
     my $functions = $args{functions};
     my $previous = $args{previous} || [];
     my $commands = $args{commands};
+    my $options = $args{options};
     my $level = $args{level};
     my $indent = "    " x $level;
 
@@ -78,21 +79,21 @@ EOM
         my $spec = $commands->{ $name };
         my $subcommands = $spec->subcommands;
         my $parameters = $spec->parameters;
-        my $options = $spec->options;
+        my $cmd_options = $spec->options;
         if (keys %$subcommands) {
             my $comp = $self->completion_commands(
                 commands => $subcommands,
-                options => $spec->options,
+                options => [ @$options, @$cmd_options ],
                 level => $level + 1,
                 previous => [@$previous, $name],
                 functions => $functions,
             );
             $subc .= $comp;
         }
-        elsif (@$parameters or @$options) {
+        elsif (@$parameters or @$cmd_options) {
             $subc .= $self->completion_parameters(
                 parameters => $parameters,
-                options => $options,
+                options => [ @$options, @$cmd_options ],
                 level => $level + 1,
                 previous => [@$previous, $name],
                 functions => $functions,
@@ -182,11 +183,12 @@ ${indent}  @{[ join '|', @option_strings ]})
 EOM
             if (ref $type) {
                 if (my $list = $type->{enum}) {
-                    my @list = map { s/ /\\ /g; "'$_'" } @$list;
+                    my @list = map { s/ /\\ /g; $_ } @$list;
                     local $" = q{"$'\\n'"};
                     for (@list) {
                         s/['`]/'"'"'/g;
                         s/\$/\\\$/g;
+                        $_ = "'$_'";
                     }
                     $comp_value .= <<"EOM";
 ${indent}    _${appname}_compreply "@list"
@@ -250,7 +252,12 @@ sub dynamic_completion {
                     my $num = $replace->[1];
                     my $index = "\$COMP_CWORD";
                     if ($num ne 'CURRENT') {
-                        $index .= $num;
+                        if ($num =~ m/^-/) {
+                            $index .= $num;
+                        }
+                        else {
+                            $index = $num - 1;
+                        }
                     }
                     my $string = qq{"\$\{COMP_WORDS\[$index\]\}"};
                     push @args, $string;

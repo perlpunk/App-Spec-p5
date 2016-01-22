@@ -12,7 +12,7 @@ _pcorelist() {
     case $COMP_CWORD in
 
     1)
-        _pcorelist_compreply "_complete -- Generate self completion"$'\n'"diff -- Show diff between two Perl versions"$'\n'"features -- List features with perl versions"$'\n'"help -- Show command help"$'\n'"module -- Show for which perl version the module was first released"$'\n'"modules -- List all modules"$'\n'"perl -- Perl Versions"
+        _pcorelist_compreply '_complete -- Generate self completion'$'\n''diff -- Show diff between two Perl versions'$'\n''features -- List features with perl versions'$'\n''help -- Show command help'$'\n''module -- Show for which perl version the module was first released'$'\n''modules -- List all modules'$'\n''perl -- Perl Versions'
 
     ;;
     *)
@@ -22,6 +22,8 @@ _pcorelist() {
         case $COMP_CWORD in
         *)
         case ${COMP_WORDS[$COMP_CWORD-1]} in
+          --help|-h)
+          ;;
           --name)
           ;;
           --zsh)
@@ -30,7 +32,7 @@ _pcorelist() {
           ;;
 
           *)
-            _pcorelist_compreply "'--name -- name of the program'"$'\n'"'--zsh -- for zsh'"$'\n'"'--bash -- for bash'"
+            _pcorelist_compreply "'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--name -- name of the program'"$'\n'"'--zsh -- for zsh'"$'\n'"'--bash -- for bash'"
           ;;
         esac
         ;;
@@ -46,13 +48,15 @@ _pcorelist() {
         ;;
         *)
         case ${COMP_WORDS[$COMP_CWORD-1]} in
+          --help|-h)
+          ;;
           --added)
           ;;
           --removed)
           ;;
 
           *)
-            _pcorelist_compreply "'--added -- Show only added modules'"$'\n'"'--removed -- Show only removed modules'"
+            _pcorelist_compreply "'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--added -- Show only added modules'"$'\n'"'--removed -- Show only removed modules'"
           ;;
         esac
         ;;
@@ -65,11 +69,13 @@ _pcorelist() {
         ;;
         *)
         case ${COMP_WORDS[$COMP_CWORD-1]} in
+          --help|-h)
+          ;;
           --raw)
           ;;
 
           *)
-            _pcorelist_compreply "'--raw -- List only feature names'"
+            _pcorelist_compreply "'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--raw -- List only feature names'"
           ;;
         esac
         ;;
@@ -79,7 +85,7 @@ _pcorelist() {
         case $COMP_CWORD in
 
         2)
-            _pcorelist_compreply "_complete"$'\n'"diff"$'\n'"features"$'\n'"module"$'\n'"modules"$'\n'"perl"
+            _pcorelist_compreply '_complete'$'\n''diff'$'\n''features'$'\n''module'$'\n''modules'$'\n''perl'
 
         ;;
         *)
@@ -109,6 +115,8 @@ _pcorelist() {
         ;;
         *)
         case ${COMP_WORDS[$COMP_CWORD-1]} in
+          --help|-h)
+          ;;
           --all|-a)
           ;;
           --date|-d)
@@ -118,7 +126,7 @@ _pcorelist() {
           ;;
 
           *)
-            _pcorelist_compreply "'--all -- Show all perl and module versions'"$'\n'"'-a -- Show all perl and module versions'"$'\n'"'--date -- Show by date'"$'\n'"'-d -- Show by date'"$'\n'"'--perl -- Show by Perl Version'"$'\n'"'-p -- Show by Perl Version'"
+            _pcorelist_compreply "'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--all -- Show all perl and module versions'"$'\n'"'-a -- Show all perl and module versions'"$'\n'"'--date -- Show by date'"$'\n'"'-d -- Show by date'"$'\n'"'--perl -- Show by Perl Version'"$'\n'"'-p -- Show by Perl Version'"
           ;;
         esac
         ;;
@@ -130,13 +138,15 @@ _pcorelist() {
         case $COMP_CWORD in
         *)
         case ${COMP_WORDS[$COMP_CWORD-1]} in
+          --help|-h)
+          ;;
           --raw|-r)
           ;;
           --release)
           ;;
 
           *)
-            _pcorelist_compreply "'--raw -- Show raw output without header'"$'\n'"'-r -- Show raw output without header'"$'\n'"'--release -- Show perl releases with dates'"
+            _pcorelist_compreply "'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--raw -- Show raw output without header'"$'\n'"'-r -- Show raw output without header'"$'\n'"'--release -- Show perl releases with dates'"
           ;;
         esac
         ;;

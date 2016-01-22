@@ -12,7 +12,7 @@ _myapp() {
     case $COMP_CWORD in
 
     1)
-        _myapp_compreply "_complete -- Generate self completion"$'\n'"cook -- Cook something"$'\n'"help -- Show command help"$'\n'"weather -- Weather"
+        _myapp_compreply '_complete -- Generate self completion'$'\n''cook -- Cook something'$'\n''help -- Show command help'$'\n''weather -- Weather'
 
     ;;
     *)
@@ -22,6 +22,10 @@ _myapp() {
         case $COMP_CWORD in
         *)
         case ${COMP_WORDS[$COMP_CWORD-1]} in
+          --verbose|-v)
+          ;;
+          --help|-h)
+          ;;
           --name)
           ;;
           --zsh)
@@ -30,7 +34,7 @@ _myapp() {
           ;;
 
           *)
-            _myapp_compreply "'--name -- name of the program'"$'\n'"'--zsh -- for zsh'"$'\n'"'--bash -- for bash'"
+            _myapp_compreply "'--verbose -- be verbose'"$'\n'"'-v -- be verbose'"$'\n'"'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--name -- name of the program'"$'\n'"'--zsh -- for zsh'"$'\n'"'--bash -- for bash'"
           ;;
         esac
         ;;
@@ -43,6 +47,10 @@ _myapp() {
         ;;
         *)
         case ${COMP_WORDS[$COMP_CWORD-1]} in
+          --verbose|-v)
+          ;;
+          --help|-h)
+          ;;
           --with)
             _myapp_compreply "'almond\ milk'"$'\n'"'soy\ milk'"$'\n'"'oat\ milk'"$'\n'"'spelt\ milk'"$'\n'"'cow\ milk'"
           ;;
@@ -50,7 +58,7 @@ _myapp() {
           ;;
 
           *)
-            _myapp_compreply "'--with -- Drink with ...'"$'\n'"'--sugar -- add sugar'"$'\n'"'-s -- add sugar'"
+            _myapp_compreply "'--verbose -- be verbose'"$'\n'"'-v -- be verbose'"$'\n'"'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--with -- Drink with ...'"$'\n'"'--sugar -- add sugar'"$'\n'"'-s -- add sugar'"
           ;;
         esac
         ;;
@@ -60,7 +68,7 @@ _myapp() {
         case $COMP_CWORD in
 
         2)
-            _myapp_compreply "_complete"$'\n'"cook"$'\n'"weather"
+            _myapp_compreply '_complete'$'\n''cook'$'\n''weather'
 
         ;;
         *)
@@ -74,7 +82,7 @@ _myapp() {
             case $COMP_CWORD in
 
             3)
-                _myapp_compreply "cities"$'\n'"countries"$'\n'"show"
+                _myapp_compreply 'cities'$'\n''countries'$'\n''show'
 
             ;;
             *)
@@ -100,7 +108,7 @@ _myapp() {
         case $COMP_CWORD in
 
         2)
-            _myapp_compreply "cities -- show list of cities"$'\n'"countries -- show list of countries"$'\n'"show -- Show Weather forecast"
+            _myapp_compreply 'cities -- show list of cities'$'\n''countries -- show list of countries'$'\n''show -- Show Weather forecast'
 
         ;;
         *)
@@ -110,12 +118,16 @@ _myapp() {
             case $COMP_CWORD in
             *)
             case ${COMP_WORDS[$COMP_CWORD-1]} in
+              --verbose|-v)
+              ;;
+              --help|-h)
+              ;;
               --country|-c)
                 _myapp_weather_cities_option_country_completion
               ;;
 
               *)
-                _myapp_compreply "'--country -- country name'"$'\n'"'-c -- country name'"
+                _myapp_compreply "'--verbose -- be verbose'"$'\n'"'-v -- be verbose'"$'\n'"'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--country -- country name(s)'"$'\n'"'-c -- country name(s)'"
               ;;
             esac
             ;;
@@ -130,6 +142,18 @@ _myapp() {
             ;;
             4)
                     _myapp_weather_show_param_city_completion
+            ;;
+            *)
+            case ${COMP_WORDS[$COMP_CWORD-1]} in
+              --verbose|-v)
+              ;;
+              --help|-h)
+              ;;
+
+              *)
+                _myapp_compreply "'--verbose -- be verbose'"$'\n'"'-v -- be verbose'"$'\n'"'--help -- Show command help'"$'\n'"'-h -- Show command help'"
+              ;;
+            esac
             ;;
             esac
           ;;
@@ -161,7 +185,7 @@ _myapp_weather_show_param_country_completion() {
     _myapp_compreply "$param_country"
 }
 _myapp_weather_show_param_city_completion() {
-    local param_city=`$program 'weather' 'cities' '--country' "${COMP_WORDS[$COMP_CWORD-1]}"`
+    local param_city=`$program 'weather' 'cities' '--country' "${COMP_WORDS[3]}"`
     _myapp_compreply "$param_city"
 }
 

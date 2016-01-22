@@ -22,6 +22,8 @@ _subrepo() {
         case $COMP_CWORD in
         *)
         case ${COMP_WORDS[$COMP_CWORD-1]} in
+          --help|-h)
+          ;;
           --name)
           ;;
           --zsh)
@@ -30,7 +32,7 @@ _subrepo() {
           ;;
 
           *)
-            _subrepo_compreply "'--name -- name of the program'"$'\n'"'--zsh -- for zsh'"$'\n'"'--bash -- for bash'"
+            _subrepo_compreply "'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--name -- name of the program'"$'\n'"'--zsh -- for zsh'"$'\n'"'--bash -- for bash'"
           ;;
         esac
         ;;
@@ -43,11 +45,13 @@ _subrepo() {
         ;;
         *)
         case ${COMP_WORDS[$COMP_CWORD-1]} in
+          --help|-h)
+          ;;
           --all)
           ;;
 
           *)
-            _subrepo_compreply "'--all -- All subrepos'"
+            _subrepo_compreply "'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--all -- All subrepos'"
           ;;
         esac
         ;;
@@ -60,11 +64,13 @@ _subrepo() {
         ;;
         *)
         case ${COMP_WORDS[$COMP_CWORD-1]} in
+          --help|-h)
+          ;;
           --all)
           ;;
 
           *)
-            _subrepo_compreply "'--all -- All subrepos'"
+            _subrepo_compreply "'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--all -- All subrepos'"
           ;;
         esac
         ;;
@@ -78,13 +84,15 @@ _subrepo() {
         ;;
         *)
         case ${COMP_WORDS[$COMP_CWORD-1]} in
+          --help|-h)
+          ;;
           --branch|-b)
           ;;
           --force|-f)
           ;;
 
           *)
-            _subrepo_compreply "'--branch -- Upstream branch'"$'\n'"'-b -- Upstream branch'"$'\n'"'--force -- reclone (completely replace) an existing subdir.'"$'\n'"'-f -- reclone (completely replace) an existing subdir.'"
+            _subrepo_compreply "'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--branch -- Upstream branch'"$'\n'"'-b -- Upstream branch'"$'\n'"'--force -- reclone (completely replace) an existing subdir.'"$'\n'"'-f -- reclone (completely replace) an existing subdir.'"
           ;;
         esac
         ;;
@@ -97,6 +105,16 @@ _subrepo() {
         ;;
         3)
         ;;
+        *)
+        case ${COMP_WORDS[$COMP_CWORD-1]} in
+          --help|-h)
+          ;;
+
+          *)
+            _subrepo_compreply "'--help -- Show command help'"$'\n'"'-h -- Show command help'"
+          ;;
+        esac
+        ;;
         esac
       ;;
       fetch)
@@ -106,11 +124,13 @@ _subrepo() {
         ;;
         *)
         case ${COMP_WORDS[$COMP_CWORD-1]} in
+          --help|-h)
+          ;;
           --all)
           ;;
 
           *)
-            _subrepo_compreply "'--all -- All subrepos'"
+            _subrepo_compreply "'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--all -- All subrepos'"
           ;;
         esac
         ;;
@@ -159,13 +179,15 @@ _subrepo() {
         ;;
         *)
         case ${COMP_WORDS[$COMP_CWORD-1]} in
+          --help|-h)
+          ;;
           --remote|-r)
           ;;
           --branch|-b)
           ;;
 
           *)
-            _subrepo_compreply "'--remote -- Specify remote repository'"$'\n'"'-r -- Specify remote repository'"$'\n'"'--branch -- Upstream branch'"$'\n'"'-b -- Upstream branch'"
+            _subrepo_compreply "'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--remote -- Specify remote repository'"$'\n'"'-r -- Specify remote repository'"$'\n'"'--branch -- Upstream branch'"$'\n'"'-b -- Upstream branch'"
           ;;
         esac
         ;;
@@ -178,6 +200,8 @@ _subrepo() {
         ;;
         *)
         case ${COMP_WORDS[$COMP_CWORD-1]} in
+          --help|-h)
+          ;;
           --all)
           ;;
           --branch|-b)
@@ -188,7 +212,7 @@ _subrepo() {
           ;;
 
           *)
-            _subrepo_compreply "'--all -- All subrepos'"$'\n'"'--branch -- Upstream branch'"$'\n'"'-b -- Upstream branch'"$'\n'"'--remote -- Specify remote repository'"$'\n'"'-r -- Specify remote repository'"$'\n'"'--update -- update'"$'\n'"'-u -- update'"
+            _subrepo_compreply "'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--all -- All subrepos'"$'\n'"'--branch -- Upstream branch'"$'\n'"'-b -- Upstream branch'"$'\n'"'--remote -- Specify remote repository'"$'\n'"'-r -- Specify remote repository'"$'\n'"'--update -- update'"$'\n'"'-u -- update'"
           ;;
         esac
         ;;
@@ -201,6 +225,8 @@ _subrepo() {
         ;;
         *)
         case ${COMP_WORDS[$COMP_CWORD-1]} in
+          --help|-h)
+          ;;
           --all)
           ;;
           --branch|-b)
@@ -211,7 +237,7 @@ _subrepo() {
           ;;
 
           *)
-            _subrepo_compreply "'--all -- All subrepos'"$'\n'"'--branch -- Upstream branch'"$'\n'"'-b -- Upstream branch'"$'\n'"'--remote -- Specify remote repository'"$'\n'"'-r -- Specify remote repository'"$'\n'"'--update -- update'"$'\n'"'-u -- update'"
+            _subrepo_compreply "'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--all -- All subrepos'"$'\n'"'--branch -- Upstream branch'"$'\n'"'-b -- Upstream branch'"$'\n'"'--remote -- Specify remote repository'"$'\n'"'-r -- Specify remote repository'"$'\n'"'--update -- update'"$'\n'"'-u -- update'"
           ;;
         esac
         ;;
@@ -224,11 +250,13 @@ _subrepo() {
         ;;
         *)
         case ${COMP_WORDS[$COMP_CWORD-1]} in
+          --help|-h)
+          ;;
           --quiet|-q)
           ;;
 
           *)
-            _subrepo_compreply "'--quiet -- Just print names'"$'\n'"'-q -- Just print names'"
+            _subrepo_compreply "'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--quiet -- Just print names'"$'\n'"'-q -- Just print names'"
           ;;
         esac
         ;;
