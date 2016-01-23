@@ -11,39 +11,49 @@ properties:
   title: { type: string }
   abstract: { type: string }
   description: { type: string }
-  options: &def_options
-    type: array
-    items:
-      type: object
-      properties:
-        name: { type: string }
-        description: { type: string }
-        type:
-          oneOf:
-            -
-              enum: [bool, string]
-            -
-              type: object
-              properties:
-                enum:
-                  type: array
-        aliases:
-          type: array
-          items: { type: string }
+  options:
+    '$ref': '#/definitions/options'
   subcommands:
     type: object
     patternProperties:
       "^[a-zA-Z0-9_]+$":
-        type: object
+        '$ref': '#/definitions/command'
+definitions:
+  optionTypeSimple:
+    enum: [bool, string]
+  optionTypeEnum:
+    type: object
+    properties:
+      enum:
+        type: array
+  options:
+    type: array
+    items:
+      '$ref': '#/definitions/option'
+  option:
+    type: object
+    properties:
+      name: { type: string }
+      description: { type: string }
+      type:
+        oneOf:
+          - '$ref': '#/definitions/optionTypeSimple'
+          - '$ref': '#/definitions/optionTypeEnum'
+      aliases:
+        type: array
+        items: { type: string }
+  command:
+    type: object
+    properties:
+      summary: { type: string }
+      op: { type: string }
+      parameters:
+        type: array
         properties:
-          summary: { type: string }
-          op: { type: string }
-          parameters:
-            type: array
-            properties:
-              name: { type: string }
-              required: { type: bool }
-              type:
-                type: object
-          options: *def_options
+          name: { type: string }
+          required: { type: bool }
+          type:
+            type: object
+      options:
+        '$ref': '#/definitions/options'
 
