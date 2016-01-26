@@ -12,7 +12,7 @@ _subrepo() {
     case $COMP_CWORD in
 
     1)
-        _subrepo_compreply '_complete -- Generate self completion'$'\n''branch -- Create a branch with local subrepo commits since last pull.'$'\n''clean -- Remove artifacts created by '"'"'fetch'"'"' and '"'"'branch'"'"' commands.'$'\n''clone -- Add a repository as a subrepo in a subdir of your repository.'$'\n''commit -- Add subrepo branch to current history as a single commit.'$'\n''fetch -- Fetch the remote/upstream content for a subrepo.'$'\n''help -- Same as '"'"'git help subrepo'"'"''$'\n''init -- Turn an existing subdirectory into a subrepo.'$'\n''pull -- Update the subrepo subdir with the latest upstream changes.'$'\n''push -- Push a properly merged subrepo branch back upstream.'$'\n''status -- Get the status of a subrepo.'$'\n''version -- display version information about git-subrepo'
+        _subrepo_compreply '_complete -- Generate self completion'$'\n''branch    -- Create a branch with local subrepo commits since last pull.'$'\n''clean     -- Remove artifacts created by '"'"'fetch'"'"' and '"'"'branch'"'"' commands.'$'\n''clone     -- Add a repository as a subrepo in a subdir of your repository.'$'\n''commit    -- Add subrepo branch to current history as a single commit.'$'\n''fetch     -- Fetch the remote/upstream content for a subrepo.'$'\n''help      -- Same as '"'"'git help subrepo'"'"''$'\n''init      -- Turn an existing subdirectory into a subrepo.'$'\n''pull      -- Update the subrepo subdir with the latest upstream changes.'$'\n''push      -- Push a properly merged subrepo branch back upstream.'$'\n''status    -- Get the status of a subrepo.'$'\n''version   -- display version information about git-subrepo'
 
     ;;
     *)
@@ -32,7 +32,7 @@ _subrepo() {
           ;;
 
           *)
-            _subrepo_compreply "'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--name -- name of the program'"$'\n'"'--zsh -- for zsh'"$'\n'"'--bash -- for bash'"
+            _subrepo_compreply "'--help -- Show command help'"$'\n'"'-h     -- Show command help'"$'\n'"'--name -- name of the program'"$'\n'"'--zsh  -- for zsh'"$'\n'"'--bash -- for bash'"
           ;;
         esac
         ;;
@@ -51,7 +51,7 @@ _subrepo() {
           ;;
 
           *)
-            _subrepo_compreply "'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--all -- All subrepos'"
+            _subrepo_compreply "'--help -- Show command help'"$'\n'"'-h     -- Show command help'"$'\n'"'--all  -- All subrepos'"
           ;;
         esac
         ;;
@@ -70,7 +70,7 @@ _subrepo() {
           ;;
 
           *)
-            _subrepo_compreply "'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--all -- All subrepos'"
+            _subrepo_compreply "'--help -- Show command help'"$'\n'"'-h     -- Show command help'"$'\n'"'--all  -- All subrepos'"
           ;;
         esac
         ;;
@@ -92,7 +92,7 @@ _subrepo() {
           ;;
 
           *)
-            _subrepo_compreply "'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--branch -- Upstream branch'"$'\n'"'-b -- Upstream branch'"$'\n'"'--force -- reclone (completely replace) an existing subdir.'"$'\n'"'-f -- reclone (completely replace) an existing subdir.'"
+            _subrepo_compreply "'--help   -- Show command help'"$'\n'"'-h       -- Show command help'"$'\n'"'--branch -- Upstream branch'"$'\n'"'-b       -- Upstream branch'"$'\n'"'--force  -- reclone (completely replace) an existing subdir.'"$'\n'"'-f       -- reclone (completely replace) an existing subdir.'"
           ;;
         esac
         ;;
@@ -111,7 +111,7 @@ _subrepo() {
           ;;
 
           *)
-            _subrepo_compreply "'--help -- Show command help'"$'\n'"'-h -- Show command help'"
+            _subrepo_compreply "'--help -- Show command help'"$'\n'"'-h     -- Show command help'"
           ;;
         esac
         ;;
@@ -130,7 +130,7 @@ _subrepo() {
           ;;
 
           *)
-            _subrepo_compreply "'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--all -- All subrepos'"
+            _subrepo_compreply "'--help -- Show command help'"$'\n'"'-h     -- Show command help'"$'\n'"'--all  -- All subrepos'"
           ;;
         esac
         ;;
@@ -140,7 +140,7 @@ _subrepo() {
         case $COMP_CWORD in
 
         2)
-            _subrepo_compreply '_complete'$'\n''branch'$'\n''clean'$'\n''clone'$'\n''commit'$'\n''fetch'$'\n''init'$'\n''pull'$'\n''push'$'\n''status'$'\n''version'
+            _subrepo_compreply '_complete'$'\n''branch   '$'\n''clean    '$'\n''clone    '$'\n''commit   '$'\n''fetch    '$'\n''init     '$'\n''pull     '$'\n''push     '$'\n''status   '$'\n''version  '
 
         ;;
         *)
@@ -187,7 +187,7 @@ _subrepo() {
           ;;
 
           *)
-            _subrepo_compreply "'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--remote -- Specify remote repository'"$'\n'"'-r -- Specify remote repository'"$'\n'"'--branch -- Upstream branch'"$'\n'"'-b -- Upstream branch'"
+            _subrepo_compreply "'--help   -- Show command help'"$'\n'"'-h       -- Show command help'"$'\n'"'--remote -- Specify remote repository'"$'\n'"'-r       -- Specify remote repository'"$'\n'"'--branch -- Upstream branch'"$'\n'"'-b       -- Upstream branch'"
           ;;
         esac
         ;;
@@ -212,7 +212,7 @@ _subrepo() {
           ;;
 
           *)
-            _subrepo_compreply "'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--all -- All subrepos'"$'\n'"'--branch -- Upstream branch'"$'\n'"'-b -- Upstream branch'"$'\n'"'--remote -- Specify remote repository'"$'\n'"'-r -- Specify remote repository'"$'\n'"'--update -- update'"$'\n'"'-u -- update'"
+            _subrepo_compreply "'--help   -- Show command help'"$'\n'"'-h       -- Show command help'"$'\n'"'--all    -- All subrepos'"$'\n'"'--branch -- Upstream branch'"$'\n'"'-b       -- Upstream branch'"$'\n'"'--remote -- Specify remote repository'"$'\n'"'-r       -- Specify remote repository'"$'\n'"'--update -- update'"$'\n'"'-u       -- update'"
           ;;
         esac
         ;;
@@ -237,7 +237,7 @@ _subrepo() {
           ;;
 
           *)
-            _subrepo_compreply "'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--all -- All subrepos'"$'\n'"'--branch -- Upstream branch'"$'\n'"'-b -- Upstream branch'"$'\n'"'--remote -- Specify remote repository'"$'\n'"'-r -- Specify remote repository'"$'\n'"'--update -- update'"$'\n'"'-u -- update'"
+            _subrepo_compreply "'--help   -- Show command help'"$'\n'"'-h       -- Show command help'"$'\n'"'--all    -- All subrepos'"$'\n'"'--branch -- Upstream branch'"$'\n'"'-b       -- Upstream branch'"$'\n'"'--remote -- Specify remote repository'"$'\n'"'-r       -- Specify remote repository'"$'\n'"'--update -- update'"$'\n'"'-u       -- update'"
           ;;
         esac
         ;;
@@ -256,7 +256,7 @@ _subrepo() {
           ;;
 
           *)
-            _subrepo_compreply "'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--quiet -- Just print names'"$'\n'"'-q -- Just print names'"
+            _subrepo_compreply "'--help  -- Show command help'"$'\n'"'-h      -- Show command help'"$'\n'"'--quiet -- Just print names'"$'\n'"'-q      -- Just print names'"
           ;;
         esac
         ;;
@@ -273,8 +273,8 @@ _subrepo() {
 
 _subrepo_compreply() {
     IFS=$'\n' COMPREPLY=($(compgen -W "$1" -- ${COMP_WORDS[COMP_CWORD]}))
-    if [[ ${#COMPREPLY[*]} -eq 1 ]]; then #Only one completion
-        COMPREPLY=( ${COMPREPLY[0]%% -- *} ) #Remove ' -- ' and everything after
+    if [[ ${#COMPREPLY[*]} -eq 1 ]]; then # Only one completion
+        COMPREPLY=( ${COMPREPLY[0]%%  *-- *} ) # Remove ' -- ' and everything after
     fi
 }
 

@@ -35,8 +35,8 @@ $completion_outer
 
 _${name}_compreply() \{
     IFS=\$'\\n' COMPREPLY=(\$(compgen -W "\$1" -- \$\{COMP_WORDS\[COMP_CWORD\]\}))
-    if [[ \$\{#COMPREPLY[*]\} -eq 1 ]]; then #Only one completion
-        COMPREPLY=( \$\{COMPREPLY[0]%% -- *\} ) #Remove ' -- ' and everything after
+    if [[ \$\{#COMPREPLY[*]\} -eq 1 ]]; then # Only one completion
+        COMPREPLY=( \$\{COMPREPLY[0]%%  *-- *\} ) # Remove ' -- ' and everything after
     fi
 \}
 
@@ -58,9 +58,17 @@ sub completion_commands {
     my $level = $args{level};
     my $indent = "    " x $level;
 
+    my $maxlength = 0;
+    for (keys %$commands) {
+        if (length($_) > $maxlength) {
+            $maxlength = length $_;
+        }
+    }
     my @commands = map {
         my $summary = $commands->{ $_ }->summary;
-        length $summary ? "$_ -- " . $summary : $_
+        my $name = $_;
+        $name .= ' ' x ($maxlength - length);
+        length $summary ? "$name -- " . $summary : $name
     } sort keys %$commands;
     for (@commands) {
         s/['`]/'"'"'/g;
@@ -158,23 +166,36 @@ EOM
         my $comp_value = <<"EOM";
 ${indent}case \$\{COMP_WORDS[\$COMP_CWORD-1]\} in
 EOM
+        my $maxlength = 0;
+        for my $opt (@$options) {
+            my $name = $opt->name;
+            my $aliases = $opt->aliases;
+            my @names = ($name, @$aliases);
+            for my $n (@names) {
+                my $length = length $n;
+                $length = $length > 1 ? $length+2 : $length+1;
+                $maxlength = $length if $length > $maxlength;
+            }
+        }
         for my $i (0 .. $#$options) {
             my $opt = $options->[ $i ];
             my $name = $opt->name;
             my $type = $opt->type;
             my $summary = $opt->description;
+            $summary =~ s/['`]/'"'"'/g;
+            $summary =~ s/\$/\\\$/g;
             my $aliases = $opt->aliases;
             my @names = ($name, @$aliases);
             my @option_strings;
             for my $n (@names) {
                 my $dash = length $n > 1 ? "--" : "-";
                 my $option_string = "$dash$n";
-                $summary =~ s/['`]/'"'"'/g;
-                $summary =~ s/\$/\\\$/g;
+                push @option_strings, $option_string;
+                my $length = length $option_string;
+                $option_string .= " " x ($maxlength - $length);
                 my $string = length $summary
                     ? qq{'$option_string -- $summary'}
                     : qq{'$option_string'};
-                push @option_strings, $option_string;
                 push @comp_options, $string;
             }
 

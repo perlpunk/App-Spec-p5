@@ -12,7 +12,7 @@ _myapp() {
     case $COMP_CWORD in
 
     1)
-        _myapp_compreply '_complete -- Generate self completion'$'\n''cook -- Cook something'$'\n''help -- Show command help'$'\n''weather -- Weather'
+        _myapp_compreply '_complete -- Generate self completion'$'\n''cook      -- Cook something'$'\n''help      -- Show command help'$'\n''weather   -- Weather'
 
     ;;
     *)
@@ -34,7 +34,7 @@ _myapp() {
           ;;
 
           *)
-            _myapp_compreply "'--verbose -- be verbose'"$'\n'"'-v -- be verbose'"$'\n'"'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--name -- name of the program'"$'\n'"'--zsh -- for zsh'"$'\n'"'--bash -- for bash'"
+            _myapp_compreply "'--verbose -- be verbose'"$'\n'"'-v        -- be verbose'"$'\n'"'--help    -- Show command help'"$'\n'"'-h        -- Show command help'"$'\n'"'--name    -- name of the program'"$'\n'"'--zsh     -- for zsh'"$'\n'"'--bash    -- for bash'"
           ;;
         esac
         ;;
@@ -58,7 +58,7 @@ _myapp() {
           ;;
 
           *)
-            _myapp_compreply "'--verbose -- be verbose'"$'\n'"'-v -- be verbose'"$'\n'"'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--with -- Drink with ...'"$'\n'"'--sugar -- add sugar'"$'\n'"'-s -- add sugar'"
+            _myapp_compreply "'--verbose -- be verbose'"$'\n'"'-v        -- be verbose'"$'\n'"'--help    -- Show command help'"$'\n'"'-h        -- Show command help'"$'\n'"'--with    -- Drink with ...'"$'\n'"'--sugar   -- add sugar'"$'\n'"'-s        -- add sugar'"
           ;;
         esac
         ;;
@@ -68,7 +68,7 @@ _myapp() {
         case $COMP_CWORD in
 
         2)
-            _myapp_compreply '_complete'$'\n''cook'$'\n''weather'
+            _myapp_compreply '_complete'$'\n''cook     '$'\n''weather  '
 
         ;;
         *)
@@ -82,7 +82,7 @@ _myapp() {
             case $COMP_CWORD in
 
             3)
-                _myapp_compreply 'cities'$'\n''countries'$'\n''show'
+                _myapp_compreply 'cities   '$'\n''countries'$'\n''show     '
 
             ;;
             *)
@@ -108,7 +108,7 @@ _myapp() {
         case $COMP_CWORD in
 
         2)
-            _myapp_compreply 'cities -- show list of cities'$'\n''countries -- show list of countries'$'\n''show -- Show Weather forecast'
+            _myapp_compreply 'cities    -- show list of cities'$'\n''countries -- show list of countries'$'\n''show      -- Show Weather forecast'
 
         ;;
         *)
@@ -127,7 +127,7 @@ _myapp() {
               ;;
 
               *)
-                _myapp_compreply "'--verbose -- be verbose'"$'\n'"'-v -- be verbose'"$'\n'"'--help -- Show command help'"$'\n'"'-h -- Show command help'"$'\n'"'--country -- country name(s)'"$'\n'"'-c -- country name(s)'"
+                _myapp_compreply "'--verbose -- be verbose'"$'\n'"'-v        -- be verbose'"$'\n'"'--help    -- Show command help'"$'\n'"'-h        -- Show command help'"$'\n'"'--country -- country name(s)'"$'\n'"'-c        -- country name(s)'"
               ;;
             esac
             ;;
@@ -151,7 +151,7 @@ _myapp() {
               ;;
 
               *)
-                _myapp_compreply "'--verbose -- be verbose'"$'\n'"'-v -- be verbose'"$'\n'"'--help -- Show command help'"$'\n'"'-h -- Show command help'"
+                _myapp_compreply "'--verbose -- be verbose'"$'\n'"'-v        -- be verbose'"$'\n'"'--help    -- Show command help'"$'\n'"'-h        -- Show command help'"
               ;;
             esac
             ;;
@@ -171,8 +171,8 @@ _myapp() {
 
 _myapp_compreply() {
     IFS=$'\n' COMPREPLY=($(compgen -W "$1" -- ${COMP_WORDS[COMP_CWORD]}))
-    if [[ ${#COMPREPLY[*]} -eq 1 ]]; then #Only one completion
-        COMPREPLY=( ${COMPREPLY[0]%% -- *} ) #Remove ' -- ' and everything after
+    if [[ ${#COMPREPLY[*]} -eq 1 ]]; then # Only one completion
+        COMPREPLY=( ${COMPREPLY[0]%%  *-- *} ) # Remove ' -- ' and everything after
     fi
 }
 
