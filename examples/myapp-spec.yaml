@@ -48,23 +48,14 @@ subcommands:
             required: true
             summary: Specify country
             completion:
-              command:
-                - replace: SELF
-                - weather
-                - countries
+              op: weather_complete
           -
             name: city
             required: true
             multiple: 1
             summary: Specify city or cities
             completion:
-              command:
-                - replace: SELF
-                - weather
-                - cities
-                - '--country'
-                -
-                  replace: ["SHELL_WORDS", "4"]
+              op: weather_complete
       countries:
         summary: show list of countries
         op: countries

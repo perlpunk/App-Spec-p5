@@ -36,7 +36,7 @@ $completion_outer
 _${name}_compreply() \{
     IFS=\$'\\n' COMPREPLY=(\$(compgen -W "\$1" -- \$\{COMP_WORDS\[COMP_CWORD\]\}))
     if [[ \$\{#COMPREPLY[*]\} -eq 1 ]]; then # Only one completion
-        COMPREPLY=( \$\{COMPREPLY[0]%%  *-- *\} ) # Remove ' -- ' and everything after
+        COMPREPLY=( \$\{COMPREPLY[0]%% -- *\} ) # Remove ' -- ' and everything after
     fi
 \}
 
@@ -260,52 +260,95 @@ sub dynamic_completion {
     my $name = $p->name;
     my $def = $p->completion;
     my $command = $def->{command};
+    my $op = $def->{op};
     my @args;
-    for my $arg (@$command) {
-        unless (ref $arg) {
-            push @args, "'$arg'";
-            next;
-        }
-        if (my $replace = $arg->{replace}) {
-            if (ref $replace eq 'ARRAY') {
-                my @repl = @$replace;
-                if ($replace->[0] eq 'SHELL_WORDS') {
-                    my $num = $replace->[1];
-                    my $index = "\$COMP_CWORD";
-                    if ($num ne 'CURRENT') {
-                        if ($num =~ m/^-/) {
-                            $index .= $num;
-                        }
-                        else {
-                            $index = $num - 1;
-                        }
-                    }
-                    my $string = qq{"\$\{COMP_WORDS\[$index\]\}"};
-                    push @args, $string;
-                }
-            }
-            else {
-                if ($replace eq "SELF") {
-                    push @args, "\$program";
-                }
-            }
-        }
-    }
-    my $varname = "__${name}_completion";
-
     my $appname = $self->spec->name;
     my $function_name = "_${appname}_"
         . join ("_", @$previous)
         . "_" . ($p->isa("App::Spec::Option") ? "option" : "param")
         . "_" . $name . "_completion";
-    my $function = <<"EOM";
+
+    my $function;
+    if ($op) {
+        $function = <<"EOM";
+$function_name() \{
+    local __dynamic_completion
+    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='$name' \${COMP_WORDS[@]}`
+    _myapp_compreply "\$__dynamic_completion"
+\}
+EOM
+    }
+    elsif ($command) {
+        for my $arg (@$command) {
+            unless (ref $arg) {
+                push @args, "'$arg'";
+                next;
+            }
+            if (my $replace = $arg->{replace}) {
+                if (ref $replace eq 'ARRAY') {
+                    my @repl = @$replace;
+                    if ($replace->[0] eq 'SHELL_WORDS') {
+                        my $num = $replace->[1];
+                        my $index = "\$COMP_CWORD";
+                        if ($num ne 'CURRENT') {
+                            if ($num =~ m/^-/) {
+                                $index .= $num;
+                            }
+                            else {
+                                $index = $num - 1;
+                            }
+                        }
+                        my $string = qq{"\$\{COMP_WORDS\[$index\]\}"};
+                        push @args, $string;
+                    }
+                }
+                else {
+                    if ($replace eq "SELF") {
+                        push @args, "\$program";
+                    }
+                }
+            }
+        }
+        my $varname = "__${name}_completion";
+
+        $function = <<"EOM";
 $function_name() \{
     local param_$name=`@args`
     _${appname}_compreply "\$param_$name"
 \}
 EOM
+    }
     push @$functions, $function;
     return $function_name;
+}
+
+sub list_to_alternative {
+    my ($self, %args) = @_;
+    my $list = $args{list};
+    my $maxlength = 0;
+    for (@$list) {
+        if (length($_) > $maxlength) {
+            $maxlength = length $_;
+        }
+    }
+    my @alt = map {
+        my ($alt_name, $summary);
+        if (ref $_ eq 'ARRAY') {
+            ($alt_name, $summary) = @$_;
+        }
+        else {
+            ($alt_name, $summary) = ($_, '');
+        }
+        $summary //= '';
+        $alt_name =~ s/:/\\\\:/g;
+        $summary =~ s/['`]/'"'"'/g;
+        $summary =~ s/\$/\\\$/g;
+        if (length $summary) {
+            $alt_name .= " " x ($maxlength - length($alt_name));
+        }
+        $alt_name;
+    } @$list;
+    return join '', map { "$_\n" } @alt;
 }
 
 sub completion_parameter {

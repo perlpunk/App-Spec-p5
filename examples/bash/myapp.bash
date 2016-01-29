@@ -172,7 +172,7 @@ _myapp() {
 _myapp_compreply() {
     IFS=$'\n' COMPREPLY=($(compgen -W "$1" -- ${COMP_WORDS[COMP_CWORD]}))
     if [[ ${#COMPREPLY[*]} -eq 1 ]]; then # Only one completion
-        COMPREPLY=( ${COMPREPLY[0]%%  *-- *} ) # Remove ' -- ' and everything after
+        COMPREPLY=( ${COMPREPLY[0]%% -- *} ) # Remove ' -- ' and everything after
     fi
 }
 
@@ -181,12 +181,14 @@ _myapp_weather_cities_option_country_completion() {
     _myapp_compreply "$param_country"
 }
 _myapp_weather_show_param_country_completion() {
-    local param_country=`$program 'weather' 'countries'`
-    _myapp_compreply "$param_country"
+    local __dynamic_completion
+    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='country' ${COMP_WORDS[@]}`
+    _myapp_compreply "$__dynamic_completion"
 }
 _myapp_weather_show_param_city_completion() {
-    local param_city=`$program 'weather' 'cities' '--country' "${COMP_WORDS[3]}"`
-    _myapp_compreply "$param_city"
+    local __dynamic_completion
+    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='city' ${COMP_WORDS[@]}`
+    _myapp_compreply "$__dynamic_completion"
 }
 
 

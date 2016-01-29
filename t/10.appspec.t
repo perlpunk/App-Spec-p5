@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More tests => 3;
 use Test::Output;
 use FindBin '$Bin';
 use lib "$Bin/lib";
@@ -49,6 +49,26 @@ my @invalid = (
     },
 );
 
+my @completion = (
+    {
+        env => {
+          PERL5_APPSPECRUN_COMPLETION_PARAMETER => "country",
+          PERL5_APPSPECRUN_SHELL => 'zsh',
+        },
+        input => [qw/ weather show /],
+        stdout => qr/Austria Germany Netherlands/,
+    },
+    {
+        env => {
+          PERL5_APPSPECRUN_COMPLETION_PARAMETER => "city",
+          PERL5_APPSPECRUN_SHELL => 'zsh',
+        },
+        input => [qw/ weather show Netherlands /],
+        stdout => qr/Amsterdam Echt/,
+    },
+);
+
+
 subtest valid => sub {
     plan tests => scalar @valid;
     for my $test (@valid) {
@@ -86,3 +106,19 @@ subtest invalid => sub {
     }
 };
 
+subtest completion => sub {
+    plan tests => scalar @completion;
+    for my $test (@completion) {
+        my $env = $test->{env};
+        local @ENV{ keys %$env } = values %$env;
+        my $input = $test->{input};
+        my $stdout = $test->{stdout};
+        local @ARGV = @$input;
+        stdout_like(sub {
+            eval {
+                my $run = $spec->runner;
+                $run->run;
+            };
+        }, $stdout, "args: (@$input)");
+    }
+};

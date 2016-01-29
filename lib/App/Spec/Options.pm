@@ -11,6 +11,7 @@ has options => ( is => 'ro' );
 has option_specs => ( is => 'ro' );
 has parameters => ( is => 'ro' );
 has param_specs => ( is => 'ro' );
+has config => ( is => 'ro' );
 
 my %validate = (
     string => sub { length($_[0]) > 0 },
@@ -28,6 +29,7 @@ sub process {
     my ($self, $errs, %args) = @_;
     my $app = $args{app};
     my $type = $args{type};
+    my $config = $self->config;
     my ($items, $specs);
     if ($args{type} eq "parameters") {
         $items = $self->parameters;
@@ -42,11 +44,13 @@ sub process {
         my $value = $items->{ $name };
 
         if (not defined $value) {
-            if ($spec->required) {
+            if ($spec->required
+                and (($config->{required} // '') ne 'ignore')) {
                 $errs->{ $type }->{ $name } = "missing";
                 next;
             }
-            if (defined (my $default = $spec->default)) {
+            if (defined (my $default = $spec->default)
+                and (($config->{defult} // '') ne 'ignore')) {
                 $value = $default;
                 $items->{ $name } = $value;
             }

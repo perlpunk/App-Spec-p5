@@ -49,4 +49,22 @@ sub cities {
     say for map { sort @$_ } @countries{ @countries };
 }
 
+sub weather_complete {
+    my ($self, $args) = @_;
+    my $completion = $args->{completion} or return;
+    my $comp_param = $completion->{parameter};
+
+    my $param = $self->parameters;
+    if ($comp_param eq "city") {
+        my $country = $param->{country};
+        my $cities = $countries{ $country } or return;
+        return [@$cities];
+    }
+    elsif ($comp_param eq "country") {
+        my @countries = sort keys %countries;
+        return \@countries;
+    }
+    return;
+}
+
 1;

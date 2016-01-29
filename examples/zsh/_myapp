@@ -275,13 +275,13 @@ _myapp_weather_cities_option_country_completion() {
 }
 _myapp_weather_show_param_country_completion() {
     local __dynamic_completion
-    IFS=$'\n' set -A __dynamic_completion `$program 'weather' 'countries'`
-    compadd -X "country:" $__dynamic_completion
+    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='country' $words`
+    _alternative "$__dynamic_completion"
 }
 _myapp_weather_show_param_city_completion() {
     local __dynamic_completion
-    IFS=$'\n' set -A __dynamic_completion `$program 'weather' 'cities' '--country' "$words[4]"`
-    compadd -X "city:" $__dynamic_completion
+    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='city' $words`
+    _alternative "$__dynamic_completion"
 }
 
 

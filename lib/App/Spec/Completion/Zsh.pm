@@ -211,51 +211,65 @@ sub dynamic_completion {
     my $name = $p->name;
     my $def = $p->completion;
     my $command = $def->{command};
-    my @args;
-    for my $arg (@$command) {
-        unless (ref $arg) {
-            push @args, "'$arg'";
-            next;
-        }
-        if (my $replace = $arg->{replace}) {
-            if (ref $replace eq 'ARRAY') {
-                my @repl = @$replace;
-                if ($replace->[0] eq 'SHELL_WORDS') {
-                    my $num = $replace->[1];
-                    my $index = "\$CURRENT";
-                    if ($num ne 'CURRENT') {
-                        if ($num =~ m/^-/) {
-                            $index .= $num;
-                        }
-                        else {
-                            $index = $num;
-                        }
-                    }
-                    my $string = qq{"\$words\[$index\]"};
-                    push @args, $string;
-                }
-            }
-            else {
-                if ($replace eq "SELF") {
-                    push @args, "\$program";
-                }
-            }
-        }
-    }
-    my $varname = "__${name}_completion";
-
+    my $op = $def->{op};
     my $appname = $self->spec->name;
     my $function_name = "_${appname}_"
         . join ("_", @$previous)
         . "_" . ($p->isa("App::Spec::Option") ? "option" : "param")
         . "_" . $name . "_completion";
-    my $function = <<"EOM";
+
+    my $function;
+    if ($op) {
+        $function = <<"EOM";
+$function_name() \{
+    local __dynamic_completion
+    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='$name' \$words`
+    _alternative "\$__dynamic_completion"
+\}
+EOM
+    }
+    elsif ($command) {
+        my @args;
+        for my $arg (@$command) {
+            unless (ref $arg) {
+                push @args, "'$arg'";
+                next;
+            }
+            if (my $replace = $arg->{replace}) {
+                if (ref $replace eq 'ARRAY') {
+                    my @repl = @$replace;
+                    if ($replace->[0] eq 'SHELL_WORDS') {
+                        my $num = $replace->[1];
+                        my $index = "\$CURRENT";
+                        if ($num ne 'CURRENT') {
+                            if ($num =~ m/^-/) {
+                                $index .= $num;
+                            }
+                            else {
+                                $index = $num;
+                            }
+                        }
+                        my $string = qq{"\$words\[$index\]"};
+                        push @args, $string;
+                    }
+                }
+                else {
+                    if ($replace eq "SELF") {
+                        push @args, "\$program";
+                    }
+                }
+            }
+        }
+        my $varname = "__${name}_completion";
+
+        $function = <<"EOM";
 $function_name() \{
     local __dynamic_completion
     IFS=\$'\\n' set -A __dynamic_completion `@args`
     compadd -X "$name:" \$__dynamic_completion
 \}
 EOM
+}
     push @$functions, $function;
     return $function_name;
 }
@@ -270,14 +284,35 @@ sub commands_alternative {
     for my $key (sort keys %$commands) {
         my $cmd = $commands->{ $key };
         my $name = $cmd->name;
-        $name =~ s/:/\\\\:/g;
-        my $summary = $cmd->summary // '';
+        my $summary = $cmd->summary;
+        push @subcommands, [$name, $summary];
+    }
+    my $string = $self->list_to_alternative(
+        name => "cmd$level",
+        list => \@subcommands,
+    );
+    return "_alternative '$string'";
+}
+
+sub list_to_alternative {
+    my ($self, %args) = @_;
+    my $list = $args{list};
+    my $name = $args{name};
+    my @alt = map {
+        my ($alt_name, $summary);
+        if (ref $_ eq 'ARRAY') {
+            ($alt_name, $summary) = @$_;
+            $summary //= '';
+        }
+        else {
+            ($alt_name, $summary) = ($_, '');
+        }
+        $alt_name =~ s/:/\\\\:/g;
         $summary =~ s/['`]/'"'"'/g;
         $summary =~ s/\$/\\\$/g;
-        push @subcommands, length $summary ? qq{$name\\:"$summary"} : $name;
-    }
-    my $string = qq{_alternative 'args:cmd$level:((@subcommands))'};
-    return $string;
+        length $summary ? qq{$alt_name\\:"$summary"} : $alt_name
+    } @$list;
+    my $string = qq{args:$name:((@alt))};
 }
 
 sub options {

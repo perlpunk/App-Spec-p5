@@ -19,6 +19,7 @@ sub run {
     my ($self) = @_;
     my $spec = $self->spec;
 
+    my $completion_parameter = $ENV{PERL5_APPSPECRUN_COMPLETION_PARAMETER};
     $self->check_help;
 
     my %option_specs;
@@ -33,11 +34,19 @@ sub run {
         parameter_list => \@param_list,
         param_specs => \%param_specs,
     );
+
+    my %options_config;
+    if ($completion_parameter) {
+        $options_config{required} = "ignore";
+        $options_config{default} = "ignore";
+    }
+
     my $opt = App::Spec::Options->new({
         options => $self->options,
         option_specs => \%option_specs,
         parameters => $self->parameters,
         param_specs => \%param_specs,
+        config => \%options_config,
     });
     my %errs;
     my ($ok) = $opt->process( \%errs, type => "parameters", app => $self );
@@ -53,7 +62,36 @@ sub run {
         print STDERR $help;
         die "$err\nsorry =(\n";
     }
-    $self->$op;
+    my $args = {};
+    if ($completion_parameter) {
+        my $shell = $ENV{PERL5_APPSPECRUN_SHELL} or return;
+        my $param = $param_specs{ $completion_parameter };
+        my $completion = $param->completion;
+        my $op = $completion->{op} or return;
+        $args->{completion} = {
+            parameter => $completion_parameter,
+        };
+        my $result = $self->$op($args);
+        my $mod;
+        if ($shell eq 'bash') {
+            $mod = 'App::Spec::Completion::Bash';
+        }
+        elsif ($shell eq 'zsh') {
+            $mod = 'App::Spec::Completion::Zsh';
+        }
+        else {
+            return;
+        }
+        eval "use $mod";
+        my $string = $mod->list_to_alternative(
+            name => $completion_parameter,
+            list => $result,
+        );
+        say $string;
+    }
+    else {
+        $self->$op;
+    }
 
 }
 
