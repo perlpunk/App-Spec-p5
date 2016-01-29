@@ -125,8 +125,15 @@ sub _add_subcommands {
 }
 
 sub usage {
-    my ($self, $cmds) = @_;
+    my ($self, %args) = @_;
+    my $cmds = $args{commands};
+    my %highlights = %{ $args{highlights} || {} };
+    my $color = $args{color};
     my $appname = $self->name;
+
+    if (keys %highlights and $color) {
+        require Term::ANSIColor;
+    }
 
     my $abstract = $self->abstract;
     my $title = $self->title;
@@ -142,8 +149,14 @@ EOM
     if (keys %$subcmds) {
         my $maxlength = 0;
         my @table;
-        $usage .= " <subcommands>";
-        $body .= "Subcommands:\n";
+        my $usage_string = "<subcommands>";
+        my $header = "Subcommands:";
+        if ($color and $highlights{subcommands}) {
+            $usage_string = Term::ANSIColor::colored([qw/ bold red /], $usage_string);
+            $header = Term::ANSIColor::colored([qw/ bold red /], $header);
+        }
+        $usage .= " $usage_string";
+        $body .= "$header\n";
         for my $name (sort keys %$subcmds) {
             my $cmd_spec = $subcmds->{ $name };
             my $summary = $cmd_spec->summary;
@@ -158,8 +171,11 @@ EOM
     if (@$parameters) {
         my $maxlength = 0;
         my @table;
+        my @highlights;
         for my $param (@$parameters) {
             my $name = $param->name;
+            my $highlight = $highlights{parameters}->{ $name };
+            push @highlights, ($color and $highlight) ? 1 : 0;
             my $summary = $param->summary;
             $usage .= " " . $param->to_usage_header;
             my ($req, $multi) = (' ', '  ');
@@ -175,15 +191,20 @@ EOM
             }
         }
         $body .= "Parameters:\n";
-        $body .= $self->_output_table(\@table, [$maxlength]);
+        my @lines = $self->_output_table(\@table, [$maxlength]);
+        my $lines = $self->_colorize_lines(\@lines, \@highlights);
+        $body .= $lines;
     }
 
     if (@$options) {
+        my @highlights;
         $usage .= " [options]";
         my $maxlength = 0;
         my @table;
         for my $opt (sort { $a->name cmp $b->name } @$options) {
             my $name = $opt->name;
+            my $highlight = $highlights{options}->{ $name };
+            push @highlights, ($color and $highlight) ? 1 : 0;
             my $aliases = $opt->aliases;
             my $summary = $opt->summary;
             my @names = map {
@@ -203,7 +224,9 @@ EOM
             push @table, [$string, $req, $multi, $summary];
         }
         $body .= "\nOptions:\n";
-        $body .= $self->_output_table(\@table, [$maxlength]);
+        my @lines = $self->_output_table(\@table, [$maxlength]);
+        my $lines = $self->_colorize_lines(\@lines, \@highlights);
+        $body .= $lines;
     }
 
     return "$usage\n\n$body";
@@ -221,17 +244,30 @@ sub generate_pod {
 
 }
 
+sub _colorize_lines {
+    my ($self, $lines, $highlights) = @_;
+    my $output = '';
+    for my $i (0 .. $#$lines) {
+        my $line = $lines->[ $i ];
+        if ($highlights->[ $i ]) {
+            $line = Term::ANSIColor::colored([qw/ bold red /], $line);
+        }
+        $output .= $line;
+    }
+    return $output;
+}
+
 sub _output_table {
     my ($self, $table, $lengths) = @_;
-    my $string = '';
+    my @lines;
     my @lengths = map {
         defined $lengths->[$_] ? "%-$lengths->[$_]s" : "%s"
     } 0 .. @{ $table->[0] } - 1;
     for my $row (@$table) {
         no warnings 'uninitialized';
-        $string .= sprintf join('  ', @lengths) . "\n", @$row;
+        push @lines, sprintf join('  ', @lengths) . "\n", @$row;
     }
-    return $string;
+    return wantarray ? @lines : join '', @lines;
 }
 
 

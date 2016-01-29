@@ -6,6 +6,7 @@ use FindBin '$Bin';
 use lib "$Bin/lib";
 use App::Spec::Example::MyApp;
 use App::Spec;
+$ENV{PERL5_APPSPECRUN_COLOR} = 'never';
 my $spec = App::Spec->read("$Bin/../examples/myapp-spec.yaml");
 
 my @valid = (
@@ -78,7 +79,10 @@ subtest invalid => sub {
             };
             $err = $@;
         }, $stderr, "stderr - args: (@$input)");
-        cmp_ok($@, '=~', $eval_error, "eval error - args: (@$input)");
+        if ($ENV{PERL5_APPSPEC_DEBUG}) {
+            diag("EVAL_ERROR:\n$err");
+        }
+        cmp_ok($err, '=~', $eval_error, "eval error - args: (@$input)");
     }
 };
 
