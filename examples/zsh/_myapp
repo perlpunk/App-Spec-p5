@@ -15,7 +15,7 @@ _myapp() {
 
         case $state in
         cmd1)
-            _alternative 'args:cmd2:((_complete\:"Generate self completion" cook\:"Cook something" help\:"Show command help" weather\:"Weather"))'
+            _alternative 'args:cmd2:((_complete\:"Generate self completion" cook\:"Cook something" help\:"Show command help" palindrome\:"Check if a string is a palindrome" weather\:"Weather"))'
         ;;
 
         args)
@@ -70,7 +70,7 @@ _myapp() {
 
                 case $state in
                 cmd2)
-                    _alternative 'args:cmd3:((_complete cook weather))'
+                    _alternative 'args:cmd3:((_complete cook palindrome weather))'
                 ;;
 
                 args)
@@ -93,6 +93,21 @@ _myapp() {
                     cook)
 
                         # ---- Command: help cook
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '--verbose[be verbose]' \
+                            '-v[be verbose]' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
+                            '--all[]' \
+                            && ret=0
+
+
+                    ;;
+                    palindrome)
+
+                        # ---- Command: help palindrome
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
@@ -183,6 +198,25 @@ _myapp() {
 
                 esac
             ;;
+            palindrome)
+
+                # ---- Command: palindrome
+                _arguments -s -C \
+                    '1: :->cmd1' \
+                    '2: :->string' \
+                    '--verbose[be verbose]' \
+                    '-v[be verbose]' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
+                    && ret=0
+
+                case $state in
+                string)
+_myapp_palindrome_param_string_completion
+                ;;
+                esac
+
+            ;;
             weather)
 
                 # ---- Command: weather
@@ -268,6 +302,12 @@ _myapp_weather_show_param_city_completion
 
 }
 
+_myapp_palindrome_param_string_completion() {
+    local __dynamic_completion
+    IFS=$'\n' set -A __dynamic_completion `cat /usr/share/dict/words | perl -nle'print if $_ eq reverse $_'
+`
+    compadd -X "string:" $__dynamic_completion
+}
 _myapp_weather_cities_option_country_completion() {
     local __dynamic_completion
     IFS=$'\n' set -A __dynamic_completion `$program 'weather' 'countries'`

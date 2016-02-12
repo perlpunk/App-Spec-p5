@@ -67,4 +67,10 @@ sub weather_complete {
     return;
 }
 
+sub palindrome{
+    my ($self) = @_;
+    my $string = $self->parameters->{string};
+    say +($string eq reverse $string) ? "yes" : "nope";
+}
+
 1;

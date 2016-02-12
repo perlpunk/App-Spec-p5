@@ -12,7 +12,7 @@ _myapp() {
     case $COMP_CWORD in
 
     1)
-        _myapp_compreply '_complete -- Generate self completion'$'\n''cook      -- Cook something'$'\n''help      -- Show command help'$'\n''weather   -- Weather'
+        _myapp_compreply '_complete  -- Generate self completion'$'\n''cook       -- Cook something'$'\n''help       -- Show command help'$'\n''palindrome -- Check if a string is a palindrome'$'\n''weather    -- Weather'
 
     ;;
     *)
@@ -68,7 +68,7 @@ _myapp() {
         case $COMP_CWORD in
 
         2)
-            _myapp_compreply '_complete'$'\n''cook     '$'\n''weather  '
+            _myapp_compreply '_complete '$'\n''cook      '$'\n''palindrome'$'\n''weather   '
 
         ;;
         *)
@@ -77,6 +77,8 @@ _myapp() {
           _complete)
           ;;
           cook)
+          ;;
+          palindrome)
           ;;
           weather)
             case $COMP_CWORD in
@@ -101,6 +103,25 @@ _myapp() {
           ;;
         esac
 
+        ;;
+        esac
+      ;;
+      palindrome)
+        case $COMP_CWORD in
+        2)
+                _myapp_palindrome_param_string_completion
+        ;;
+        *)
+        case ${COMP_WORDS[$COMP_CWORD-1]} in
+          --verbose|-v)
+          ;;
+          --help|-h)
+          ;;
+
+          *)
+            _myapp_compreply "'--verbose -- be verbose'"$'\n'"'-v        -- be verbose'"$'\n'"'--help    -- Show command help'"$'\n'"'-h        -- Show command help'"
+          ;;
+        esac
         ;;
         esac
       ;;
@@ -173,9 +194,15 @@ _myapp_compreply() {
     IFS=$'\n' COMPREPLY=($(compgen -W "$1" -- ${COMP_WORDS[COMP_CWORD]}))
     if [[ ${#COMPREPLY[*]} -eq 1 ]]; then # Only one completion
         COMPREPLY=( ${COMPREPLY[0]%% -- *} ) # Remove ' -- ' and everything after
+        COMPREPLY="$(echo -e "$COMPREPLY" | sed -e 's/[[:space:]]*$//')"
     fi
 }
 
+_myapp_palindrome_param_string_completion() {
+    local param_string=`cat /usr/share/dict/words | perl -nle'print if $_ eq reverse $_'
+`
+    _myapp_compreply "$param_string"
+}
 _myapp_weather_cities_option_country_completion() {
     local param_country=`$program 'weather' 'countries'`
     _myapp_compreply "$param_country"

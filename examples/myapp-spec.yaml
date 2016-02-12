@@ -73,4 +73,12 @@ subcommands:
                 - replace: SELF
                 - weather
                 - countries
+  palindrome:
+    summary: Check if a string is a palindrome
+    op: palindrome
+    parameters:
+    - name: string
+      completion:
+        command_string: |
+          cat /usr/share/dict/words | perl -nle'print if $_ eq reverse $_'
 # vim:et:sts=2:sws=2:sw=2:foldmethod=indent

@@ -211,6 +211,7 @@ sub dynamic_completion {
     my $name = $p->name;
     my $def = $p->completion;
     my $command = $def->{command};
+    my $command_string = $def->{command_string};
     my $op = $def->{op};
     my $appname = $self->spec->name;
     my $function_name = "_${appname}_"
@@ -228,44 +229,52 @@ $function_name() \{
 \}
 EOM
     }
-    elsif ($command) {
-        my @args;
-        for my $arg (@$command) {
-            unless (ref $arg) {
-                push @args, "'$arg'";
-                next;
-            }
-            if (my $replace = $arg->{replace}) {
-                if (ref $replace eq 'ARRAY') {
-                    my @repl = @$replace;
-                    if ($replace->[0] eq 'SHELL_WORDS') {
-                        my $num = $replace->[1];
-                        my $index = "\$CURRENT";
-                        if ($num ne 'CURRENT') {
-                            if ($num =~ m/^-/) {
-                                $index .= $num;
+    elsif ($command or $command_string) {
+        my $string = '';
+
+        if ($command) {
+            my @args;
+            for my $arg (@$command) {
+                unless (ref $arg) {
+                    push @args, "'$arg'";
+                    next;
+                }
+                if (my $replace = $arg->{replace}) {
+                    if (ref $replace eq 'ARRAY') {
+                        my @repl = @$replace;
+                        if ($replace->[0] eq 'SHELL_WORDS') {
+                            my $num = $replace->[1];
+                            my $index = "\$CURRENT";
+                            if ($num ne 'CURRENT') {
+                                if ($num =~ m/^-/) {
+                                    $index .= $num;
+                                }
+                                else {
+                                    $index = $num;
+                                }
                             }
-                            else {
-                                $index = $num;
-                            }
+                            my $string = qq{"\$words\[$index\]"};
+                            push @args, $string;
                         }
-                        my $string = qq{"\$words\[$index\]"};
-                        push @args, $string;
                     }
-                }
-                else {
-                    if ($replace eq "SELF") {
-                        push @args, "\$program";
+                    else {
+                        if ($replace eq "SELF") {
+                            push @args, "\$program";
+                        }
                     }
                 }
             }
+            $string = "@args";
+        }
+        elsif (defined $command_string) {
+            $string = $command_string;
         }
         my $varname = "__${name}_completion";
 
         $function = <<"EOM";
 $function_name() \{
     local __dynamic_completion
-    IFS=\$'\\n' set -A __dynamic_completion `@args`
+    IFS=\$'\\n' set -A __dynamic_completion `$string`
     compadd -X "$name:" \$__dynamic_completion
 \}
 EOM
