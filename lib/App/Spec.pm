@@ -135,7 +135,7 @@ sub usage {
         require Term::ANSIColor;
     }
 
-    my $abstract = $self->abstract;
+    my $abstract = $self->abstract // '';
     my $title = $self->title;
     my ($options, $parameters, $subcmds) = $self->gather_options_parameters($cmds);
     my $usage = <<"EOM";
