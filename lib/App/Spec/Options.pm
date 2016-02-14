@@ -15,7 +15,7 @@ has config => ( is => 'ro' );
 
 my %validate = (
     string => sub { length($_[0]) > 0 },
-    file => sub { -f $_[0] },
+    file => sub { $_[0] eq '-' or -f $_[0] },
     dir => sub { -d $_[0] },
     integer => sub { $_[0] =~ m/^[+-]?\d+/ },
     bool => sub { 1 },
@@ -50,7 +50,7 @@ sub process {
                 next;
             }
             if (defined (my $default = $spec->default)
-                and (($config->{defult} // '') ne 'ignore')) {
+                and (($config->{default} // '') ne 'ignore')) {
                 $value = $default;
                 $items->{ $name } = $value;
             }
@@ -68,6 +68,7 @@ sub process {
         }
 
         my $param_type = $spec->{type};
+
         my $def;
         if (ref $param_type eq 'HASH') {
             ($param_type, $def) = %$param_type;
@@ -77,6 +78,10 @@ sub process {
         my $ok = $code->($value, $def);
         unless ($ok) {
             $errs->{ $type }->{ $name } = "invalid $param_type";
+        }
+        if ($param_type eq 'file' and $value eq '-') {
+            $value = do { local $/; my $t = <STDIN>; \$t };
+            $items->{ $name } = $value;
         }
     }
     return (keys %$errs) ? 0 : 1;
