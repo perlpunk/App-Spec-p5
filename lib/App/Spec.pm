@@ -55,6 +55,10 @@ sub read {
     elsif (not ref $file) {
         $spec = eval { YAML::XS::LoadFile($file) };
     }
+    elsif (ref $file eq 'SCALAR') {
+        my $data = $$file;
+        $spec = eval { YAML::XS::Load($data) };
+    }
     elsif (ref $file eq 'HASH') {
         $spec = $file;
     }
