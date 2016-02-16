@@ -78,6 +78,7 @@ subcommands:
     op: palindrome
     parameters:
     - name: string
+      required: true
       completion:
         command_string: |
           cat /usr/share/dict/words | perl -nle'print if $_ eq reverse $_'
