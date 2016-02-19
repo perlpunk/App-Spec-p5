@@ -259,6 +259,9 @@ sub dynamic_completion {
     my $level = $args{level};
     my $indent = '        ' x $level;
     my $name = $p->name;
+    my $shell_name = $name;
+    $name =~ tr/^A-Za-z0-9_:-/_/c;
+    $shell_name =~ tr/^A-Za-z0-9_/_/c;
     my $def = $p->completion;
     my $command = $def->{command};
     my $command_string = $def->{command_string};
@@ -267,7 +270,7 @@ sub dynamic_completion {
     my $function_name = "_${appname}_"
         . join ("_", @$previous)
         . "_" . ($p->isa("App::Spec::Option") ? "option" : "param")
-        . "_" . $name . "_completion";
+        . "_" . $shell_name . "_completion";
 
     my $function;
     if ($op) {
@@ -324,8 +327,8 @@ EOM
 
         $function = <<"EOM";
 $function_name() \{
-    local param_$name=`$string`
-    _${appname}_compreply "\$param_$name"
+    local param_$shell_name=`$string`
+    _${appname}_compreply "\$param_$shell_name"
 \}
 EOM
     }
