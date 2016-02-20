@@ -42,17 +42,28 @@ subcommands:
       show:
         summary: Show Weather forecast
         op: weather
+        options:
+          - name: temperature
+            description: show temperature
+            aliases: [T]
+            type: bool
+          - name: celsius
+            description: show temperature in celcius
+            aliases: [C]
+            type: bool
+          - name: fahrenheit
+            description: show temperature in fahrenheit
+            aliases: [F]
+            type: bool
         parameters:
-          -
-            name: country
+          - name: country
             required: true
             summary: Specify country
             completion:
               op: weather_complete
-          -
-            name: city
+          - name: city
             required: true
-            multiple: 1
+            multiple: true
             summary: Specify city or cities
             completion:
               op: weather_complete
@@ -63,10 +74,9 @@ subcommands:
         summary: show list of cities
         op: cities
         options:
-          -
-            name: country
+          - name: country
             aliases: ["c"]
-            multiple: 1
+            multiple: true
             description: country name(s)
             completion:
               command:

@@ -27,9 +27,10 @@ sub build {
     my $summary = $args->{summary};
     $summary //= $description // '';
     $description //= $summary;
+    my $type = $args->{type} // 'string';
     my $self = $class->new({
         name => $args->{name},
-        type => $args->{type} // 'string',
+        type => $type,
         multiple => $args->{multiple} ? 1 : 0,
         required => $args->{required} ? 1 : 0,
         summary => $summary,

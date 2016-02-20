@@ -276,6 +276,12 @@ _myapp_palindrome_param_string_completion
                             '-v[be verbose]' \
                             '--help[Show command help]' \
                             '-h[Show command help]' \
+                            '--temperature[show temperature]' \
+                            '-T[show temperature]' \
+                            '--celsius[show temperature in celcius]' \
+                            '-C[show temperature in celcius]' \
+                            '--fahrenheit[show temperature in fahrenheit]' \
+                            '-F[show temperature in fahrenheit]' \
                             && ret=0
 
                         case $state in

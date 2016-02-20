@@ -6,6 +6,7 @@ properties:
   appspec:
     type: object
     required: [version]
+    additionalProperties: false
     properties:
       version: { type: number }
   title: { type: string }
@@ -15,6 +16,7 @@ properties:
     '$ref': '#/definitions/options'
   subcommands:
     type: object
+    additionalProperties: false
     patternProperties:
       "^[a-zA-Z0-9_]+$":
         '$ref': '#/definitions/command'
@@ -22,6 +24,7 @@ definitions:
   optionTypeSimple:
     enum: [bool, string]
   optionTypeEnum:
+    additionalProperties: false
     type: object
     properties:
       enum:
@@ -32,9 +35,13 @@ definitions:
       '$ref': '#/definitions/option'
   option:
     type: object
+    additionalProperties: false
+    required: [name]
     properties:
       name: { type: string }
+      summary: { type: string }
       description: { type: string }
+      multiple: { '$ref': '#/definitions/bool' }
       type:
         oneOf:
           - '$ref': '#/definitions/optionTypeSimple'
@@ -42,18 +49,31 @@ definitions:
       aliases:
         type: array
         items: { type: string }
+      required: { '$ref': '#/definitions/bool' }
+      completion:
+        type: object
   command:
     type: object
+    additionalProperties: false
     properties:
       summary: { type: string }
+      description: { type: string }
       op: { type: string }
       parameters:
         type: array
+        additionalProperties: false
         properties:
           name: { type: string }
-          required: { type: bool }
-          type:
-            type: object
-      options:
-        '$ref': '#/definitions/options'
-
+          required: { '$ref': '#/definitions/bool' }
+          type: { type: object }
+      options: { '$ref': '#/definitions/options' }
+      subcommands:
+        type: object
+        additionalProperties: false
+        patternProperties:
+          "^[a-zA-Z0-9_]+$":
+            '$ref': '#/definitions/command'
+  bool:
+    oneOf:
+      - { type: boolean }
+      - { type: integer }

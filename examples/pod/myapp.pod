@@ -37,6 +37,16 @@ Parameters:
 
     drink  *  
 
+=head3  palindrome
+
+    myapp  palindrome <string>
+
+Check if a string is a palindrome
+
+Parameters:
+
+    string  *  
+
 =head3  weather
 
     myapp  weather <subcommands>
@@ -64,9 +74,15 @@ show list of countries
 
 =head3 weather show
 
-    myapp weather show <country> <city>+
+    myapp weather show [options] <country> <city>+
 
 Show Weather forecast
+
+Options:
+
+    --temperature -T    show temperature              
+    --celsius -C        show temperature in celcius   
+    --fahrenheit -F     show temperature in fahrenheit
 
 Parameters:
 

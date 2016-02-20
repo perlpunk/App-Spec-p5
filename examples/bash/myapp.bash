@@ -170,9 +170,15 @@ _myapp() {
               ;;
               --help|-h)
               ;;
+              --temperature|-T)
+              ;;
+              --celsius|-C)
+              ;;
+              --fahrenheit|-F)
+              ;;
 
               *)
-                _myapp_compreply "'--verbose -- be verbose'"$'\n'"'-v        -- be verbose'"$'\n'"'--help    -- Show command help'"$'\n'"'-h        -- Show command help'"
+                _myapp_compreply "'--verbose     -- be verbose'"$'\n'"'-v            -- be verbose'"$'\n'"'--help        -- Show command help'"$'\n'"'-h            -- Show command help'"$'\n'"'--temperature -- show temperature'"$'\n'"'-T            -- show temperature'"$'\n'"'--celsius     -- show temperature in celcius'"$'\n'"'-C            -- show temperature in celcius'"$'\n'"'--fahrenheit  -- show temperature in fahrenheit'"$'\n'"'-F            -- show temperature in fahrenheit'"
               ;;
             esac
             ;;
