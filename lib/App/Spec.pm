@@ -11,6 +11,7 @@ use App::Spec::Option;
 use App::Spec::Parameter;
 use List::Util qw/ any /;
 use YAML::XS ();
+use Storable qw/ dclone /;
 
 use Moo;
 
@@ -29,7 +30,7 @@ my $default_spec;
 
 sub _read_default_spec {
     $default_spec ||= YAML::XS::Load($DATA);
-    return $default_spec;
+    return dclone $default_spec;
 }
 
 sub runner {
