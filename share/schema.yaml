@@ -22,7 +22,7 @@ properties:
         '$ref': '#/definitions/command'
 definitions:
   optionTypeSimple:
-    enum: [bool, string]
+    enum: [flag, string]
   optionTypeEnum:
     additionalProperties: false
     type: object

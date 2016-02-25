@@ -13,7 +13,7 @@ options:
   -
     name: verbose
     description: be verbose
-    type: bool
+    type: flag
     aliases: ["v"]
 subcommands:
   cook:
@@ -33,7 +33,7 @@ subcommands:
           enum: ["almond milk", "soy milk", "oat milk", "spelt milk", "cow milk"]
       -
         name: sugar
-        type: bool
+        type: flag
         aliases: ["s"]
         description: add sugar
   weather:
@@ -46,15 +46,15 @@ subcommands:
           - name: temperature
             description: show temperature
             aliases: [T]
-            type: bool
+            type: flag
           - name: celsius
             description: show temperature in celcius
             aliases: [C]
-            type: bool
+            type: flag
           - name: fahrenheit
             description: show temperature in fahrenheit
             aliases: [F]
-            type: bool
+            type: flag
         parameters:
           - name: country
             required: true

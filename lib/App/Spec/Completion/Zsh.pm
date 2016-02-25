@@ -364,7 +364,7 @@ sub options {
         elsif ($type eq "file" or $type eq "dir") {
             $values = ":$name:_files";
         }
-        elsif (not ref $type and $type ne "bool") {
+        elsif (not ref $type and $type ne "flag") {
             $values = ":$name";
         }
         $desc =~ s/['`]/'"'"'/g;

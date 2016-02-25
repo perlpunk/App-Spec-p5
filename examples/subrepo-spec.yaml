@@ -36,7 +36,7 @@ subcommands:
         name: force
         aliases: ["f"]
         description: 'reclone (completely replace) an existing subdir.'
-        type: bool
+        type: flag
   init:
     summary: Turn an existing subdirectory into a subrepo.
     parameters:
@@ -65,7 +65,7 @@ subcommands:
     options: &pull_options
       - &option_all
         name: all
-        type: bool
+        type: flag
         description: All subrepos
       - *option_branch
       - *option_remote

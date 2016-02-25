@@ -217,7 +217,7 @@ ${indent}    _${appname}_compreply "@list"
 EOM
                 }
             }
-            elsif ($type eq "bool") {
+            elsif ($type eq "flag") {
             }
             elsif ($type eq "file" or $type eq "dir") {
             }

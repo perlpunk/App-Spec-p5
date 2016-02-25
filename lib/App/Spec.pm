@@ -323,7 +323,7 @@ sub make_getopt {
     for my $opt (@$options) {
         my $name = $opt->name;
         my $spec = $name;
-        unless ($opt->type eq 'bool') {
+        unless ($opt->type eq 'flag') {
             $spec .= "=s";
         }
         $specs->{ $name } = $opt;
@@ -342,7 +342,7 @@ __DATA__
 options:
     -   name: help
         description: Show command help
-        type: bool
+        type: flag
         aliases:
         - h
 subcommands:
@@ -352,7 +352,7 @@ subcommands:
         subcommand_required: 0
         options:
         -   name: all
-            type: bool
+            type: flag
     _complete:
         summary: Generate self completion
         op: cmd_self_completion
@@ -361,11 +361,11 @@ subcommands:
                 description: name of the program
             -   name: zsh
                 description: for zsh
-                type: bool
+                type: flag
             -   name: bash
                 description: for bash
-                type: bool
+                type: flag
 #            -   name: without-description
-#                type: bool
+#                type: flag
 #                default: false
 #                description: generate without description

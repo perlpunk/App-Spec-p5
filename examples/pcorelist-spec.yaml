@@ -12,12 +12,12 @@ subcommands:
       -
         name: all
         summary: Show all perl and module versions
-        type: bool
+        type: flag
         aliases: ["a"]
       -
         name: date
         summary: Show by date
-        type: bool
+        type: flag
         aliases: ["d"]
       -
         name: perl
@@ -46,12 +46,12 @@ subcommands:
       -
         name: raw
         summary: Show raw output without header
-        type: bool
+        type: flag
         aliases: ["r"]
       -
         name: release
         summary: Show perl releases with dates
-        type: bool
+        type: flag
   diff:
     summary: Show diff between two Perl versions
     op: diff
@@ -59,11 +59,11 @@ subcommands:
       -
         name: added
         summary: Show only added modules
-        type: bool
+        type: flag
       -
         name: removed
         summary: Show only removed modules
-        type: bool
+        type: flag
     parameters:
       -
         name: perl1
@@ -96,7 +96,7 @@ subcommands:
       -
         name: raw
         summary: List only feature names
-        type: bool
+        type: flag
   modules:
     summary: List all modules
     op: modules
