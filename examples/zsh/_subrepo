@@ -10,8 +10,6 @@ _subrepo() {
         _arguments -s  \
             '1: :->cmd1' \
             '*: :->args' \
-            '--help[Show command help]' \
-            '-h[Show command help]' \
             && ret=0
 
 
@@ -27,6 +25,8 @@ _subrepo() {
                 # ---- Command: _complete
                 _arguments -s -C \
                     '1: :->cmd1' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
                     '--name[name of the program]:name' \
                     '--zsh[for zsh]' \
                     '--bash[for bash]' \
@@ -40,6 +40,8 @@ _subrepo() {
                 _arguments -s -C \
                     '1: :->cmd1' \
                     '2: :->subrepo' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
                     '--all[All subrepos]' \
                     && ret=0
 
@@ -56,6 +58,8 @@ _subrepo_branch_param_subrepo_completion
                 _arguments -s -C \
                     '1: :->cmd1' \
                     '2: :->subrepo' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
                     '--all[All subrepos]' \
                     && ret=0
 
@@ -73,6 +77,8 @@ _subrepo_clean_param_subrepo_completion
                     '1: :->cmd1' \
                     '2: :->repository' \
                     '3: :->subdir' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
                     '--branch[Upstream branch]:branch' \
                     '-b[Upstream branch]:branch' \
                     '--force[reclone (completely replace) an existing subdir.]' \
@@ -96,6 +102,8 @@ _files
                     '1: :->cmd1' \
                     '2: :->subrepo' \
                     '3: :->subreporef' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
                     && ret=0
 
                 case $state in
@@ -114,6 +122,8 @@ _subrepo_commit_param_subrepo_completion
                 _arguments -s -C \
                     '1: :->cmd1' \
                     '2: :->subrepo' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
                     '--all[All subrepos]' \
                     && ret=0
 
@@ -147,6 +157,8 @@ _subrepo_fetch_param_subrepo_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
                             && ret=0
 
 
@@ -157,6 +169,8 @@ _subrepo_fetch_param_subrepo_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
                             && ret=0
 
 
@@ -167,6 +181,8 @@ _subrepo_fetch_param_subrepo_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
                             && ret=0
 
 
@@ -177,6 +193,8 @@ _subrepo_fetch_param_subrepo_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
                             && ret=0
 
 
@@ -187,6 +205,8 @@ _subrepo_fetch_param_subrepo_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
                             && ret=0
 
 
@@ -197,6 +217,8 @@ _subrepo_fetch_param_subrepo_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
                             && ret=0
 
 
@@ -207,6 +229,8 @@ _subrepo_fetch_param_subrepo_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
                             && ret=0
 
 
@@ -217,6 +241,8 @@ _subrepo_fetch_param_subrepo_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
                             && ret=0
 
 
@@ -227,6 +253,8 @@ _subrepo_fetch_param_subrepo_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
                             && ret=0
 
 
@@ -237,6 +265,8 @@ _subrepo_fetch_param_subrepo_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
                             && ret=0
 
 
@@ -247,6 +277,8 @@ _subrepo_fetch_param_subrepo_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
                             && ret=0
 
 
@@ -263,6 +295,8 @@ _subrepo_fetch_param_subrepo_completion
                 _arguments -s -C \
                     '1: :->cmd1' \
                     '2: :->subdir' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
                     '--remote[Specify remote repository]:remote' \
                     '-r[Specify remote repository]:remote' \
                     '--branch[Upstream branch]:branch' \
@@ -282,6 +316,8 @@ _files
                 _arguments -s -C \
                     '1: :->cmd1' \
                     '2: :->subrepo' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
                     '--all[All subrepos]' \
                     '--branch[Upstream branch]:branch' \
                     '-b[Upstream branch]:branch' \
@@ -304,6 +340,8 @@ _subrepo_pull_param_subrepo_completion
                 _arguments -s -C \
                     '1: :->cmd1' \
                     '2: :->subrepo' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
                     '--all[All subrepos]' \
                     '--branch[Upstream branch]:branch' \
                     '-b[Upstream branch]:branch' \
@@ -326,6 +364,8 @@ _subrepo_push_param_subrepo_completion
                 _arguments -s -C \
                     '1: :->cmd1' \
                     '2: :->subrepo' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
                     '--quiet[Just print names]:quiet' \
                     '-q[Just print names]:quiet' \
                     && ret=0
@@ -342,6 +382,8 @@ _subrepo_status_param_subrepo_completion
                 # ---- Command: version
                 _arguments -s -C \
                     '1: :->cmd1' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
                     && ret=0
 
 

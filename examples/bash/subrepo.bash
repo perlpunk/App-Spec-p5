@@ -274,7 +274,8 @@ _subrepo() {
 _subrepo_compreply() {
     IFS=$'\n' COMPREPLY=($(compgen -W "$1" -- ${COMP_WORDS[COMP_CWORD]}))
     if [[ ${#COMPREPLY[*]} -eq 1 ]]; then # Only one completion
-        COMPREPLY=( ${COMPREPLY[0]%%  *-- *} ) # Remove ' -- ' and everything after
+        COMPREPLY=( ${COMPREPLY[0]%% -- *} ) # Remove ' -- ' and everything after
+        COMPREPLY="$(echo -e "$COMPREPLY" | sed -e 's/[[:space:]]*$//')"
     fi
 }
 

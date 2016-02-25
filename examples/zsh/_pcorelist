@@ -10,8 +10,6 @@ _pcorelist() {
         _arguments -s  \
             '1: :->cmd1' \
             '*: :->args' \
-            '--help[Show command help]' \
-            '-h[Show command help]' \
             && ret=0
 
 
@@ -27,6 +25,8 @@ _pcorelist() {
                 # ---- Command: _complete
                 _arguments -s -C \
                     '1: :->cmd1' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
                     '--name[name of the program]:name' \
                     '--zsh[for zsh]' \
                     '--bash[for bash]' \
@@ -41,6 +41,8 @@ _pcorelist() {
                     '1: :->cmd1' \
                     '2: :->perl1' \
                     '3: :->perl2' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
                     '--added[Show only added modules]' \
                     '--removed[Show only removed modules]' \
                     && ret=0
@@ -61,6 +63,8 @@ _pcorelist_diff_param_perl2_completion
                 _arguments -s -C \
                     '1: :->cmd1' \
                     '2: :->feature' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
                     '--raw[List only feature names]' \
                     && ret=0
 
@@ -78,7 +82,6 @@ _pcorelist_features_param_feature_completion
                     '1: :->cmd1' \
                     '2: :->cmd2' \
                     '*: :->args' \
-                    '--all[]' \
                     && ret=0
 
 
@@ -95,6 +98,9 @@ _pcorelist_features_param_feature_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
+                            '--all[]' \
                             && ret=0
 
 
@@ -105,6 +111,9 @@ _pcorelist_features_param_feature_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
+                            '--all[]' \
                             && ret=0
 
 
@@ -115,6 +124,9 @@ _pcorelist_features_param_feature_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
+                            '--all[]' \
                             && ret=0
 
 
@@ -125,6 +137,9 @@ _pcorelist_features_param_feature_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
+                            '--all[]' \
                             && ret=0
 
 
@@ -135,6 +150,9 @@ _pcorelist_features_param_feature_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
+                            '--all[]' \
                             && ret=0
 
 
@@ -145,6 +163,9 @@ _pcorelist_features_param_feature_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
+                            '--all[]' \
                             && ret=0
 
 
@@ -161,6 +182,8 @@ _pcorelist_features_param_feature_completion
                 _arguments -s -C \
                     '1: :->cmd1' \
                     '2: :->module' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
                     '--all[Show all perl and module versions]' \
                     '-a[Show all perl and module versions]' \
                     '--date[Show by date]' \
@@ -181,6 +204,8 @@ _pcorelist_module_param_module_completion
                 # ---- Command: modules
                 _arguments -s -C \
                     '1: :->cmd1' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
                     && ret=0
 
 
@@ -190,6 +215,8 @@ _pcorelist_module_param_module_completion
                 # ---- Command: perl
                 _arguments -s -C \
                     '1: :->cmd1' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
                     '--raw[Show raw output without header]' \
                     '-r[Show raw output without header]' \
                     '--release[Show perl releases with dates]' \
@@ -220,15 +247,15 @@ _pcorelist_features_param_feature_completion() {
     IFS=$'\n' set -A __dynamic_completion `$program 'features' '--raw'`
     compadd -X "feature:" $__dynamic_completion
 }
-_pcorelist_module_option_perl_completion() {
-    local __dynamic_completion
-    IFS=$'\n' set -A __dynamic_completion `$program 'perl' '--raw'`
-    compadd -X "perl:" $__dynamic_completion
-}
 _pcorelist_module_param_module_completion() {
     local __dynamic_completion
     IFS=$'\n' set -A __dynamic_completion `$program 'modules'`
     compadd -X "module:" $__dynamic_completion
+}
+_pcorelist_module_option_perl_completion() {
+    local __dynamic_completion
+    IFS=$'\n' set -A __dynamic_completion `$program 'perl' '--raw'`
+    compadd -X "perl:" $__dynamic_completion
 }
 
 

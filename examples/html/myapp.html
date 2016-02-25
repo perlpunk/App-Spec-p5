@@ -20,6 +20,7 @@
       <li><a href="#SUBCOMMANDS">SUBCOMMANDS</a>
         <ul>
           <li><a href="#cook">cook</a></li>
+          <li><a href="#palindrome">palindrome</a></li>
           <li><a href="#weather">weather</a></li>
           <li><a href="#weather-cities">weather cities</a></li>
           <li><a href="#weather-countries">weather countries</a></li>
@@ -66,6 +67,16 @@
 
 <pre><code>    drink  *  </code></pre>
 
+<h3 id="palindrome">palindrome</h3>
+
+<pre><code>    myapp  palindrome &lt;string&gt;</code></pre>
+
+<p>Check if a string is a palindrome</p>
+
+<p>Parameters:</p>
+
+<pre><code>    string  *  </code></pre>
+
 <h3 id="weather">weather</h3>
 
 <pre><code>    myapp  weather &lt;subcommands&gt;</code></pre>
@@ -90,9 +101,15 @@
 
 <h3 id="weather-show">weather show</h3>
 
-<pre><code>    myapp weather show &lt;country&gt; &lt;city&gt;+</code></pre>
+<pre><code>    myapp weather show [options] &lt;country&gt; &lt;city&gt;+</code></pre>
 
 <p>Show Weather forecast</p>
+
+<p>Options:</p>
+
+<pre><code>    --temperature -T    show temperature              
+    --celsius -C        show temperature in celcius   
+    --fahrenheit -F     show temperature in fahrenheit</code></pre>
 
 <p>Parameters:</p>
 

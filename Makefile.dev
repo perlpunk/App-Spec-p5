@@ -1,0 +1,17 @@
+completion:
+	for i in myapp pcorelist subrepo; do \
+		appspec completion examples/$$i-spec.yaml --zsh  > examples/zsh/_$$i; \
+		appspec completion examples/$$i-spec.yaml --bash > examples/bash/$$i.bash; \
+	done
+
+pod:
+	for i in myapp pcorelist subrepo; do \
+		appspec pod examples/$$i-spec.yaml > examples/pod/$$i.pod; \
+	done
+
+html:
+	for i in myapp pcorelist subrepo; do \
+		pod2html examples/pod/$$i.pod > examples/html/$$i.html; \
+	done
+
+update: completion pod html
