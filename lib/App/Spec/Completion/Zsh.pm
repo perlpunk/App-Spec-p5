@@ -167,11 +167,9 @@ sub parameters {
         $count++;
 
         my $completion = '';
-        if (ref $p->type) {
-            if (my $list = $p->type->{enum}) {
-                my @list = map { "'$_'" } @$list;
-                $completion = $indent . "        compadd -X '$name:' @list";
-            }
+        if (my $enum = $p->enum) {
+            my @list = map { "'$_'" } @$enum;
+            $completion = $indent . "        compadd -X '$name:' @list";
         }
         elsif ($p->type eq 'file') {
             $completion = '_files';
@@ -339,6 +337,7 @@ sub options {
         my $name = $opt->name;
         my $desc = $opt->description;
         my $type = $opt->type;
+        my $enum = $opt->enum;
         my $aliases = $opt->aliases;
         my $values = '';
         if ($opt->completion) {
@@ -355,11 +354,9 @@ sub options {
             $values = ":$name:$function_name";
             $comp .= $indent . ";;\n";
         }
-        elsif (ref $type) {
-            if (my $list = $type->{enum}) {
-                my @list = map { qq{"$_"} } @$list;
-                $values = ":$name:(@list)";
-            }
+        elsif ($enum) {
+            my @list = map { qq{"$_"} } @$enum;
+            $values = ":$name:(@list)";
         }
         elsif ($type eq "file" or $type eq "dir") {
             $values = ":$name:_files";

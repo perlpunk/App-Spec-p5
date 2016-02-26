@@ -68,6 +68,7 @@ sub process {
         }
 
         my $param_type = $spec->{type};
+        my $enum = $spec->{enum};
 
         my $def;
         if (ref $param_type eq 'HASH') {
@@ -78,6 +79,14 @@ sub process {
         my $ok = $code->($value, $def);
         unless ($ok) {
             $errs->{ $type }->{ $name } = "invalid $param_type";
+        }
+        if ($enum) {
+            my $code = $validate{enum}
+                or die "Missing method for validation type enum";
+            my $ok = $code->($value, $enum);
+            unless ($ok) {
+                $errs->{ $type }->{ $name } = "invalid enum";
+            }
         }
         if ($param_type eq 'file' and $value eq '-') {
             $value = do { local $/; my $t = <STDIN>; \$t };

@@ -23,12 +23,6 @@ properties:
 definitions:
   optionTypeSimple:
     enum: [flag, string]
-  optionTypeEnum:
-    additionalProperties: false
-    type: object
-    properties:
-      enum:
-        type: array
   options:
     type: array
     items:
@@ -45,7 +39,9 @@ definitions:
       type:
         oneOf:
           - '$ref': '#/definitions/optionTypeSimple'
-          - '$ref': '#/definitions/optionTypeEnum'
+      enum:
+        type: array
+        items: { type: string }
       aliases:
         type: array
         items: { type: string }

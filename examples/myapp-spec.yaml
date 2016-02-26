@@ -23,14 +23,14 @@ subcommands:
       -
         name: drink
         required: true
-        type:
-          enum: ["tea", "coffee"]
+        type: string
+        enum: ["tea", "coffee"]
     options:
       -
         name: with
         description: Drink with ...
-        type:
-          enum: ["almond milk", "soy milk", "oat milk", "spelt milk", "cow milk"]
+        type: string
+        enum: ["almond milk", "soy milk", "oat milk", "spelt milk", "cow milk"]
       -
         name: sugar
         type: flag

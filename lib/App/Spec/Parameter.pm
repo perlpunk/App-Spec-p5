@@ -15,6 +15,7 @@ has description => ( is => 'ro' );
 has default => ( is => 'ro' );
 has completion => ( is => 'ro' );
 has filter => ( is => 'ro' );
+has enum => ( is => 'ro' );
 
 sub build {
     my ($class, $args) = @_;
@@ -36,6 +37,7 @@ sub build {
         default => $args->{default},
         completion => $args->{completion},
         filter => $args->{filter},
+        enum => $args->{enum},
     });
     return $self;
 }

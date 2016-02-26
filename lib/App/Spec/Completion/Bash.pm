@@ -182,6 +182,7 @@ EOM
             my $opt = $options->[ $i ];
             my $name = $opt->name;
             my $type = $opt->type;
+            my $enum = $opt->enum;
             my $summary = $opt->description;
             $summary =~ s/['`]/'"'"'/g;
             $summary =~ s/\$/\\\$/g;
@@ -203,19 +204,17 @@ EOM
             $comp_value .= <<"EOM";
 ${indent}  @{[ join '|', @option_strings ]})
 EOM
-            if (ref $type) {
-                if (my $list = $type->{enum}) {
-                    my @list = map { s/ /\\ /g; $_ } @$list;
-                    local $" = q{"$'\\n'"};
-                    for (@list) {
-                        s/['`]/'"'"'/g;
-                        s/\$/\\\$/g;
-                        $_ = "'$_'";
-                    }
-                    $comp_value .= <<"EOM";
+            if ($enum) {
+                my @list = map { s/ /\\ /g; $_ } @$enum;
+                local $" = q{"$'\\n'"};
+                for (@list) {
+                    s/['`]/'"'"'/g;
+                    s/\$/\\\$/g;
+                    $_ = "'$_'";
+                }
+                $comp_value .= <<"EOM";
 ${indent}    _${appname}_compreply "@list"
 EOM
-                }
             }
             elsif ($type eq "flag") {
             }
@@ -377,17 +376,17 @@ sub completion_parameter {
     my $comp = '';
 
     my $type = $param->type;
-    if (ref $type) {
-        if (my $list = $type->{enum}) {
-            local $" = q{"$'\\n'"};
-            for (@$list) {
-                s/['`]/'"'"'/g;
-                s/\$/\\\$/g;
-            }
-            $comp = <<"EOM";
-${indent}    _${appname}_compreply "@$list"
-EOM
+    my $enum = $param->enum;
+    if ($enum) {
+        my @list = @$enum;
+        local $" = q{"$'\\n'"};
+        for (@list) {
+            s/['`]/'"'"'/g;
+            s/\$/\\\$/g;
         }
+        $comp = <<"EOM";
+${indent}    _${appname}_compreply "@list"
+EOM
     }
     elsif ($type eq "file" or $type eq "dir") {
     }
