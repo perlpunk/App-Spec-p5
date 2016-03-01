@@ -150,7 +150,8 @@ $abstract
 EOM
 
     my $body = '';
-    $usage .= "Usage: $appname @$cmds";
+    $usage .= "Usage: $appname";
+    $usage .= " @$cmds" if @$cmds;
     if (keys %$subcmds) {
         my $maxlength = 0;
         my @table;
