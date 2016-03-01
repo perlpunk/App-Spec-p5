@@ -6,8 +6,10 @@ use FindBin '$Bin';
 use lib "$Bin/lib";
 use App::Spec::Example::MyApp;
 use App::Spec;
+use IPC::Run qw( run timeout );
 $ENV{PERL5_APPSPECRUN_COLOR} = 'never';
 my $spec = App::Spec->read("$Bin/../examples/myapp-spec.yaml");
+my $app = "$Bin/../examples/bin/myapp";
 
 my @valid = (
     {
@@ -70,55 +72,48 @@ my @completion = (
 
 
 subtest valid => sub {
-    plan tests => scalar @valid;
+    plan tests => scalar @valid * 2;
     for my $test (@valid) {
         my $input = $test->{input};
         my $stdout = $test->{stdout};
-        local @ARGV = @$input;
-        stdout_like(sub {
-            eval {
-                my $run = $spec->runner;
-                $run->run;
-            };
-        }, $stdout, "args: (@$input)");
+
+        my @cmd = ($^X, $app, @$input);
+        my $ok = run \@cmd, \my $in, \my $out, \my $err, timeout( 10 );
+        my $rc = $?;
+        is($rc, 0, "args: (@$input) rc=0");
+        cmp_ok($out, '=~', $stdout, "args: (@$input) output ok");
     }
 };
 
 subtest invalid => sub {
-    plan tests => @invalid * 2;
+    plan tests => @invalid * 3;
     for my $test (@invalid) {
         my $input = $test->{input};
         my $stderr = $test->{stderr};
+        my $exit = $test->{exit} || 255;
         my $eval_error = $test->{eval_error};
-        local @ARGV = @$input;
-        my $err;
-        stderr_like(sub {
-            eval {
-                my $run = $spec->runner;
-                $run->run;
-            };
-            $err = $@;
-        }, $stderr, "stderr - args: (@$input)");
-        if ($ENV{PERL5_APPSPEC_DEBUG}) {
-            diag("EVAL_ERROR:\n$err");
-        }
-        cmp_ok($err, '=~', $eval_error, "eval error - args: (@$input)");
+
+        my @cmd = ($^X, $app, @$input);
+        my $ok = run \@cmd, \my $in, \my $out, \my $err, timeout( 10 );
+        my $rc = $? >> 8;
+        is($rc, $exit, "args: (@$input) rc=$exit");
+        cmp_ok($err, '=~', $stderr, "args: (@$input) stderr ok");
+        cmp_ok($err, '=~', $eval_error, "args: (@$input) stderr ok");
     }
 };
 
 subtest completion => sub {
-    plan tests => scalar @completion;
+    plan tests => scalar @completion * 2;
     for my $test (@completion) {
         my $env = $test->{env};
         local @ENV{ keys %$env } = values %$env;
         my $input = $test->{input};
         my $stdout = $test->{stdout};
-        local @ARGV = @$input;
-        stdout_like(sub {
-            eval {
-                my $run = $spec->runner;
-                $run->run;
-            };
-        }, $stdout, "args: (@$input)");
+
+        my @cmd = ($^X, $app, @$input);
+        my $ok = run \@cmd, \my $in, \my $out, \my $err, timeout( 10 );
+        my $rc = $?;
+        is($rc, 0, "args: (@$input) rc=0");
+        cmp_ok($out, '=~', $stdout, "args: (@$input) output ok");
     }
 };
