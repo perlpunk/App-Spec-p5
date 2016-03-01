@@ -5,10 +5,26 @@ use 5.010;
 
 use base 'App::Spec::Run';
 
+sub _dump_hash {
+    my ($self, $hash) = @_;
+    my @strings;
+    for my $key (sort keys %$hash) {
+    next unless defined $hash->{ $key };
+        push @strings, "$key=$hash->{ $key }";
+    }
+    return join ",", @strings;
+}
+
 sub cook {
     my ($self) = @_;
     my $param = $self->parameters;
     my $opt = $self->options;
+    if ($ENV{PERL5_APPSPECRUN_TEST}) {
+        say "Subcommands: cook";
+        say "Options: " . $self->_dump_hash($opt);
+        say "Parameters: " .  $self->_dump_hash($param);
+        return;
+    }
 
     my @with;
     my $with = $opt->{with} // '';

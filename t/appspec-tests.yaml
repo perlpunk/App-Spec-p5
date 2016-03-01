@@ -1,0 +1,69 @@
+---
+#valid:
+-
+  args: [ cook, tea, --sugar ]
+  stdout:
+    - regex: 'Options: sugar=1'
+    - regex: 'Parameters: drink=tea'
+    - regex: 'Subcommands: cook'
+  exit: 0
+-
+  args: [ cook, tea, --with, "almond milk" ]
+  stdout:
+    - regex: 'Options: with=almond milk'
+    - regex: 'Parameters: drink=tea'
+    - regex: 'Subcommands: cook'
+  exit: 0
+-
+  args: [ help ]
+  stdout:
+    regex: 'Usage: myapp <subcommands> \[options\]'
+  exit: 0
+
+#invalid:
+-
+  # missing parameter
+  args: [ cook ]
+  stderr:
+    - regex: 'Usage: myapp cook <drink> \[options\]'
+    - regex: (?s:drink.*missing)
+  exit: 255
+-
+  # invalid subcommand
+  args: [ foo ]
+  stderr:
+  - regex: 'Usage: myapp <subcommands>'
+  - regex: Unknown subcommand 'foo'
+  exit: 255
+-
+  args: [ cook, tea, --with, salt ]
+  stderr:
+  - regex: 'Usage: myapp cook <drink> \[options\]'
+  - regex: (?s:with.*invalid)
+  exit: 255
+-
+  args: []
+  stderr:
+  - regex: 'Usage: myapp <subcommands>'
+  - regex: Missing subcommand
+  exit: 255
+
+#completion:
+-
+  env:
+    PERL5_APPSPECRUN_COMPLETION_PARAMETER: country
+    PERL5_APPSPECRUN_SHELL: zsh
+  args: [ weather, show ]
+  stdout:
+    regex: Austria Germany Netherlands
+  exit: 0
+-
+  env:
+    PERL5_APPSPECRUN_COMPLETION_PARAMETER: city
+    PERL5_APPSPECRUN_SHELL: zsh
+  args: [ weather, show, Netherlands ]
+  stdout:
+    regex: Amsterdam Echt
+  exit: 0
+
+# vim:et:sts=2:sws=2:sw=2:foldmethod=indent
