@@ -103,7 +103,7 @@ sub colorize {
     if (($ENV{PERL5_APPSPECRUN_COLOR} // '') eq 'never') {
         return 0;
     }
-    if (-t STDOUT and -d STDERR) {
+    if (-t STDOUT and -t STDERR) {
         return 1;
     }
     return 0;
