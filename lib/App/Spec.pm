@@ -142,7 +142,7 @@ sub usage {
 
     my $abstract = $self->abstract // '';
     my $title = $self->title;
-    my ($options, $parameters, $subcmds) = $self->gather_options_parameters($cmds);
+    my ($options, $parameters, $subcmds) = $self->_gather_options_parameters($cmds);
     my $usage = <<"EOM";
 $appname - $title
 $abstract
@@ -277,7 +277,7 @@ sub _output_table {
 }
 
 
-sub gather_options_parameters {
+sub _gather_options_parameters {
     my ($self, $cmds) = @_;
     my @options;
     my @parameters;
@@ -301,16 +301,16 @@ sub gather_options_parameters {
 sub generate_completion {
     my ($self, %args) = @_;
     my $shell = delete $args{shell};
-    require App::Spec::Completion::Zsh;
-    require App::Spec::Completion::Bash;
 
     if ($shell eq "zsh") {
+        require App::Spec::Completion::Zsh;
         my $completer = App::Spec::Completion::Zsh->new({
             spec => $self,
         });
         return $completer->generate_completion(%args);
     }
     elsif ($shell eq "bash") {
+        require App::Spec::Completion::Bash;
         my $completer = App::Spec::Completion::Bash->new({
             spec => $self,
         });
@@ -337,6 +337,97 @@ sub make_getopt {
     }
     return @getopt;
 }
+
+=pod
+
+=head1 SYNOPSIS
+
+WARNING: This is still experimental. The spec is subject to change.
+
+This module represents a specification of a command line tool.
+Currently it can read the spec from a YAML file or directly from a data
+structure in perl.
+
+The L<App::Spec::Run> module is the framework which will run the actual
+app.
+
+Your script:
+
+    use App::Spec;
+    my $spec = App::Spec->read("/path/to/myapp-spec.yaml");
+
+    my $run = $spec->runner;
+    $run->run;
+
+    # this is equivalent to
+    #my $run = Your::App->new({
+    #    spec => $spec,
+    #});
+    #$run->run;
+
+Your App class:
+
+    package Your::App;
+    use base 'App::Spec::Run';
+
+    sub command1 {
+        my ($self) = @_;
+        my $options = $self->options;
+        my $param = $self->parameters;
+        # Do something
+    }
+
+
+=head1 METHODS
+
+=over 4
+
+=item read
+
+    my $spec = App::Spec->read("/path/to/myapp-spec.yaml");
+
+=item runner
+
+Returns an instance of the your app class
+
+    my $run = $spec->runner;
+    $run->run;
+
+    # this is equivalent to
+    my $run = App::Spec::Example::MyApp->new({
+        spec => $spec,
+    });
+    $run->run;
+
+=item usage
+
+Returns usage output for the specified subcommands:
+
+    my $usage = $spec->usage(
+        commands => ["subcommand1","subcommand2"],
+    );
+
+=item generate_completion
+
+Generates shell completion script for the spec.
+
+    my $completion = $spec->generate_completion(
+        shell => "zsh",
+    );
+
+=item generate_pod
+
+    my $pod = $spec->generate_pod;
+
+=item make_getopt
+
+Returns options for Getopt::Long
+
+    my @getopt = $spec->make_getopt($global_options, \%options, $option_specs);
+
+=back
+
+=cut
 
 1;
 

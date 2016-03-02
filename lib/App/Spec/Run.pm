@@ -1,3 +1,4 @@
+# ABSTRACT: App::Spec framework to run your app
 use strict;
 use warnings;
 package App::Spec::Run;
@@ -251,3 +252,24 @@ sub cmd_self_completion {
 }
 
 1;
+
+__END__
+=pod
+
+=head1 DESCRIPTION
+
+App::Spec::Run is the framework which runs your app defined by the spec.
+Your app class should inherit from App::Spec::Run.
+
+=head1 METHODS
+
+=over 4
+
+=item run
+
+Actually runs your app
+
+=back
+
+=cut
+

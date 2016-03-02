@@ -60,10 +60,17 @@
 -
   env:
     PERL5_APPSPECRUN_COMPLETION_PARAMETER: city
-    PERL5_APPSPECRUN_SHELL: zsh
+    PERL5_APPSPECRUN_SHELL: bash
   args: [ weather, show, Netherlands ]
   stdout:
-    regex: Amsterdam Echt
+    regex: Amsterdam\nEcht
+  exit: 0
+-
+  env:
+    PERL5_APPSPECRUN_COMPLETION_PARAMETER: city
+  args: [ weather, show, Netherlands ]
+  stdout:
+    regex: '^$'
   exit: 0
 
 # vim:et:sts=2:sws=2:sw=2:foldmethod=indent
