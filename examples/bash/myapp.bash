@@ -216,14 +216,46 @@ _myapp_weather_cities_option_country_completion() {
 _myapp_weather_show_param_country_completion() {
     local __dynamic_completion
     __dynamic_completion=`PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='country' ${COMP_WORDS[@]}`
-    _myapp_compreply "$__dynamic_completion"
+    __myapp_dynamic_comp 'country' "$__dynamic_completion"
 }
 _myapp_weather_show_param_city_completion() {
     local __dynamic_completion
     __dynamic_completion=`PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='city' ${COMP_WORDS[@]}`
-    _myapp_compreply "$__dynamic_completion"
+    __myapp_dynamic_comp 'city' "$__dynamic_completion"
 }
 
+__myapp_dynamic_comp() {
+    local argname="$1"
+    local arg="$2"
+    local comp name desc cols desclength formatted
+
+    while read -r line; do
+        name="$line"
+        desc="$line"
+        name="${name%$'\t'*}"
+        if [[ "${#name}" -gt "$max" ]]; then
+            max="${#name}"
+        fi
+    done <<< "$arg"
+
+    while read -r line; do
+        name="$line"
+        desc="$line"
+        name="${name%$'\t'*}"
+        desc="${desc/*$'\t'}"
+        if [[ -n "$desc" && "$desc" != "$name" ]]; then
+            # TODO portable?
+            cols=`tput cols`
+            [[ -z $cols ]] && cols=80
+            desclength=`expr $cols - 4 - $max`
+            formatted=`printf "%-*s -- %-*s" "$max" "$name" "$desclength" "$desc"`
+            comp="$comp$formatted"$'\n'
+        else
+            comp="$comp$name"$'\n'
+        fi
+    done <<< "$arg"
+    _myapp_compreply "$comp"
+}
 
 complete -o default -F _myapp myapp
 

@@ -7,7 +7,7 @@ use base 'App::Spec::Completion';
 sub generate_completion {
     my ($self, %args) = @_;
     my $spec = $self->spec;
-    my $name = $spec->name;
+    my $appname = $spec->name;
     my $functions = [];
     my $completion_outer = $self->completion_commands(
         commands => $spec->subcommands,
@@ -18,10 +18,10 @@ sub generate_completion {
 
 
 my $body = <<"EOM";
-#compdef $name
+#compdef $appname
 
-_$name() {
-    local program=$name
+_$appname() {
+    local program=$appname
     typeset -A opt_args
     local curcontext="\$curcontext" state line context
 
@@ -29,7 +29,30 @@ $completion_outer
 }
 
 @{[ join '', @$functions ]}
+__${appname}_dynamic_comp() {
 EOM
+    $body .= <<'EOM';
+    local argname="$1"
+    local arg="$2"
+    local comp="arg:$argname:(("
+    local line
+    while read -r line; do
+        local name="$line"
+        local desc="$line"
+        name="${name%$'\t'*}"
+        desc="${desc/*$'\t'}"
+        comp="$comp$name"
+        if [[ -n "$desc" && "$name" != "$desc" ]]; then
+            comp="$comp\\:"'"'"$desc"'"'
+        fi
+        comp="$comp "
+    done <<< "$arg"
+
+    comp="$comp))"
+    _alternative "$comp"
+}
+EOM
+
     return $body;
 }
 
@@ -226,7 +249,7 @@ sub dynamic_completion {
 $function_name() \{
     local __dynamic_completion
     __dynamic_completion=`PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='$name' \$words`
-    _alternative "\$__dynamic_completion"
+    __${appname}_dynamic_comp '$name' "\$__dynamic_completion"
 \}
 EOM
     }

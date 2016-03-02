@@ -94,7 +94,7 @@ sub weather_complete {
     if ($comp_param eq "city") {
         my $country = $param->{country};
         my $cities = $countries{ $country } or return;
-        return [sort keys %$cities];
+        return [map { +{ name => $_, description => "$_ ($country)" } } sort keys %$cities];
     }
     elsif ($comp_param eq "country") {
         my @countries = sort keys %countries;

@@ -188,6 +188,38 @@ _pcorelist_module_option_perl_completion() {
     _pcorelist_compreply "$param_perl"
 }
 
+__pcorelist_dynamic_comp() {
+    local argname="$1"
+    local arg="$2"
+    local comp name desc cols desclength formatted
+
+    while read -r line; do
+        name="$line"
+        desc="$line"
+        name="${name%$'\t'*}"
+        if [[ "${#name}" -gt "$max" ]]; then
+            max="${#name}"
+        fi
+    done <<< "$arg"
+
+    while read -r line; do
+        name="$line"
+        desc="$line"
+        name="${name%$'\t'*}"
+        desc="${desc/*$'\t'}"
+        if [[ -n "$desc" && "$desc" != "$name" ]]; then
+            # TODO portable?
+            cols=`tput cols`
+            [[ -z $cols ]] && cols=80
+            desclength=`expr $cols - 4 - $max`
+            formatted=`printf "%-*s -- %-*s" "$max" "$name" "$desclength" "$desc"`
+            comp="$comp$formatted"$'\n'
+        else
+            comp="$comp$name"$'\n'
+        fi
+    done <<< "$arg"
+    _pcorelist_compreply "$comp"
+}
 
 complete -o default -F _pcorelist pcorelist
 

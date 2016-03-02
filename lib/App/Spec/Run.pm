@@ -73,22 +73,21 @@ sub run {
             parameter => $completion_parameter,
         };
         my $result = $self->$op($args);
-        my $mod;
-        if ($shell eq 'bash') {
-            $mod = 'App::Spec::Completion::Bash';
+
+        my $string = '';
+        for my $item (@$result) {
+            if (ref $item eq 'HASH') {
+                my $name = $item->{name};
+                my $desc = $item->{description};
+                $string .= "$name\t$desc\n";
+            }
+            else {
+                $string .= "$item\n";
+            }
         }
-        elsif ($shell eq 'zsh') {
-            $mod = 'App::Spec::Completion::Zsh';
-        }
-        else {
-            return;
-        }
-        eval "use $mod";
-        my $string = $mod->list_to_alternative(
-            name => $completion_parameter,
-            list => $result,
-        );
-        say $string;
+
+        print $string;
+        return;
     }
     else {
         $self->$op;

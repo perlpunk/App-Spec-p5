@@ -7,7 +7,7 @@ use base 'App::Spec::Completion';
 sub generate_completion {
     my ($self, %args) = @_;
     my $spec = $self->spec;
-    my $name = $spec->name;
+    my $appname = $spec->name;
 
 
     my $functions = [];
@@ -23,17 +23,17 @@ sub generate_completion {
 
 # http://stackoverflow.com/questions/7267185/bash-autocompletion-add-description-for-possible-completions
 
-_$name() \{
+_$appname() \{
 
     COMPREPLY=()
-    local program=$name
+    local program=$appname
     local cur=\$\{COMP_WORDS[\$COMP_CWORD]\}
 #    echo "COMP_CWORD:\$COMP_CWORD cur:\$cur" >>/tmp/comp
 
 $completion_outer
 \}
 
-_${name}_compreply() \{
+_${appname}_compreply() \{
     IFS=\$'\\n' COMPREPLY=(\$(compgen -W "\$1" -- \$\{COMP_WORDS\[COMP_CWORD\]\}))
     if [[ \$\{#COMPREPLY[*]\} -eq 1 ]]; then # Only one completion
         COMPREPLY=( \$\{COMPREPLY[0]%% -- *\} ) # Remove ' -- ' and everything after
@@ -42,8 +42,47 @@ _${name}_compreply() \{
 \}
 
 @{[ join '', @$functions ]}
+EOM
+    $body .= <<"EOM";
+__${appname}_dynamic_comp() {
+EOM
 
-complete -o default -F _$name $name
+    $body .= <<'EOM';
+    local argname="$1"
+    local arg="$2"
+    local comp name desc cols desclength formatted
+
+    while read -r line; do
+        name="$line"
+        desc="$line"
+        name="${name%$'\t'*}"
+        if [[ "${#name}" -gt "$max" ]]; then
+            max="${#name}"
+        fi
+    done <<< "$arg"
+
+    while read -r line; do
+        name="$line"
+        desc="$line"
+        name="${name%$'\t'*}"
+        desc="${desc/*$'\t'}"
+        if [[ -n "$desc" && "$desc" != "$name" ]]; then
+            # TODO portable?
+            cols=`tput cols`
+            [[ -z $cols ]] && cols=80
+            desclength=`expr $cols - 4 - $max`
+            formatted=`printf "%-*s -- %-*s" "$max" "$name" "$desclength" "$desc"`
+            comp="$comp$formatted"$'\n'
+        else
+            comp="$comp$name"$'\n'
+        fi
+    done <<< "$arg"
+EOM
+    $body .= <<"EOM";
+    _${appname}_compreply "\$comp"
+}
+
+complete -o default -F _$appname $appname
 EOM
     return $body;
 }
@@ -277,7 +316,7 @@ sub dynamic_completion {
 $function_name() \{
     local __dynamic_completion
     __dynamic_completion=`PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='$name' \${COMP_WORDS[@]}`
-    _myapp_compreply "\$__dynamic_completion"
+    __${appname}_dynamic_comp '$name' "\$__dynamic_completion"
 \}
 EOM
     }

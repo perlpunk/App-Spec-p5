@@ -308,6 +308,38 @@ _subrepo_status_param_subrepo_completion() {
     _subrepo_compreply "$param_subrepo"
 }
 
+__subrepo_dynamic_comp() {
+    local argname="$1"
+    local arg="$2"
+    local comp name desc cols desclength formatted
+
+    while read -r line; do
+        name="$line"
+        desc="$line"
+        name="${name%$'\t'*}"
+        if [[ "${#name}" -gt "$max" ]]; then
+            max="${#name}"
+        fi
+    done <<< "$arg"
+
+    while read -r line; do
+        name="$line"
+        desc="$line"
+        name="${name%$'\t'*}"
+        desc="${desc/*$'\t'}"
+        if [[ -n "$desc" && "$desc" != "$name" ]]; then
+            # TODO portable?
+            cols=`tput cols`
+            [[ -z $cols ]] && cols=80
+            desclength=`expr $cols - 4 - $max`
+            formatted=`printf "%-*s -- %-*s" "$max" "$name" "$desclength" "$desc"`
+            comp="$comp$formatted"$'\n'
+        else
+            comp="$comp$name"$'\n'
+        fi
+    done <<< "$arg"
+    _subrepo_compreply "$comp"
+}
 
 complete -o default -F _subrepo subrepo
 

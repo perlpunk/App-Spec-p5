@@ -55,7 +55,7 @@
     PERL5_APPSPECRUN_SHELL: zsh
   args: [ weather, show ]
   stdout:
-    regex: Austria Germany Netherlands
+    regex: Austria\nGermany\nNetherlands
   exit: 0
 -
   env:
@@ -63,7 +63,8 @@
     PERL5_APPSPECRUN_SHELL: bash
   args: [ weather, show, Netherlands ]
   stdout:
-    regex: Amsterdam\nEcht
+    - regex: Amsterdam\tAmsterdam
+    - regex: Echt\tEcht
   exit: 0
 -
   env:
