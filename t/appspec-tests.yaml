@@ -19,6 +19,11 @@
   stdout:
     regex: 'Usage: myapp <subcommands> \[options\]'
   exit: 0
+-
+  args: [ convert, temperature, celsius, 23, kelvin ]
+  stdout:
+    - regex: 296\.15K
+  exit: 0
 
 #invalid:
 -

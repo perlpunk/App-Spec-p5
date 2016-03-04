@@ -22,6 +22,19 @@ This is a very useful description for myapp.
 
 =head2 SUBCOMMANDS
 
+=head3  convert
+
+    myapp  convert <type> <source> <value> <target>+
+
+Various unit conversions
+
+Parameters:
+
+    type    *    The type of unit to convert    
+    source  *    The source unit to convert from
+    value   *    The value to convert           
+    target  * [] The target unit                
+
 =head3  cook
 
     myapp  cook [options] <drink>
@@ -81,7 +94,7 @@ Show Weather forecast
 Options:
 
     --temperature -T    show temperature              
-    --celsius -C        show temperature in celcius   
+    --celsius -C        show temperature in celsius   
     --fahrenheit -F     show temperature in fahrenheit
 
 Parameters:

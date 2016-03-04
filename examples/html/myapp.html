@@ -4,10 +4,10 @@
 <head>
 <title></title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<link rev="made" href="mailto:tina@iggy" />
+<link rev="made" href="mailto:root@localhost" />
 </head>
 
-<body style="background-color: white">
+<body>
 
 
 
@@ -19,6 +19,7 @@
       <li><a href="#GLOBAL-OPTIONS">GLOBAL OPTIONS</a></li>
       <li><a href="#SUBCOMMANDS">SUBCOMMANDS</a>
         <ul>
+          <li><a href="#convert">convert</a></li>
           <li><a href="#cook">cook</a></li>
           <li><a href="#palindrome">palindrome</a></li>
           <li><a href="#weather">weather</a></li>
@@ -51,6 +52,19 @@
     --help -h       Show command help</code></pre>
 
 <h2 id="SUBCOMMANDS">SUBCOMMANDS</h2>
+
+<h3 id="convert">convert</h3>
+
+<pre><code>    myapp  convert &lt;type&gt; &lt;source&gt; &lt;value&gt; &lt;target&gt;+</code></pre>
+
+<p>Various unit conversions</p>
+
+<p>Parameters:</p>
+
+<pre><code>    type    *    The type of unit to convert    
+    source  *    The source unit to convert from
+    value   *    The value to convert           
+    target  * [] The target unit                </code></pre>
 
 <h3 id="cook">cook</h3>
 
@@ -108,7 +122,7 @@
 <p>Options:</p>
 
 <pre><code>    --temperature -T    show temperature              
-    --celsius -C        show temperature in celcius   
+    --celsius -C        show temperature in celsius   
     --fahrenheit -F     show temperature in fahrenheit</code></pre>
 
 <p>Parameters:</p>

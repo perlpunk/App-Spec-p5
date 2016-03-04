@@ -15,7 +15,7 @@ _myapp() {
 
         case $state in
         cmd1)
-            _alternative 'args:cmd2:((_complete\:"Generate self completion" cook\:"Cook something" help\:"Show command help" palindrome\:"Check if a string is a palindrome" weather\:"Weather"))'
+            _alternative 'args:cmd2:((_complete\:"Generate self completion" convert\:"Various unit conversions" cook\:"Cook something" help\:"Show command help" palindrome\:"Check if a string is a palindrome" weather\:"Weather"))'
         ;;
 
         args)
@@ -34,6 +34,37 @@ _myapp() {
                     '--bash[for bash]' \
                     && ret=0
 
+
+            ;;
+            convert)
+
+                # ---- Command: convert
+                _arguments -s -C \
+                    '1: :->cmd1' \
+                    '2: :->type' \
+                    '3: :->source' \
+                    '4: :->value' \
+                    '*: :->target' \
+                    '--verbose[be verbose]' \
+                    '-v[be verbose]' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
+                    && ret=0
+
+                case $state in
+                type)
+_myapp_convert_param_type_completion
+                ;;
+                source)
+_myapp_convert_param_source_completion
+                ;;
+                value)
+
+                ;;
+                target)
+_myapp_convert_param_target_completion
+                ;;
+                esac
 
             ;;
             cook)
@@ -70,7 +101,7 @@ _myapp() {
 
                 case $state in
                 cmd2)
-                    _alternative 'args:cmd3:((_complete cook palindrome weather))'
+                    _alternative 'args:cmd3:((_complete convert cook palindrome weather))'
                 ;;
 
                 args)
@@ -78,6 +109,21 @@ _myapp() {
                     _complete)
 
                         # ---- Command: help _complete
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '--verbose[be verbose]' \
+                            '-v[be verbose]' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
+                            '--all[]' \
+                            && ret=0
+
+
+                    ;;
+                    convert)
+
+                        # ---- Command: help convert
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
@@ -278,8 +324,8 @@ _myapp_palindrome_param_string_completion
                             '-h[Show command help]' \
                             '--temperature[show temperature]' \
                             '-T[show temperature]' \
-                            '--celsius[show temperature in celcius]' \
-                            '-C[show temperature in celcius]' \
+                            '--celsius[show temperature in celsius]' \
+                            '-C[show temperature in celsius]' \
                             '--fahrenheit[show temperature in fahrenheit]' \
                             '-F[show temperature in fahrenheit]' \
                             && ret=0
@@ -308,6 +354,21 @@ _myapp_weather_show_param_city_completion
 
 }
 
+_myapp_convert_param_type_completion() {
+    local __dynamic_completion
+    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='type' $words`
+    __myapp_dynamic_comp 'type' "$__dynamic_completion"
+}
+_myapp_convert_param_source_completion() {
+    local __dynamic_completion
+    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='source' $words`
+    __myapp_dynamic_comp 'source' "$__dynamic_completion"
+}
+_myapp_convert_param_target_completion() {
+    local __dynamic_completion
+    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='target' $words`
+    __myapp_dynamic_comp 'target' "$__dynamic_completion"
+}
 _myapp_palindrome_param_string_completion() {
     local __dynamic_completion
     IFS=$'\n' set -A __dynamic_completion `cat /usr/share/dict/words | perl -nle'print if $_ eq reverse $_'

@@ -12,7 +12,7 @@ _myapp() {
     case $COMP_CWORD in
 
     1)
-        _myapp_compreply '_complete  -- Generate self completion'$'\n''cook       -- Cook something'$'\n''help       -- Show command help'$'\n''palindrome -- Check if a string is a palindrome'$'\n''weather    -- Weather'
+        _myapp_compreply '_complete  -- Generate self completion'$'\n''convert    -- Various unit conversions'$'\n''cook       -- Cook something'$'\n''help       -- Show command help'$'\n''palindrome -- Check if a string is a palindrome'$'\n''weather    -- Weather'
 
     ;;
     *)
@@ -35,6 +35,33 @@ _myapp() {
 
           *)
             _myapp_compreply "'--verbose -- be verbose'"$'\n'"'-v        -- be verbose'"$'\n'"'--help    -- Show command help'"$'\n'"'-h        -- Show command help'"$'\n'"'--name    -- name of the program'"$'\n'"'--zsh     -- for zsh'"$'\n'"'--bash    -- for bash'"
+          ;;
+        esac
+        ;;
+        esac
+      ;;
+      convert)
+        case $COMP_CWORD in
+        2)
+                _myapp_convert_param_type_completion
+        ;;
+        3)
+                _myapp_convert_param_source_completion
+        ;;
+        4)
+        ;;
+        5)
+                _myapp_convert_param_target_completion
+        ;;
+        *)
+        case ${COMP_WORDS[$COMP_CWORD-1]} in
+          --verbose|-v)
+          ;;
+          --help|-h)
+          ;;
+
+          *)
+            _myapp_compreply "'--verbose -- be verbose'"$'\n'"'-v        -- be verbose'"$'\n'"'--help    -- Show command help'"$'\n'"'-h        -- Show command help'"
           ;;
         esac
         ;;
@@ -68,13 +95,15 @@ _myapp() {
         case $COMP_CWORD in
 
         2)
-            _myapp_compreply '_complete '$'\n''cook      '$'\n''palindrome'$'\n''weather   '
+            _myapp_compreply '_complete '$'\n''convert   '$'\n''cook      '$'\n''palindrome'$'\n''weather   '
 
         ;;
         *)
         # subcmds
         case ${COMP_WORDS[2]} in
           _complete)
+          ;;
+          convert)
           ;;
           cook)
           ;;
@@ -178,7 +207,7 @@ _myapp() {
               ;;
 
               *)
-                _myapp_compreply "'--verbose     -- be verbose'"$'\n'"'-v            -- be verbose'"$'\n'"'--help        -- Show command help'"$'\n'"'-h            -- Show command help'"$'\n'"'--temperature -- show temperature'"$'\n'"'-T            -- show temperature'"$'\n'"'--celsius     -- show temperature in celcius'"$'\n'"'-C            -- show temperature in celcius'"$'\n'"'--fahrenheit  -- show temperature in fahrenheit'"$'\n'"'-F            -- show temperature in fahrenheit'"
+                _myapp_compreply "'--verbose     -- be verbose'"$'\n'"'-v            -- be verbose'"$'\n'"'--help        -- Show command help'"$'\n'"'-h            -- Show command help'"$'\n'"'--temperature -- show temperature'"$'\n'"'-T            -- show temperature'"$'\n'"'--celsius     -- show temperature in celsius'"$'\n'"'-C            -- show temperature in celsius'"$'\n'"'--fahrenheit  -- show temperature in fahrenheit'"$'\n'"'-F            -- show temperature in fahrenheit'"
               ;;
             esac
             ;;
@@ -204,6 +233,21 @@ _myapp_compreply() {
     fi
 }
 
+_myapp_convert_param_type_completion() {
+    local __dynamic_completion
+    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='type' ${COMP_WORDS[@]}`
+    __myapp_dynamic_comp 'type' "$__dynamic_completion"
+}
+_myapp_convert_param_source_completion() {
+    local __dynamic_completion
+    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='source' ${COMP_WORDS[@]}`
+    __myapp_dynamic_comp 'source' "$__dynamic_completion"
+}
+_myapp_convert_param_target_completion() {
+    local __dynamic_completion
+    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='target' ${COMP_WORDS[@]}`
+    __myapp_dynamic_comp 'target' "$__dynamic_completion"
+}
 _myapp_palindrome_param_string_completion() {
     local param_string=`cat /usr/share/dict/words | perl -nle'print if $_ eq reverse $_'
 `

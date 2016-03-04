@@ -48,7 +48,7 @@ subcommands:
             aliases: [T]
             type: flag
           - name: celsius
-            description: show temperature in celcius
+            description: show temperature in celsius
             aliases: [C]
             type: flag
           - name: fahrenheit
@@ -92,4 +92,31 @@ subcommands:
       completion:
         command_string: |
           cat /usr/share/dict/words | perl -nle'print if $_ eq reverse $_'
+  convert:
+    summary: Various unit conversions
+    op: convert
+    parameters:
+    - name: type
+      summary: The type of unit to convert
+      type: string
+      required: true
+      completion:
+        op: convert_complete
+    - name: source
+      summary: The source unit to convert from
+      type: string
+      required: true
+      completion:
+        op: convert_complete
+    - name: value
+      summary: The value to convert
+      required: true
+      type: string
+    - name: target
+      summary: The target unit
+      type: string
+      required: true
+      multiple: true
+      completion:
+        op: convert_complete
 # vim:et:sts=2:sws=2:sw=2:foldmethod=indent
