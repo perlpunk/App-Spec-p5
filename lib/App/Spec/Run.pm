@@ -54,14 +54,34 @@ sub run {
     $ok &&= $opt->process( \%errs, type => "options", app => $self );
 
     unless ($ok) {
-        my $err = Data::Dumper->Dump([\%errs], ['errs']);
+        my @error_output;
+        for my $key (sort keys %errs) {
+            my $errors = $errs{ $key };
+            if ($key eq "parameters" or $key eq "options") {
+                for my $name (sort keys %$errors) {
+                    my $error = $errors->{ $name };
+                    $key =~ s/s$//;
+                    push @error_output, "Error: $key '$name': $error";
+                }
+            }
+            else {
+                my $err = Data::Dumper->Dump([\%errs], ['errs']);
+                push @error_output, $err;
+            }
+        }
+        $self->colorize and require Term::ANSIColor;
         my $help = $spec->usage(
             commands => $self->commands,
             highlights => \%errs,
             color => $self->colorize,
         );
-        print STDERR $help;
-        die "$err\nsorry =(\n";
+        say STDERR $help;
+        for my $msg (@error_output) {
+            $self->colorize
+                and $msg = Term::ANSIColor::colored([qw/ bold red /], $msg);
+            print STDERR "$msg\n";
+        }
+        die "sorry =(\n";
     }
     my $args = {};
     if ($completion_parameter) {
