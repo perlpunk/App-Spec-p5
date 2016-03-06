@@ -111,21 +111,26 @@ sub palindrome{
 
 my %units = (
     temperature => {
-        celsius => {
-            label => "°C",
-        },
-        kelvin => {
-            label => "K",
-        },
-        fahrenheit => {
-            label => "°F",
-        },
+        celsius => { label => "°C" },
+        kelvin => { label => "K" },
+        fahrenheit => { label => "°F" },
+    },
+    distance => {
+        meter => { label => "m" },
+        inch => { label => "in" },
+        foot => { label => "ft" },
     },
 );
 
 use constant KELVIN => 273.15;
 sub celsius_fahrenheit { $_[0] * 9 / 5 + 32 }
 sub fahrenheit_celsius { ($_[0] - 32) / (9 / 5) }
+sub meter_inch { $_[0] * 39.37 }
+sub inch_meter { $_[0] / 39.37 }
+sub meter_foot { $_[0] * 3.28083 }
+sub foot_meter { $_[0] / 3.28083 }
+sub inch_foot { $_[0] / 12 }
+sub foot_inch { $_[0] * 12 }
 my %conversions = (
     temperature => {
         celsius_fahrenheit => sub {
@@ -147,19 +152,28 @@ my %conversions = (
             return sprintf "%.2f", celsius_fahrenheit($_[0] - KELVIN)
         },
     },
+    distance => {
+        meter_inch => sub { sprintf "%.3f", meter_inch($_[0]) },
+        inch_meter => sub { sprintf "%.3f", inch_meter($_[0]) },
+        meter_foot => sub { sprintf "%.3f", meter_foot($_[0]) },
+        foot_meter => sub { sprintf "%.3f", foot_meter($_[0]) },
+        inch_foot => sub { sprintf "%.3f", inch_foot($_[0]) },
+        foot_inch => sub { sprintf "%.3f", foot_inch($_[0]) },
+    },
 );
 
 sub convert {
     my ($self) = @_;
     my $param = $self->parameters;
+    my $type = $param->{type};
     my $source = $param->{source};
     my $targets = $param->{target};
     my $value = $param->{value};
     for my $target (@$targets) {
         my $key = $source . '_' . $target;
-        my $sub = $conversions{temperature}->{ $key };
+        my $sub = $conversions{ $type }->{ $key };
         my $result = $sub->($value);
-        my $label = $units{temperature}->{ $target }->{label};
+        my $label = $units{ $type }->{ $target }->{label};
         say "$result$label";
     }
 }
@@ -172,7 +186,7 @@ sub convert_complete {
     my $param = $self->parameters;
 
     if ($comp_param eq 'type') {
-        return [keys %units];
+        return [sort keys %units];
     }
     elsif ($comp_param eq 'source') {
         my $type = $param->{type};
@@ -191,7 +205,7 @@ sub convert_complete {
             next if $unit eq $source;
             my $label = $units->{ $unit }->{label};
             my $key = $source . '_' . $unit;
-            my $sub = $conversions{temperature}->{ $key };
+            my $sub = $conversions{ $type }->{ $key };
             my $result = $sub->($value);
             push @result, {
                 name => $unit,
