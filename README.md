@@ -33,8 +33,13 @@ For now just an example in the examples directory called "myapp".
 Just play with it and use your tab key!
 Also try zsh if you haven't yet.
 
-There is also a command line tool called app-spec <https://github.com/perlpunk/App-AppSpec-p5>
-which is useful if you only have a spec file but no app.
+### For authors
+
+There is a command line tool called appspec <https://github.com/perlpunk/App-AppSpec-p5>
+which is useful for you as an author of an app. You can use it to
+create completion and pod from a spec file.
+
+### Example
 
 For a first overview, here is how an app looks like:
 
@@ -59,32 +64,16 @@ package main;
 use App::Spec;
 
 # read YAML from __DATA__ section
-my $spec = App::Spec->read(\*DATA);
+my $spec = App::Spec->read("myapp-spec.yaml");
 my $run = App::Spec::Example::MyApp->new({ spec => $spec });
 # this will check input and call frobnicate
 $run->run;
-
-# specification follows:
-__DATA__
----
-name: myapp # filename of the app
-version: 0.1 # app-spec schema version
-title: My Very Cool App
-# global options. option 'help' will be generated for you
-options:
-  - ...
-  - ...
-commands:
-  frobnicate:
-    summary: Frobnicate something
-    op: frobnicate
-    # subcommand specific options and parameters
-    parameters:
-      - ...
-    options:
-      - ...
-      - ...
 ```
+
+See https://github.com/perlpunk/App-Spec-p5/blob/master/examples/myapp-spec.yaml
+for the specification of the example app. It's supposed to cover all currently
+implemented features.
+
 ## Getting the completion to work
 
 Here is how you get the completion for the example app.
@@ -138,6 +127,9 @@ I'm lazy and I didn't want to write a completion for all the other app framework
 I just want to do it once. 
 
 ## TODO
+
+See https://github.com/perlpunk/App-Spec-p5/issues
+
 * Write a schema
 * Write tests
 * Complete the help output
