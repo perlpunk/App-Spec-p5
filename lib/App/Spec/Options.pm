@@ -44,17 +44,17 @@ sub process {
         my $value = $items->{ $name };
 
         if (not defined $value) {
-            if ($spec->required
-                and (($config->{required} // '') ne 'ignore')) {
-                $errs->{ $type }->{ $name } = "missing";
-                next;
-            }
             if (defined (my $default = $spec->default)
                 and (($config->{default} // '') ne 'ignore')) {
                 $value = $default;
                 $items->{ $name } = $value;
             }
-            else {
+            elsif ($spec->required
+                and (($config->{required} // '') ne 'ignore')) {
+                $errs->{ $type }->{ $name } = "missing";
+                next;
+            }
+            if (not defined $value) {
                 next;
             }
         }
