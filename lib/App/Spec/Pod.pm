@@ -155,11 +155,13 @@ sub params2pod {
     my $tb = Text::Table->new;
     for my $param (@$params) {
         my $required = $param->required ? '*' : '';
+        my $summary = $param->summary;
         my $multi = '';
         if ($param->multiple) {
             $multi = '[]';
         }
-        push @rows, ["    " . $param->name, " " . $required, $multi, $param->description];
+        my $flags = $self->spec->_param_flags_string($param);
+        push @rows, ["    " . $param->name, " " . $required, $multi, $summary . $flags];
     }
     $tb->load(@rows);
     return "$tb";
@@ -173,7 +175,7 @@ sub options2pod {
     for my $opt (@$options) {
         my $name = $opt->name;
         my $aliases = $opt->aliases;
-        my $description = $opt->description;
+        my $summary = $opt->summary;
         my $required = $opt->required ? '*' : '';
         my $multi = '';
         if ($opt->multiple) {
@@ -182,7 +184,8 @@ sub options2pod {
         my @names = map {
             length $_ > 1 ? "--$_" : "-$_"
         } ($name, @$aliases);
-        push @rows, ["    @names", " " . $required, $multi, $description];
+        my $flags = $self->spec->_param_flags_string($opt);
+        push @rows, ["    @names", " " . $required, $multi, $summary . $flags];
     }
     $tb->load(@rows);
     return "$tb";

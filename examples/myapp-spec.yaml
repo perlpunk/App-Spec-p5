@@ -22,6 +22,7 @@ subcommands:
     parameters:
       -
         name: drink
+        summary: What to drink
         required: true
         type: string
         enum: ["tea", "coffee"]

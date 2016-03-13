@@ -16,8 +16,8 @@ This is a very useful description for myapp.
 
 =head2 GLOBAL OPTIONS
 
-    --verbose -v    be verbose       
-    --help -h       Show command help
+    --verbose -v    be verbose (flag)       
+    --help -h       Show command help (flag)
 
 
 =head2 SUBCOMMANDS
@@ -33,7 +33,7 @@ Parameters:
     type    *    The type of unit to convert    
     source  *    The source unit to convert from
     value   *    The value to convert           
-    target  * [] The target unit                
+    target  * [] The target unit (multiple)     
 
 =head3  cook
 
@@ -43,12 +43,12 @@ Cook something
 
 Options:
 
-    --with        Drink with ...
-    --sugar -s    add sugar     
+    --with        Drink with ...  
+    --sugar -s    add sugar (flag)
 
 Parameters:
 
-    drink  *  
+    drink  *  What to drink
 
 =head3  palindrome
 
@@ -75,7 +75,7 @@ show list of cities
 
 Options:
 
-    --country -c   [] country name(s)
+    --country -c   [] country name(s) (multiple)
 
 
 =head3 weather countries
@@ -93,14 +93,14 @@ Show Weather forecast
 
 Options:
 
-    --temperature -T    show temperature              
-    --celsius -C        show temperature in celsius   
-    --fahrenheit -F     show temperature in fahrenheit
+    --temperature -T    show temperature (flag)              
+    --celsius -C        show temperature in celsius (flag)   
+    --fahrenheit -F     show temperature in fahrenheit (flag)
 
 Parameters:
 
-    country  *    Specify country       
-    city     * [] Specify city or cities
+    country  *    Specify country                  
+    city     * [] Specify city or cities (multiple)
 
 =head3  help
 
@@ -110,7 +110,7 @@ Show command help
 
 Options:
 
-    --all    
+    --all     (flag)
 
 
 =head3  _complete
@@ -122,8 +122,8 @@ Generate self completion
 Options:
 
     --name    name of the program
-    --zsh     for zsh            
-    --bash    for bash           
+    --zsh     for zsh (flag)     
+    --bash    for bash (flag)    
 
 
 

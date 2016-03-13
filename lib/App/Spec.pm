@@ -206,7 +206,10 @@ EOM
             if ($param->multiple) {
                 $multi = '[]';
             }
-            push @table, [$name, $req, $multi, $summary];
+
+            my $flags = $self->_param_flags_string($param);
+
+            push @table, [$name, $req, $multi, $summary . $flags];
             if (length $name > $maxlength) {
                 $maxlength = length $name;
             }
@@ -246,7 +249,10 @@ EOM
             if ($opt->multiple) {
                 $multi = '[]';
             }
-            push @table, [$string, $req, $multi, $summary];
+
+            my $flags = $self->_param_flags_string($opt);
+
+            push @table, [$string, $req, $multi, $summary . $flags];
         }
         my $options_string = "Options:";
         if ($color) {
@@ -259,6 +265,19 @@ EOM
     }
 
     return "$usage\n\n$body";
+}
+
+sub _param_flags_string {
+    my ($self, $param) = @_;
+    my @flags;
+    if ($param->type eq 'flag') {
+        push @flags, "flag";
+    }
+    if ($param->multiple) {
+        push @flags, "multiple";
+    }
+    my $flags = @flags ? " (" . join("; ", @flags) . ")" : '';
+    return $flags;
 }
 
 sub generate_pod {

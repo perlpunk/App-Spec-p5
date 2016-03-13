@@ -12,7 +12,7 @@ This is a wrapper around the corelist tool which adds shell completion
 
 =head2 GLOBAL OPTIONS
 
-    --help -h    Show command help
+    --help -h    Show command help (flag)
 
 
 =head2 SUBCOMMANDS
@@ -25,8 +25,8 @@ Show diff between two Perl versions
 
 Options:
 
-    --added      Show only added modules  
-    --removed    Show only removed modules
+    --added      Show only added modules (flag)  
+    --removed    Show only removed modules (flag)
 
 Parameters:
 
@@ -45,7 +45,7 @@ perl feature bundle it was first released with.
 
 Options:
 
-    --raw    List only feature names
+    --raw    List only feature names (flag)
 
 Parameters:
 
@@ -59,9 +59,9 @@ Show for which perl version the module was first released
 
 Options:
 
-    --all -a     Show all perl and module versions
-    --date -d    Show by date                     
-    --perl -p    Show by Perl Version             
+    --all -a     Show all perl and module versions (flag)
+    --date -d    Show by date (flag)                     
+    --perl -p    Show by Perl Version                    
 
 Parameters:
 
@@ -82,8 +82,8 @@ Perl Versions
 
 Options:
 
-    --raw -r     Show raw output without header
-    --release    Show perl releases with dates 
+    --raw -r     Show raw output without header (flag)
+    --release    Show perl releases with dates (flag) 
 
 
 =head3  help
@@ -94,7 +94,7 @@ Show command help
 
 Options:
 
-    --all    
+    --all     (flag)
 
 
 =head3  _complete
@@ -106,8 +106,8 @@ Generate self completion
 Options:
 
     --name    name of the program
-    --zsh     for zsh            
-    --bash    for bash           
+    --zsh     for zsh (flag)     
+    --bash    for bash (flag)    
 
 
 

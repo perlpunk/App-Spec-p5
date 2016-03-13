@@ -19,7 +19,7 @@ This command is an improvement from C<git-submodule> and C<git-subtree>; two oth
 
 =head2 GLOBAL OPTIONS
 
-    --help -h    Show command help
+    --help -h    Show command help (flag)
 
 
 =head2 SUBCOMMANDS
@@ -33,7 +33,7 @@ Create a branch with local subrepo commits since last pull.
 
 Options:
 
-    --all    All subrepos
+    --all    All subrepos (flag)
 
 Parameters:
 
@@ -48,7 +48,7 @@ Remove artifacts created by C<fetch> and C<branch> commands.
 
 Options:
 
-    --all    All subrepos
+    --all    All subrepos (flag)
 
 Parameters:
 
@@ -63,8 +63,8 @@ Add a repository as a subrepo in a subdir of your repository.
 
 Options:
 
-    --branch -b    Upstream branch                                 
-    --force -f     reclone (completely replace) an existing subdir.
+    --branch -b    Upstream branch                                        
+    --force -f     reclone (completely replace) an existing subdir. (flag)
 
 Parameters:
 
@@ -92,7 +92,7 @@ Fetch the remote/upstream content for a subrepo.
 
 Options:
 
-    --all    All subrepos
+    --all    All subrepos (flag)
 
 Parameters:
 
@@ -123,7 +123,7 @@ Update the subrepo subdir with the latest upstream changes.
 
 Options:
 
-    --all          All subrepos             
+    --all          All subrepos (flag)      
     --branch -b    Upstream branch          
     --remote -r    Specify remote repository
     --update -u    update                   
@@ -141,7 +141,7 @@ Push a properly merged subrepo branch back upstream.
 
 Options:
 
-    --all          All subrepos             
+    --all          All subrepos (flag)      
     --branch -b    Upstream branch          
     --remote -r    Specify remote repository
     --update -u    update                   
@@ -191,8 +191,8 @@ Generate self completion
 Options:
 
     --name    name of the program
-    --zsh     for zsh            
-    --bash    for bash           
+    --zsh     for zsh (flag)     
+    --bash    for bash (flag)    
 
 
 
