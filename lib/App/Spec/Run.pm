@@ -36,24 +36,17 @@ sub run {
         param_specs => \%param_specs,
     );
 
-    my %options_config;
-    if ($completion_parameter) {
-        $options_config{required} = "ignore";
-        $options_config{default} = "ignore";
-    }
-
     my $opt = App::Spec::Options->new({
         options => $self->options,
         option_specs => \%option_specs,
         parameters => $self->parameters,
         param_specs => \%param_specs,
-        config => \%options_config,
     });
     my %errs;
     my ($ok) = $opt->process( \%errs, type => "parameters", app => $self );
     $ok &&= $opt->process( \%errs, type => "options", app => $self );
 
-    unless ($ok) {
+    if (not $ok and not $completion_parameter) {
         my @error_output;
         for my $key (sort keys %errs) {
             my $errors = $errs{ $key };
