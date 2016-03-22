@@ -44,13 +44,19 @@
   args: [ cook, tea, --with, salt ]
   stderr:
   - regex: 'Usage: myapp cook <drink> \[options\]'
-  - regex: (?s:with.*invalid)
+  - regex: 'with.*invalid'
   exit: 255
 -
   args: []
   stderr:
   - regex: 'Usage: myapp <subcommands>'
   - regex: Missing subcommand
+  exit: 255
+-
+  args: [ weather, show, Netherlands ]
+  stderr:
+  - regex: 'Usage: myapp weather show <country> <city>\+'
+  - regex: 'city.*missing'
   exit: 255
 
 #completion:

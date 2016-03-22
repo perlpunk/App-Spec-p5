@@ -41,18 +41,28 @@ sub process {
         my $spec = $specs->{ $name };
         my $value = $items->{ $name };
 
-        if (not defined $value) {
+        if ($spec->multiple and not @$value) {
+            if (defined (my $default = $spec->default)) {
+                $value = [ $default ];
+                $items->{ $name } = $value;
+            }
+        }
+        elsif (not defined $value) {
             if (defined (my $default = $spec->default)) {
                 $value = $default;
                 $items->{ $name } = $value;
             }
-            elsif ($spec->required) {
-                $errs->{ $type }->{ $name } = "missing";
-                next;
-            }
-            if (not defined $value) {
-                next;
-            }
+        }
+        if ( (
+                ($spec->multiple and not @$value)
+                ||
+                (not defined $value)
+            ) and $spec->required) {
+            $errs->{ $type }->{ $name } = "missing";
+            next;
+        }
+        if ($spec->multiple and not @$value or not defined $value) {
+            next;
         }
 
         if (my $filter = $spec->filter) {
