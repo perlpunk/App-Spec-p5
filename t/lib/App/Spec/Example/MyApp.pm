@@ -87,8 +87,9 @@ sub cities {
 
 sub weather_complete {
     my ($self, $args) = @_;
-    my $completion = $args->{completion} or return;
-    my $comp_param = $completion->{parameter};
+    my $runmode = $args->{runmode};
+    return if $runmode ne "completion";
+    my $comp_param = $args->{parameter};
 
     my $param = $self->parameters;
     if ($comp_param eq "city") {
@@ -181,8 +182,9 @@ sub convert {
 
 sub convert_complete {
     my ($self, $args) = @_;
-    my $completion = $args->{completion} or return;
-    my $comp_param = $completion->{parameter};
+    my $runmode = $args->{runmode};
+    return if ($runmode ne "completion" and $runmode ne "validation");
+    my $comp_param = $args->{parameter};
     my $param = $self->parameters;
 
     if ($comp_param eq 'type') {

@@ -300,10 +300,22 @@ sub dynamic_completion {
     my $shell_name = $name;
     $name =~ tr/^A-Za-z0-9_:-/_/c;
     $shell_name =~ tr/^A-Za-z0-9_/_/c;
+
     my $def = $p->completion;
-    my $command = $def->{command};
-    my $command_string = $def->{command_string};
-    my $op = $def->{op};
+    my ($op, $command, $command_string);
+    if (not ref $def and $def == 1) {
+        my $possible_values = $p->values or die "Error for '$name': completion: 1 but 'values' not defined";
+        $op = $possible_values->{op} or die "Error for '$name': 'values' needs an 'op'";
+    }
+    elsif (ref $def) {
+        $op = $def->{op};
+        $command = $def->{command};
+        $command_string = $def->{command_string};
+    }
+    else {
+        die "Error for '$name': invalid value for 'completion'";
+    }
+
     my $appname = $self->spec->name;
     my $function_name = "_${appname}_"
         . join ("_", @$previous)

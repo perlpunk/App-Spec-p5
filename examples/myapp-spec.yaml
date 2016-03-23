@@ -15,6 +15,7 @@ options:
     description: be verbose
     type: flag
     aliases: ["v"]
+
 subcommands:
   cook:
     summary: Cook something
@@ -37,6 +38,7 @@ subcommands:
         type: flag
         aliases: ["s"]
         description: add sugar
+
   weather:
     summary: Weather
     subcommands:
@@ -60,12 +62,16 @@ subcommands:
           - name: country
             required: true
             summary: Specify country
+            values:
+              op: weather_complete
             completion:
               op: weather_complete
           - name: city
             required: true
             multiple: true
             summary: Specify city or cities
+            values:
+              op: weather_complete
             completion:
               op: weather_complete
       countries:
@@ -84,6 +90,7 @@ subcommands:
                 - replace: SELF
                 - weather
                 - countries
+
   palindrome:
     summary: Check if a string is a palindrome
     op: palindrome
@@ -93,6 +100,7 @@ subcommands:
       completion:
         command_string: |
           cat /usr/share/dict/words | perl -nle'print if $_ eq reverse $_'
+
   convert:
     summary: Various unit conversions
     op: convert
@@ -101,14 +109,16 @@ subcommands:
       summary: The type of unit to convert
       type: string
       required: true
-      completion:
+      values:
         op: convert_complete
+      completion: true
     - name: source
       summary: The source unit to convert from
       type: string
       required: true
-      completion:
+      values:
         op: convert_complete
+      completion: true
     - name: value
       summary: The value to convert
       required: true
@@ -118,6 +128,7 @@ subcommands:
       type: string
       required: true
       multiple: true
-      completion:
+      values:
         op: convert_complete
+      completion: true
 # vim:et:sts=2:sws=2:sw=2:foldmethod=indent

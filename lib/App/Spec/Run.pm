@@ -15,6 +15,7 @@ has spec => ( is => 'ro' );
 has options => ( is => 'rw' );
 has parameters => ( is => 'rw' );
 has commands => ( is => 'rw' );
+has runmode => ( is => 'rw', default => 'normal' );
 
 sub run {
     my ($self) = @_;
@@ -76,13 +77,13 @@ sub run {
         }
         die "sorry =(\n";
     }
-    my $args = {};
     if ($completion_parameter) {
         my $shell = $ENV{PERL5_APPSPECRUN_SHELL} or return;
         my $param = $param_specs{ $completion_parameter };
         my $completion = $param->completion;
         my $op = $completion->{op} or return;
-        $args->{completion} = {
+        my $args = {
+            runmode => "completion",
             parameter => $completion_parameter,
         };
         my $result = $self->$op($args);

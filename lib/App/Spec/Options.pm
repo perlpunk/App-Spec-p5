@@ -5,6 +5,7 @@ package App::Spec::Options;
 our $VERSION = '0.000'; # VERSION;
 
 use List::Util qw/ any /;
+use Ref::Util qw/ is_arrayref is_hashref /;
 use Moo;
 
 has options => ( is => 'ro' );
@@ -73,30 +74,54 @@ sub process {
             );
         }
 
-        my $param_type = $spec->{type};
-        my $enum = $spec->{enum};
+        my $param_type = $spec->type;
+        my $enum = $spec->enum;
 
         my $def;
         if (ref $param_type eq 'HASH') {
             ($param_type, $def) = %$param_type;
         }
+        my $values = is_arrayref($value) ? $value : [ $value ];
         my $code = $validate{ $param_type }
             or die "Missing method for validation type $param_type";
-        my $ok = $code->($value, $def);
-        unless ($ok) {
-            $errs->{ $type }->{ $name } = "invalid $param_type";
+
+        my $possible_values = [];
+        if (my $spec_values = $spec->values) {
+            my $op = $spec_values->{op};
+            my $args = {
+                runmode => "validation",
+                parameter => $name,
+            };
+            $possible_values = $app->$op($args) || [];
         }
-        if ($enum) {
-            my $code = $validate{enum}
-                or die "Missing method for validation type enum";
-            my $ok = $code->($value, $enum);
+
+        for my $v (@$values) {
+            # check type validity
+            my $ok = $code->($v, $def);
             unless ($ok) {
-                $errs->{ $type }->{ $name } = "invalid enum";
+                $errs->{ $type }->{ $name } = "invalid $param_type";
             }
-        }
-        if ($param_type eq 'file' and $value eq '-') {
-            $value = do { local $/; my $t = <STDIN>; \$t };
-            $items->{ $name } = $value;
+            # check static enums
+            if ($enum) {
+                my $code = $validate{enum}
+                    or die "Missing method for validation type enum";
+                my $ok = $code->($v, $enum);
+                unless ($ok) {
+                    $errs->{ $type }->{ $name } = "invalid enum";
+                }
+            }
+            if ($param_type eq 'file' and $v eq '-') {
+                $v = do { local $/; my $t = <STDIN>; \$t };
+                $items->{ $name } = $v;
+            }
+            if (@$possible_values) {
+                my $ok = any {
+                    is_hashref($_) ? $_->{name} eq $v : $_ eq $v
+                } @$possible_values;
+                unless ($ok) {
+                    $errs->{ $type }->{ $name } = "invalid value";
+                }
+            }
         }
     }
     return (keys %$errs) ? 0 : 1;

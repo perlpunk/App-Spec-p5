@@ -58,6 +58,12 @@
   - regex: 'Usage: myapp weather show <country> <city>\+'
   - regex: 'city.*missing'
   exit: 255
+-
+   args: [ convert, nonsense ]
+   stderr:
+   - regex: 'Usage: myapp convert <type> <source> <value> <target>\+'
+   - regex: 'type.*invalid'
+   exit: 255
 
 #completion:
 -

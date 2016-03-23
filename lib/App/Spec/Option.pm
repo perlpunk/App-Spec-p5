@@ -17,6 +17,7 @@ has filter => ( is => 'ro' );
 has completion => ( is => 'ro' );
 has aliases => ( is => 'ro' );
 has enum => ( is => 'ro' );
+has values => ( is => 'ro' );
 
 sub build {
     my ($class, $args) = @_;
@@ -40,6 +41,7 @@ sub build {
         completion => $args->{completion},
         aliases => $args->{aliases} || [],
         enum => $args->{enum},
+        values => $args->{values},
     });
     return $self;
 }

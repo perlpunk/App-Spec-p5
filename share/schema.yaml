@@ -46,10 +46,15 @@ definitions:
         type: array
         items: { type: string }
       required: { '$ref': '#/definitions/bool' }
+      values:
+        type: object
+        additionalProperties: false
+        properties:
+          op: { type: string }
       completion:
         oneOf:
           - { type: object }
-          - { type: integer }
+          - { '$ref': '#/definitions/bool' }
   command:
     type: object
     additionalProperties: false
