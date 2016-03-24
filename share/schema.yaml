@@ -22,7 +22,7 @@ properties:
         '$ref': '#/definitions/command'
 definitions:
   optionTypeSimple:
-    enum: [flag, string]
+    enum: [flag, string, file]
   options:
     type: array
     items:
@@ -47,7 +47,9 @@ definitions:
         items: { type: string }
       required: { '$ref': '#/definitions/bool' }
       completion:
-        type: object
+        oneOf:
+          - { type: object }
+          - { type: integer }
   command:
     type: object
     additionalProperties: false
@@ -55,14 +57,8 @@ definitions:
       summary: { type: string }
       description: { type: string }
       op: { type: string }
-      parameters:
-        type: array
-        additionalProperties: false
-        properties:
-          name: { type: string }
-          required: { '$ref': '#/definitions/bool' }
-          type: { type: object }
       options: { '$ref': '#/definitions/options' }
+      parameters: { '$ref': '#/definitions/options' }
       subcommands:
         type: object
         additionalProperties: false
@@ -73,3 +69,4 @@ definitions:
     oneOf:
       - { type: boolean }
       - { type: integer }
+      - { type: string, maxLength: 0 }
