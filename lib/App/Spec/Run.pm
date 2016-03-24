@@ -16,6 +16,7 @@ has options => ( is => 'rw' );
 has parameters => ( is => 'rw' );
 has commands => ( is => 'rw' );
 has runmode => ( is => 'rw', default => 'normal' );
+has errors => ( is => 'rw' );
 
 sub run {
     my ($self) = @_;
@@ -46,67 +47,84 @@ sub run {
     my %errs;
     my ($ok) = $opt->process( \%errs, type => "parameters", app => $self );
     $ok &&= $opt->process( \%errs, type => "options", app => $self );
+    $self->errors(\%errs) if not $ok;
 
     if (not $ok and not $completion_parameter) {
-        my @error_output;
-        for my $key (sort keys %errs) {
-            my $errors = $errs{ $key };
-            if ($key eq "parameters" or $key eq "options") {
-                for my $name (sort keys %$errors) {
-                    my $error = $errors->{ $name };
-                    $key =~ s/s$//;
-                    push @error_output, "Error: $key '$name': $error";
-                }
-            }
-            else {
-                my $err = Data::Dumper->Dump([\%errs], ['errs']);
-                push @error_output, $err;
-            }
-        }
-        $self->colorize and require Term::ANSIColor;
-        my $help = $spec->usage(
-            commands => $self->commands,
-            highlights => \%errs,
-            color => $self->colorize,
-        );
-        say STDERR $help;
-        for my $msg (@error_output) {
-            $self->colorize
-                and $msg = Term::ANSIColor::colored([qw/ bold red /], $msg);
-            print STDERR "$msg\n";
-        }
-        die "sorry =(\n";
+        $self->error_output;
     }
     if ($completion_parameter) {
-        my $shell = $ENV{PERL5_APPSPECRUN_SHELL} or return;
-        my $param = $param_specs{ $completion_parameter };
-        my $completion = $param->completion;
-        my $op = $completion->{op} or return;
-        my $args = {
-            runmode => "completion",
-            parameter => $completion_parameter,
-        };
-        my $result = $self->$op($args);
-
-        my $string = '';
-        for my $item (@$result) {
-            if (ref $item eq 'HASH') {
-                my $name = $item->{name};
-                my $desc = $item->{description};
-                $string .= "$name\t$desc\n";
-            }
-            else {
-                $string .= "$item\n";
-            }
-        }
-
-        print $string;
-        return;
+        $self->completion_output(
+            param_specs => \%param_specs,
+            completion_parameter => $completion_parameter,
+        );
     }
     else {
         $self->$op;
     }
 
+}
+
+sub completion_output {
+    my ($self, %args) = @_;
+    my $completion_parameter = $args{completion_parameter};
+    my $param_specs = $args{param_specs};
+    my $shell = $ENV{PERL5_APPSPECRUN_SHELL} or return;
+    my $param = $param_specs->{ $completion_parameter };
+    my $completion = $param->completion;
+    my $op = $completion->{op} or return;
+    my $args = {
+        runmode => "completion",
+        parameter => $completion_parameter,
+    };
+    my $result = $self->$op($args);
+
+    my $string = '';
+    for my $item (@$result) {
+        if (ref $item eq 'HASH') {
+            my $name = $item->{name};
+            my $desc = $item->{description};
+            $string .= "$name\t$desc\n";
+        }
+        else {
+            $string .= "$item\n";
+        }
+    }
+
+    print $string;
+    return;
+}
+
+sub error_output {
+    my ($self) = @_;
+    my $errs = $self->errors;
+    my @error_output;
+    for my $key (sort keys %$errs) {
+        my $errors = $errs->{ $key };
+        if ($key eq "parameters" or $key eq "options") {
+            for my $name (sort keys %$errors) {
+                my $error = $errors->{ $name };
+                $key =~ s/s$//;
+                push @error_output, "Error: $key '$name': $error";
+            }
+        }
+        else {
+            my $err = Data::Dumper->Dump([$errs], ['errs']);
+            push @error_output, $err;
+        }
+    }
+    $self->colorize and require Term::ANSIColor;
+    my $help = $self->spec->usage(
+        commands => $self->commands,
+        highlights => $errs,
+        color => $self->colorize,
+    );
+    say STDERR $help;
+    for my $msg (@error_output) {
+        $self->colorize
+            and $msg = Term::ANSIColor::colored([qw/ bold red /], $msg);
+        print STDERR "$msg\n";
+    }
+    die "sorry =(\n";
 }
 
 sub colorize {
