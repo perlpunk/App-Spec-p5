@@ -70,8 +70,15 @@ sub completion_output {
     my $param_specs = $args{param_specs};
     my $shell = $ENV{PERL5_APPSPECRUN_SHELL} or return;
     my $param = $param_specs->{ $completion_parameter };
-    my $completion = $param->completion;
-    my $op = $completion->{op} or return;
+    my $completion = $param->completion or return;
+    my $op;
+    if (ref $completion) {
+        $op = $completion->{op} or return;
+    }
+    else {
+        my $possible_values = $param->values or return;
+        $op = $possible_values->{op} or return;
+    }
     my $args = {
         runmode => "completion",
         parameter => $completion_parameter,
