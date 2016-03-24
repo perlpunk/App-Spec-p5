@@ -48,8 +48,8 @@
 
 <h2 id="GLOBAL-OPTIONS">GLOBAL OPTIONS</h2>
 
-<pre><code>    --verbose -v    be verbose       
-    --help -h       Show command help</code></pre>
+<pre><code>    --verbose -v    be verbose (flag)       
+    --help -h       Show command help (flag)</code></pre>
 
 <h2 id="SUBCOMMANDS">SUBCOMMANDS</h2>
 
@@ -64,7 +64,7 @@
 <pre><code>    type    *    The type of unit to convert    
     source  *    The source unit to convert from
     value   *    The value to convert           
-    target  * [] The target unit                </code></pre>
+    target  * [] The target unit (multiple)     </code></pre>
 
 <h3 id="cook">cook</h3>
 
@@ -74,8 +74,8 @@
 
 <p>Options:</p>
 
-<pre><code>    --with        Drink with ...
-    --sugar -s    add sugar     </code></pre>
+<pre><code>    --with        Drink with ...  
+    --sugar -s    add sugar (flag)</code></pre>
 
 <p>Parameters:</p>
 
@@ -105,7 +105,7 @@
 
 <p>Options:</p>
 
-<pre><code>    --country -c   [] country name(s)</code></pre>
+<pre><code>    --country -c   [] country name(s) (multiple)</code></pre>
 
 <h3 id="weather-countries">weather countries</h3>
 
@@ -121,14 +121,14 @@
 
 <p>Options:</p>
 
-<pre><code>    --temperature -T    show temperature              
-    --celsius -C        show temperature in celsius   
-    --fahrenheit -F     show temperature in fahrenheit</code></pre>
+<pre><code>    --temperature -T    show temperature (flag)              
+    --celsius -C        show temperature in celsius (flag)   
+    --fahrenheit -F     show temperature in fahrenheit (flag)</code></pre>
 
 <p>Parameters:</p>
 
-<pre><code>    country  *    Specify country       
-    city     * [] Specify city or cities</code></pre>
+<pre><code>    country  *    Specify country                  
+    city     * [] Specify city or cities (multiple)</code></pre>
 
 <h3 id="help">help</h3>
 
@@ -138,7 +138,7 @@
 
 <p>Options:</p>
 
-<pre><code>    --all    </code></pre>
+<pre><code>    --all     (flag)</code></pre>
 
 <h3 id="complete">_complete</h3>
 
@@ -149,8 +149,8 @@
 <p>Options:</p>
 
 <pre><code>    --name    name of the program
-    --zsh     for zsh            
-    --bash    for bash           </code></pre>
+    --zsh     for zsh (flag)     
+    --bash    for bash (flag)    </code></pre>
 
 
 </body>

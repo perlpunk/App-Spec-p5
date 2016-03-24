@@ -68,6 +68,7 @@ sub read {
         die "Error reading '$file': $@";
     }
 
+    my $has_subcommands = $spec->{subcommands} ? 1 : 0;
     my $default;
     {
         $default = $class->_read_default_spec;
@@ -79,23 +80,27 @@ sub read {
             }
         }
 
-        for my $key (keys %{ $default->{subcommands} } ) {
-            my $cmd = $default->{subcommands}->{ $key };
-            $spec->{subcommands}->{ $key } ||= $cmd;
+        if ($has_subcommands) {
+            for my $key (keys %{ $default->{subcommands} } ) {
+                my $cmd = $default->{subcommands}->{ $key };
+                $spec->{subcommands}->{ $key } ||= $cmd;
+            }
         }
     }
 
-    # add subcommands to help command
-    my $help_subcmds = $spec->{subcommands}->{help}->{subcommands} ||= {};
-    $class->_add_subcommands($help_subcmds, $spec->{subcommands}, { subcommand_required => 0 });
-
     my $commands;
-    for my $name (keys %{ $spec->{subcommands} || [] }) {
-        my $cmd = $spec->{subcommands}->{ $name };
-        $commands->{ $name } = App::Spec::Command->build({
-            name => $name,
-            %$cmd,
-        });
+    if ($has_subcommands) {
+        # add subcommands to help command
+        my $help_subcmds = $spec->{subcommands}->{help}->{subcommands} ||= {};
+        $class->_add_subcommands($help_subcmds, $spec->{subcommands}, { subcommand_required => 0 });
+
+        for my $name (keys %{ $spec->{subcommands} || [] }) {
+            my $cmd = $spec->{subcommands}->{ $name };
+            $commands->{ $name } = App::Spec::Command->build({
+                name => $name,
+                %$cmd,
+            });
+        }
     }
 
     my $self = $class->new({
@@ -127,6 +132,11 @@ sub _add_subcommands {
         my $subcmds = $cmd->{subcommands} || {};
         $self->_add_subcommands($commands1->{ $name }->{subcommands}, $subcmds, $ref);
     }
+}
+
+sub has_subcommands {
+    my ($self) = @_;
+    return $self->subcommands ? 1 : 0;
 }
 
 sub usage {

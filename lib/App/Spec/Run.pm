@@ -23,14 +23,16 @@ sub run {
     my $spec = $self->spec;
 
     my $completion_parameter = $ENV{PERL5_APPSPECRUN_COMPLETION_PARAMETER};
-    $self->check_help;
+    my $op = $self->check_help;
 
     my %option_specs;
     my @param_list;
-    my $op = $self->process_commands_options(
-        option_specs => \%option_specs,
-        parameter_list => \@param_list,
-    );
+    unless ($op) {
+        $op = $self->process_commands_options(
+            option_specs => \%option_specs,
+            parameter_list => \@param_list,
+        );
+    }
 
     my %param_specs;
     $self->process_parameters(
@@ -224,12 +226,17 @@ sub process_commands_options {
     }
     my @names = sort keys %$commands;
     unless ($op) {
-        warn "Missing op for commands (@cmds)\n";
-        my $help = $spec->usage(
-            commands => \@cmds,
-            color => $self->colorize,
-        );
-        die $help;
+        if ($spec->has_subcommands) {
+            warn "Missing op for commands (@cmds)\n";
+            my $help = $spec->usage(
+                commands => \@cmds,
+                color => $self->colorize,
+            );
+            die $help;
+        }
+        else {
+            $op = "execute";
+        }
     }
     $self->commands(\@cmds);
     $self->options(\%options);
@@ -245,15 +252,26 @@ sub error {
 }
 
 sub check_help {
+    my ($self) = @_;
     GetOptions(
-        "help" => \my $help,
+        "help|h" => \my $help,
     );
 
-    if ($help and not $ARGV[0] eq "help") {
-        # call subcommand 'help'
-        unshift @ARGV, "help";
+    my $op;
+    if ($self->spec->has_subcommands) {
+        if ($help and $ARGV[0] ne "help") {
+            # call subcommand 'help'
+            unshift @ARGV, "help";
+        }
+    }
+    else {
+        if ($help) {
+            $op = "cmd_help";
+            unshift @ARGV, "--help";
+        }
     }
 
+    return $op;
 }
 
 

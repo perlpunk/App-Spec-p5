@@ -1,0 +1,19 @@
+#!/usr/bin/env perl
+# vim:et:sts=4:sws=4:sw=4
+use strict;
+use warnings;
+use 5.010;
+use Data::Dumper;
+use FindBin '$Bin';
+use lib "$Bin/../../lib";
+use lib "$Bin/../../t/lib";
+# t/lib/App/Spec/Example/MySimpleApp.pm
+use App::Spec::Example::MySimpleApp;
+
+use App::Spec;
+
+my $spec = App::Spec->read("$Bin/../mysimpleapp-spec.yaml");
+my $run = $spec->runner;
+$run->run;
+
+

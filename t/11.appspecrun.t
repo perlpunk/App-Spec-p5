@@ -11,12 +11,13 @@ use YAML::XS qw/ Load /;
 $ENV{PERL5_APPSPECRUN_COLOR} = 'never';
 $ENV{PERL5_APPSPECRUN_TEST} = 1;
 my $spec = App::Spec->read("$Bin/../examples/myapp-spec.yaml");
-my $app = "$Bin/../examples/bin/myapp";
 
 my $testdata = YAML::XS::LoadFile("$Bin/appspec-tests.yaml");
 
 for my $test (@$testdata) {
     my $args = $test->{args};
+    my $app = shift @$args;
+    $app = "$Bin/../examples/bin/$app";
     my $stdout = $test->{stdout} || [];
     my $stderr = $test->{stderr} || [];
     my $env = $test->{env};

@@ -1,0 +1,13 @@
+---
+name: mysimpleapp
+appspec: { version: 0.001 }
+class: App::Spec::Example::MySimpleApp
+title: a simple app
+abstract: Just a very simple example app to document some features
+options:
+- name: verbose
+  description: be verbose
+  type: flag
+  multiple: true
+  aliases: [v]
+# vim:et:sts=2:sws=2:sw=2:foldmethod=indent
