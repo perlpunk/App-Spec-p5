@@ -38,11 +38,13 @@ sub process {
         $items = $self->options;
         $specs = $self->option_specs;
     }
+
     for my $name (sort keys %$specs) {
         my $spec = $specs->{ $name };
         my $value = $items->{ $name };
+        my $values = is_arrayref($value) ? $value : [ $value ];
 
-        if ($spec->multiple and not @$value) {
+        if ($spec->multiple and $spec->type ne "flag" and not @$value) {
             if (defined (my $default = $spec->default)) {
                 $value = [ $default ];
                 $items->{ $name } = $value;
@@ -55,14 +57,14 @@ sub process {
             }
         }
         if ( (
-                ($spec->multiple and not @$value)
+                ($spec->multiple and $spec->type ne "flag" and not @$value)
                 ||
                 (not defined $value)
             ) and $spec->required) {
             $errs->{ $type }->{ $name } = "missing";
             next;
         }
-        if ($spec->multiple and not @$value or not defined $value) {
+        if ($spec->multiple and $spec->type ne "flag" and not @$value or not defined $value) {
             next;
         }
 
@@ -81,7 +83,6 @@ sub process {
         if (ref $param_type eq 'HASH') {
             ($param_type, $def) = %$param_type;
         }
-        my $values = is_arrayref($value) ? $value : [ $value ];
         my $code = $validate{ $param_type }
             or die "Missing method for validation type $param_type";
 

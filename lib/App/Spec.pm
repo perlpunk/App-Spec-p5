@@ -372,8 +372,13 @@ sub make_getopt {
         }
         $specs->{ $name } = $opt;
         if ($opt->multiple) {
-            $result->{ $name } = [];
-            $spec .= '@';
+            if ($opt->multiple) {
+                $spec .= '+';
+            }
+            else {
+                $result->{ $name } = [];
+                $spec .= '@';
+            }
         }
         push @getopt, $spec, \$result->{ $name },
     }
