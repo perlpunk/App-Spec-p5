@@ -367,6 +367,9 @@ sub make_getopt {
     for my $opt (@$options) {
         my $name = $opt->name;
         my $spec = $name;
+        if (my $aliases = $opt->aliases) {
+            $spec .= "|$_" for @$aliases;
+        }
         unless ($opt->type eq 'flag') {
             $spec .= "=s";
         }
