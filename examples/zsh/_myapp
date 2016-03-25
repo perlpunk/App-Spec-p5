@@ -25,8 +25,8 @@ _myapp() {
                 # ---- Command: _complete
                 _arguments -s -C \
                     '1: :->cmd1' \
-                    '--verbose[be verbose]' \
-                    '-v[be verbose]' \
+                    '*--verbose[be verbose]' \
+                    '*-v[be verbose]' \
                     '--help[Show command help]' \
                     '-h[Show command help]' \
                     '--name[name of the program]:name' \
@@ -45,8 +45,8 @@ _myapp() {
                     '3: :->source' \
                     '4: :->value' \
                     '*: :->target' \
-                    '--verbose[be verbose]' \
-                    '-v[be verbose]' \
+                    '*--verbose[be verbose]' \
+                    '*-v[be verbose]' \
                     '--help[Show command help]' \
                     '-h[Show command help]' \
                     && ret=0
@@ -73,8 +73,8 @@ _myapp_convert_param_target_completion
                 _arguments -s -C \
                     '1: :->cmd1' \
                     '2: :->drink' \
-                    '--verbose[be verbose]' \
-                    '-v[be verbose]' \
+                    '*--verbose[be verbose]' \
+                    '*-v[be verbose]' \
                     '--help[Show command help]' \
                     '-h[Show command help]' \
                     '--with[Drink with ...]:with:("almond milk" "soy milk" "oat milk" "spelt milk" "cow milk")' \
@@ -112,8 +112,8 @@ _myapp_convert_param_target_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
-                            '--verbose[be verbose]' \
-                            '-v[be verbose]' \
+                            '*--verbose[be verbose]' \
+                            '*-v[be verbose]' \
                             '--help[Show command help]' \
                             '-h[Show command help]' \
                             '--all[]' \
@@ -127,8 +127,8 @@ _myapp_convert_param_target_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
-                            '--verbose[be verbose]' \
-                            '-v[be verbose]' \
+                            '*--verbose[be verbose]' \
+                            '*-v[be verbose]' \
                             '--help[Show command help]' \
                             '-h[Show command help]' \
                             '--all[]' \
@@ -142,8 +142,8 @@ _myapp_convert_param_target_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
-                            '--verbose[be verbose]' \
-                            '-v[be verbose]' \
+                            '*--verbose[be verbose]' \
+                            '*-v[be verbose]' \
                             '--help[Show command help]' \
                             '-h[Show command help]' \
                             '--all[]' \
@@ -157,8 +157,8 @@ _myapp_convert_param_target_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
-                            '--verbose[be verbose]' \
-                            '-v[be verbose]' \
+                            '*--verbose[be verbose]' \
+                            '*-v[be verbose]' \
                             '--help[Show command help]' \
                             '-h[Show command help]' \
                             '--all[]' \
@@ -191,8 +191,8 @@ _myapp_convert_param_target_completion
                                     '1: :->cmd1' \
                                     '2: :->cmd2' \
                                     '3: :->cmd3' \
-                                    '--verbose[be verbose]' \
-                                    '-v[be verbose]' \
+                                    '*--verbose[be verbose]' \
+                                    '*-v[be verbose]' \
                                     '--help[Show command help]' \
                                     '-h[Show command help]' \
                                     '--all[]' \
@@ -207,8 +207,8 @@ _myapp_convert_param_target_completion
                                     '1: :->cmd1' \
                                     '2: :->cmd2' \
                                     '3: :->cmd3' \
-                                    '--verbose[be verbose]' \
-                                    '-v[be verbose]' \
+                                    '*--verbose[be verbose]' \
+                                    '*-v[be verbose]' \
                                     '--help[Show command help]' \
                                     '-h[Show command help]' \
                                     '--all[]' \
@@ -223,8 +223,8 @@ _myapp_convert_param_target_completion
                                     '1: :->cmd1' \
                                     '2: :->cmd2' \
                                     '3: :->cmd3' \
-                                    '--verbose[be verbose]' \
-                                    '-v[be verbose]' \
+                                    '*--verbose[be verbose]' \
+                                    '*-v[be verbose]' \
                                     '--help[Show command help]' \
                                     '-h[Show command help]' \
                                     '--all[]' \
@@ -250,8 +250,8 @@ _myapp_convert_param_target_completion
                 _arguments -s -C \
                     '1: :->cmd1' \
                     '2: :->string' \
-                    '--verbose[be verbose]' \
-                    '-v[be verbose]' \
+                    '*--verbose[be verbose]' \
+                    '*-v[be verbose]' \
                     '--help[Show command help]' \
                     '-h[Show command help]' \
                     && ret=0
@@ -286,8 +286,8 @@ _myapp_palindrome_param_string_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
-                            '--verbose[be verbose]' \
-                            '-v[be verbose]' \
+                            '*--verbose[be verbose]' \
+                            '*-v[be verbose]' \
                             '--help[Show command help]' \
                             '-h[Show command help]' \
                             '*--country[country name(s)]:country:_myapp_weather_cities_option_country_completion' \
@@ -302,8 +302,8 @@ _myapp_palindrome_param_string_completion
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
-                            '--verbose[be verbose]' \
-                            '-v[be verbose]' \
+                            '*--verbose[be verbose]' \
+                            '*-v[be verbose]' \
                             '--help[Show command help]' \
                             '-h[Show command help]' \
                             && ret=0
@@ -318,8 +318,8 @@ _myapp_palindrome_param_string_completion
                             '2: :->cmd2' \
                             '3: :->country' \
                             '*: :->city' \
-                            '--verbose[be verbose]' \
-                            '-v[be verbose]' \
+                            '*--verbose[be verbose]' \
+                            '*-v[be verbose]' \
                             '--help[Show command help]' \
                             '-h[Show command help]' \
                             '--temperature[show temperature]' \
