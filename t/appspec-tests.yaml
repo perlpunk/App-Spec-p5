@@ -1,9 +1,9 @@
 ---
 #valid:
 -
-  args: [ cook, tea, --sugar, --verbose, --verbose ]
+  args: [ cook, tea, --sugar, -vv, --verbose ]
   stdout:
-    - regex: 'Options: sugar=1,verbose=2'
+    - regex: 'Options: sugar=1,verbose=3'
     - regex: 'Parameters: drink=tea'
     - regex: 'Subcommands: cook'
   exit: 0

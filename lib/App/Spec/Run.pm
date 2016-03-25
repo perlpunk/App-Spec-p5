@@ -8,7 +8,7 @@ our $VERSION = '0.000'; # VERSION
 use List::Util qw/ any /;
 use Data::Dumper;
 use App::Spec::Options;
-use Getopt::Long qw/ :config pass_through /;
+use Getopt::Long qw/ :config pass_through bundling /;
 use Moo;
 
 has spec => ( is => 'ro' );
