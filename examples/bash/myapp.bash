@@ -8,122 +8,159 @@ _myapp() {
     local program=myapp
     local cur=${COMP_WORDS[$COMP_CWORD]}
 #    echo "COMP_CWORD:$COMP_CWORD cur:$cur" >>/tmp/comp
+    declare -a FLAGS
+    declare -a OPTIONS
+    declare -a MYWORDS
 
-    case $COMP_CWORD in
+    local INDEX=`expr $COMP_CWORD - 1`
+    MYWORDS=("${COMP_WORDS[@]:1:$COMP_CWORD}")
 
-    1)
-        _myapp_compreply '_complete  -- Generate self completion'$'\n''convert    -- Various unit conversions'$'\n''cook       -- Cook something'$'\n''help       -- Show command help'$'\n''palindrome -- Check if a string is a palindrome'$'\n''weather    -- Weather'
+    FLAGS=('--verbose' 'be verbose' '-v' 'be verbose' '--help' 'Show command help' '-h' 'Show command help')
+    OPTIONS=()
+    __myapp_handle_options_flags
+
+    case $INDEX in
+
+    0)
+        __comp_current_options || return
+        __myapp_dynamic_comp 'commands' '_complete'$'\t''Generate self completion'$'\n''convert'$'\t''Various unit conversions'$'\n''cook'$'\t''Cook something'$'\n''help'$'\t''Show command help'$'\n''palindrome'$'\t''Check if a string is a palindrome'$'\n''weather'$'\t''Weather'
 
     ;;
     *)
     # subcmds
-    case ${COMP_WORDS[1]} in
+    case ${MYWORDS[0]} in
       _complete)
-        case $COMP_CWORD in
-        *)
-        case ${COMP_WORDS[$COMP_CWORD-1]} in
-          --verbose|-v)
-          ;;
-          --help|-h)
-          ;;
-          --name)
-          ;;
-          --zsh)
-          ;;
-          --bash)
-          ;;
-
+        FLAGS+=('--zsh' 'for zsh' '--bash' 'for bash')
+        OPTIONS+=('--name' 'name of the program')
+        __myapp_handle_options_flags
+          case $INDEX in
           *)
-            _myapp_compreply "'--verbose -- be verbose'"$'\n'"'-v        -- be verbose'"$'\n'"'--help    -- Show command help'"$'\n'"'-h        -- Show command help'"$'\n'"'--name    -- name of the program'"$'\n'"'--zsh     -- for zsh'"$'\n'"'--bash    -- for bash'"
-          ;;
-        esac
-        ;;
+            __comp_current_options true || return # after parameters
+            case ${MYWORDS[$INDEX-1]} in
+              --name)
+              ;;
+
+            esac
+            ;;
         esac
       ;;
       convert)
-        case $COMP_CWORD in
-        2)
+        FLAGS+=()
+        OPTIONS+=()
+        __myapp_handle_options_flags
+          case $INDEX in
+          1)
+              __comp_current_options || return
                 _myapp_convert_param_type_completion
-        ;;
-        3)
+          ;;
+          2)
+              __comp_current_options || return
                 _myapp_convert_param_source_completion
-        ;;
-        4)
-        ;;
-        5)
+          ;;
+          3)
+              __comp_current_options || return
+          ;;
+          4)
+              __comp_current_options || return
                 _myapp_convert_param_target_completion
-        ;;
-        *)
-        case ${COMP_WORDS[$COMP_CWORD-1]} in
-          --verbose|-v)
           ;;
-          --help|-h)
-          ;;
-
           *)
-            _myapp_compreply "'--verbose -- be verbose'"$'\n'"'-v        -- be verbose'"$'\n'"'--help    -- Show command help'"$'\n'"'-h        -- Show command help'"
-          ;;
-        esac
-        ;;
+            __comp_current_options true || return # after parameters
+            case ${MYWORDS[$INDEX-1]} in
+
+            esac
+            ;;
         esac
       ;;
       cook)
-        case $COMP_CWORD in
-        2)
+        FLAGS+=('--sugar' 'add sugar' '-s' 'add sugar')
+        OPTIONS+=('--with' 'Drink with ...')
+        __myapp_handle_options_flags
+          case $INDEX in
+          1)
+              __comp_current_options || return
                 _myapp_compreply "tea"$'\n'"coffee"
-        ;;
-        *)
-        case ${COMP_WORDS[$COMP_CWORD-1]} in
-          --verbose|-v)
           ;;
-          --help|-h)
-          ;;
-          --with)
-            _myapp_compreply "'almond\ milk'"$'\n'"'soy\ milk'"$'\n'"'oat\ milk'"$'\n'"'spelt\ milk'"$'\n'"'cow\ milk'"
-          ;;
-          --sugar|-s)
-          ;;
-
           *)
-            _myapp_compreply "'--verbose -- be verbose'"$'\n'"'-v        -- be verbose'"$'\n'"'--help    -- Show command help'"$'\n'"'-h        -- Show command help'"$'\n'"'--with    -- Drink with ...'"$'\n'"'--sugar   -- add sugar'"$'\n'"'-s        -- add sugar'"
-          ;;
-        esac
-        ;;
+            __comp_current_options true || return # after parameters
+            case ${MYWORDS[$INDEX-1]} in
+              --with)
+                _myapp_compreply "'almond\ milk'"$'\n'"'soy\ milk'"$'\n'"'oat\ milk'"$'\n'"'spelt\ milk'"$'\n'"'cow\ milk'"
+              ;;
+
+            esac
+            ;;
         esac
       ;;
       help)
-        case $COMP_CWORD in
+        FLAGS+=('--all' '')
+        OPTIONS+=()
+        __myapp_handle_options_flags
+        case $INDEX in
 
-        2)
-            _myapp_compreply '_complete '$'\n''convert   '$'\n''cook      '$'\n''palindrome'$'\n''weather   '
+        1)
+            __comp_current_options || return
+            __myapp_dynamic_comp 'commands' '_complete'$'\n''convert'$'\n''cook'$'\n''palindrome'$'\n''weather'
 
         ;;
         *)
         # subcmds
-        case ${COMP_WORDS[2]} in
+        case ${MYWORDS[1]} in
           _complete)
+            FLAGS+=()
+            OPTIONS+=()
+            __myapp_handle_options_flags
+            __comp_current_options true || return # no subcmds, no params/opts
           ;;
           convert)
+            FLAGS+=()
+            OPTIONS+=()
+            __myapp_handle_options_flags
+            __comp_current_options true || return # no subcmds, no params/opts
           ;;
           cook)
+            FLAGS+=()
+            OPTIONS+=()
+            __myapp_handle_options_flags
+            __comp_current_options true || return # no subcmds, no params/opts
           ;;
           palindrome)
+            FLAGS+=()
+            OPTIONS+=()
+            __myapp_handle_options_flags
+            __comp_current_options true || return # no subcmds, no params/opts
           ;;
           weather)
-            case $COMP_CWORD in
+            FLAGS+=()
+            OPTIONS+=()
+            __myapp_handle_options_flags
+            case $INDEX in
 
-            3)
-                _myapp_compreply 'cities   '$'\n''countries'$'\n''show     '
+            2)
+                __comp_current_options || return
+                __myapp_dynamic_comp 'commands' 'cities'$'\n''countries'$'\n''show'
 
             ;;
             *)
             # subcmds
-            case ${COMP_WORDS[3]} in
+            case ${MYWORDS[2]} in
               cities)
+                FLAGS+=()
+                OPTIONS+=()
+                __myapp_handle_options_flags
+                __comp_current_options true || return # no subcmds, no params/opts
               ;;
               countries)
+                FLAGS+=()
+                OPTIONS+=()
+                __myapp_handle_options_flags
+                __comp_current_options true || return # no subcmds, no params/opts
               ;;
               show)
+                FLAGS+=()
+                OPTIONS+=()
+                __myapp_handle_options_flags
+                __comp_current_options true || return # no subcmds, no params/opts
               ;;
             esac
 
@@ -136,81 +173,77 @@ _myapp() {
         esac
       ;;
       palindrome)
-        case $COMP_CWORD in
-        2)
+        FLAGS+=()
+        OPTIONS+=()
+        __myapp_handle_options_flags
+          case $INDEX in
+          1)
+              __comp_current_options || return
                 _myapp_palindrome_param_string_completion
-        ;;
-        *)
-        case ${COMP_WORDS[$COMP_CWORD-1]} in
-          --verbose|-v)
           ;;
-          --help|-h)
-          ;;
-
           *)
-            _myapp_compreply "'--verbose -- be verbose'"$'\n'"'-v        -- be verbose'"$'\n'"'--help    -- Show command help'"$'\n'"'-h        -- Show command help'"
-          ;;
-        esac
-        ;;
+            __comp_current_options true || return # after parameters
+            case ${MYWORDS[$INDEX-1]} in
+
+            esac
+            ;;
         esac
       ;;
       weather)
-        case $COMP_CWORD in
+        FLAGS+=()
+        OPTIONS+=()
+        __myapp_handle_options_flags
+        case $INDEX in
 
-        2)
-            _myapp_compreply 'cities    -- show list of cities'$'\n''countries -- show list of countries'$'\n''show      -- Show Weather forecast'
+        1)
+            __comp_current_options || return
+            __myapp_dynamic_comp 'commands' 'cities'$'\t''show list of cities'$'\n''countries'$'\t''show list of countries'$'\n''show'$'\t''Show Weather forecast'
 
         ;;
         *)
         # subcmds
-        case ${COMP_WORDS[2]} in
+        case ${MYWORDS[1]} in
           cities)
-            case $COMP_CWORD in
-            *)
-            case ${COMP_WORDS[$COMP_CWORD-1]} in
-              --verbose|-v)
-              ;;
-              --help|-h)
-              ;;
-              --country|-c)
-                _myapp_weather_cities_option_country_completion
-              ;;
-
+            FLAGS+=()
+            OPTIONS+=('--country' 'country name(s)' '-c' 'country name(s)')
+            __myapp_handle_options_flags
+              case $INDEX in
               *)
-                _myapp_compreply "'--verbose -- be verbose'"$'\n'"'-v        -- be verbose'"$'\n'"'--help    -- Show command help'"$'\n'"'-h        -- Show command help'"$'\n'"'--country -- country name(s)'"$'\n'"'-c        -- country name(s)'"
-              ;;
-            esac
-            ;;
+                __comp_current_options true || return # after parameters
+                case ${MYWORDS[$INDEX-1]} in
+                  --country|-c)
+                    _myapp_weather_cities_option_country_completion
+                  ;;
+
+                esac
+                ;;
             esac
           ;;
           countries)
+            FLAGS+=()
+            OPTIONS+=()
+            __myapp_handle_options_flags
+            __comp_current_options true || return # no subcmds, no params/opts
           ;;
           show)
-            case $COMP_CWORD in
-            3)
+            FLAGS+=('--temperature' 'show temperature' '-T' 'show temperature' '--celsius' 'show temperature in celsius' '-C' 'show temperature in celsius' '--fahrenheit' 'show temperature in fahrenheit' '-F' 'show temperature in fahrenheit')
+            OPTIONS+=()
+            __myapp_handle_options_flags
+              case $INDEX in
+              2)
+                  __comp_current_options || return
                     _myapp_weather_show_param_country_completion
-            ;;
-            4)
+              ;;
+              3)
+                  __comp_current_options || return
                     _myapp_weather_show_param_city_completion
-            ;;
-            *)
-            case ${COMP_WORDS[$COMP_CWORD-1]} in
-              --verbose|-v)
               ;;
-              --help|-h)
-              ;;
-              --temperature|-T)
-              ;;
-              --celsius|-C)
-              ;;
-              --fahrenheit|-F)
-              ;;
-
               *)
-                _myapp_compreply "'--verbose     -- be verbose'"$'\n'"'-v            -- be verbose'"$'\n'"'--help        -- Show command help'"$'\n'"'-h            -- Show command help'"$'\n'"'--temperature -- show temperature'"$'\n'"'-T            -- show temperature'"$'\n'"'--celsius     -- show temperature in celsius'"$'\n'"'-C            -- show temperature in celsius'"$'\n'"'--fahrenheit  -- show temperature in fahrenheit'"$'\n'"'-F            -- show temperature in fahrenheit'"
-              ;;
-            esac
-            ;;
+                __comp_current_options true || return # after parameters
+                case ${MYWORDS[$INDEX-1]} in
+
+                esac
+                ;;
             esac
           ;;
         esac
@@ -249,8 +282,7 @@ _myapp_convert_param_target_completion() {
     __myapp_dynamic_comp 'target' "$__dynamic_completion"
 }
 _myapp_palindrome_param_string_completion() {
-    local param_string=`cat /usr/share/dict/words | perl -nle'print if $_ eq reverse $_'
-`
+    local param_string=`cat /usr/share/dict/words | perl -nle'print if $_ eq reverse $_'`
     _myapp_compreply "$param_string"
 }
 _myapp_weather_cities_option_country_completion() {
@@ -272,6 +304,7 @@ __myapp_dynamic_comp() {
     local argname="$1"
     local arg="$2"
     local comp name desc cols desclength formatted
+    local max=0
 
     while read -r line; do
         name="$line"
@@ -292,14 +325,101 @@ __myapp_dynamic_comp() {
             cols=`tput cols`
             [[ -z $cols ]] && cols=80
             desclength=`expr $cols - 4 - $max`
-            formatted=`printf "%-*s -- %-*s" "$max" "$name" "$desclength" "$desc"`
+            formatted=`printf "'%-*s -- %-*s'" "$max" "$name" "$desclength" "$desc"`
             comp="$comp$formatted"$'\n'
         else
-            comp="$comp$name"$'\n'
+            comp="$comp'$name'"$'\n'
         fi
     done <<< "$arg"
     _myapp_compreply "$comp"
 }
+
+function __myapp_handle_options() {
+    local i j
+    declare -a copy
+    local last="${MYWORDS[$INDEX]}"
+    local max=`expr ${#MYWORDS[@]} - 1`
+    for ((i=0; i<$max; i++))
+    do
+        local word="${MYWORDS[$i]}"
+        local found=
+        for ((j=0; j<${#OPTIONS[@]}; j+=2))
+        do
+            local option="${OPTIONS[$j]}"
+            if [[ "$word" == "$option" ]]; then
+                found=1
+                i=`expr $i + 1`
+                break
+            fi
+        done
+        if [[ -n $found && $i -lt $max ]]; then
+            INDEX=`expr $INDEX - 2`
+        else
+            copy+=("$word")
+        fi
+    done
+    MYWORDS=("${copy[@]}" "$last")
+}
+
+function __myapp_handle_flags() {
+    local i j
+    declare -a copy
+    local last="${MYWORDS[$INDEX]}"
+    local max=`expr ${#MYWORDS[@]} - 1`
+    for ((i=0; i<$max; i++))
+    do
+        local word="${MYWORDS[$i]}"
+        local found=
+        for ((j=0; j<${#FLAGS[@]}; j+=2))
+        do
+            local flag="${FLAGS[$j]}"
+            if [[ "$word" == "$flag" ]]; then
+                found=1
+                break
+            fi
+        done
+        if [[ -n $found ]]; then
+            INDEX=`expr $INDEX - 1`
+        else
+            copy+=("$word")
+        fi
+    done
+    MYWORDS=("${copy[@]}" "$last")
+}
+
+__myapp_handle_options_flags() {
+    __myapp_handle_options
+    __myapp_handle_flags
+}
+
+__comp_current_options() {
+    local always="$1"
+    if [[ -n $always || ${MYWORDS[$INDEX]} =~ ^- ]]; then
+
+      local options_spec=''
+      local j=
+
+      for ((j=0; j<${#FLAGS[@]}; j+=2))
+      do
+          local name="${FLAGS[$j]}"
+          local desc="${FLAGS[$j+1]}"
+          options_spec+="$name"$'\t'"$desc"$'\n'
+      done
+
+      for ((j=0; j<${#OPTIONS[@]}; j+=2))
+      do
+          local name="${OPTIONS[$j]}"
+          local desc="${OPTIONS[$j+1]}"
+          options_spec+="$name"$'\t'"$desc"$'\n'
+      done
+      __myapp_dynamic_comp 'options' "$options_spec"
+
+      return 1
+    else
+      return 0
+    fi
+}
+
 
 complete -o default -F _myapp myapp
 
