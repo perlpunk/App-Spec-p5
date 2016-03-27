@@ -12,8 +12,8 @@ Just a very simple example app to document some features
 
 =head2 GLOBAL OPTIONS
 
-    --verbose -v    be verbose (flag)       
-    --help -h       Show command help (flag)
+    --verbose -v   [] be verbose (flag; multiple)
+    --help -h         Show command help (flag)   
 
 
 =head2 SUBCOMMANDS
