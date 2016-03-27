@@ -14,6 +14,7 @@ sub generate_completion {
     my $completion_outer = $self->completion_commands(
         commands => $spec->subcommands,
         options => $spec->options,
+        parameters => $spec->parameters,
         level => 1,
         functions => $functions,
     );
@@ -112,6 +113,7 @@ sub completion_commands {
     my $previous = $args{previous} || [];
     my $commands = $args{commands};
     my $options = $args{options};
+    my $parameters = $args{parameters};
     my $level = $args{level};
     my $indent = "    " x $level;
 
@@ -125,11 +127,34 @@ sub completion_commands {
         }
         "'$name'" . (length $summary ? q{$'\t'} . "'$summary'" : '')
     } sort keys %$commands;
-    my $cmds = join q{$'\\n'}, @commands;
+    my $cmds = '';
+    if (@commands) {
+        $cmds = join q{$'\\n'}, @commands;
+        $cmds = <<"EOM";
+${indent}    __${appname}_dynamic_comp 'commands' $cmds
+EOM
+    }
 
     my $index = $level - 1;
-    my $subc = <<"EOM";
-$indent# subcmds
+    my $subc;
+
+    # any parameters from the previous command?
+    my $param_comp = '';
+    $param_comp .= <<"EOM";
+${indent}  case \$INDEX in
+EOM
+    $param_comp .= $self->completion_parameters(
+        parameters => $parameters,
+        level => $level,
+        previous => $previous,
+        functions => $functions,
+    );
+    $param_comp .= <<"EOM";
+${indent}  esac
+EOM
+
+    $subc .= <<"EOM";
+${indent}# subcmds
 ${indent}case \$\{MYWORDS\[$index\]\} in
 EOM
 
@@ -143,26 +168,34 @@ ${indent}    OPTIONS+=$options_string
 ${indent}    __${appname}_handle_options_flags
 EOM
         my $subcommands = $cmd_spec->subcommands;
-        my $parameters = $cmd_spec->parameters;
+        my $cmd_parameters = $cmd_spec->parameters;
         my $cmd_options = $cmd_spec->options;
         if (keys %$subcommands) {
             my $comp = $self->completion_commands(
                 commands => $subcommands,
                 options => [ @$options, @$cmd_options ],
+                parameters => [ @$cmd_parameters ],
                 level => $level + 1,
                 previous => [@$previous, $name],
                 functions => $functions,
             );
             $subc .= $comp;
         }
-        elsif (@$parameters or @$cmd_options) {
+        elsif (@$cmd_parameters or @$cmd_options) {
+            $subc .= <<"EOM";
+${indent}  case \$INDEX in
+EOM
             $subc .= $self->completion_parameters(
-                parameters => $parameters,
+                parameters => $cmd_parameters,
                 options => [ @$options, @$cmd_options ],
                 level => $level + 1,
                 previous => [@$previous, $name],
                 functions => $functions,
             );
+            $subc .= <<"EOM";
+${indent}    ;;
+${indent}esac
+EOM
         }
         else {
             $subc .= $indent . "    __comp_current_options true || return # no subcmds, no params/opts\n";
@@ -193,8 +226,9 @@ ${indent}case \$INDEX in
 
 ${indent}$index)
 ${indent}    __comp_current_options || return
-${indent}    __${appname}_dynamic_comp 'commands' $cmds
+$cmds
 
+$param_comp
 ${indent};;
 ${indent}*)
 $subc
@@ -208,14 +242,15 @@ sub completion_parameters {
     my ($self, %args) = @_;
     my $spec = $self->spec;
     my $appname = $spec->name;
-    my $parameters = $args{parameters};
-    my $options = $args{options};
+    my $parameters = $args{parameters} || [];
+    my $options = $args{options} || [];
     my $level = $args{level};
     my $indent = "    " x $level;
 
-    my $comp = <<"EOM";
-${indent}  case \$INDEX in
-EOM
+    my $comp = '';
+#    my $comp = <<"EOM";
+#${indent}  case \$INDEX in
+#EOM
 
     for my $i (0 .. $#$parameters) {
         my $param = $parameters->[ $i ];
@@ -233,6 +268,7 @@ EOM
     }
 
     if (@$options) {
+        # TODO remove $comp_options
         my ($comp_values, $comp_options) = $self->completion_options(
             level => $level + 1,
             options => $options,
@@ -240,20 +276,17 @@ EOM
             previous => $args{previous},
             parameters => $parameters,
         );
-#        warn __PACKAGE__.':'.__LINE__.": !!!!\n$comp_options\n";
-        chomp $comp_options;
         $comp .= <<"EOM";
 $indent  *)
 ${indent}    __comp_current_options true || return # after parameters
 ${indent}    case \$\{MYWORDS[\$INDEX-1]\} in
 $comp_values
 ${indent}    esac
-${indent}    ;;
 EOM
 
     }
 
-    $comp .= $indent . "esac\n";
+    return $comp;
 }
 
 sub completion_options  {

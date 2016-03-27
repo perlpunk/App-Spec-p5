@@ -17,6 +17,10 @@ options:
   summary: line count
   type: flag
 parameters:
+- name: task
+  summary: Task
+  type: string
+  enum: [ wc, lc ]
 - name: file
   summary: filename
   type: file

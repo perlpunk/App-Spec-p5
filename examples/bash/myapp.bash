@@ -27,6 +27,14 @@ _myapp() {
 
     ;;
     *)
+      case $INDEX in
+      *)
+        __comp_current_options true || return # after parameters
+        case ${MYWORDS[$INDEX-1]} in
+
+        esac
+        ;;
+    esac
     # subcmds
     case ${MYWORDS[0]} in
       _complete)
@@ -104,6 +112,14 @@ _myapp() {
 
         ;;
         *)
+          case $INDEX in
+          *)
+            __comp_current_options true || return # after parameters
+            case ${MYWORDS[$INDEX-1]} in
+
+            esac
+            ;;
+        esac
         # subcmds
         case ${MYWORDS[1]} in
           _complete)
@@ -142,6 +158,14 @@ _myapp() {
 
             ;;
             *)
+              case $INDEX in
+              *)
+                __comp_current_options true || return # after parameters
+                case ${MYWORDS[$INDEX-1]} in
+
+                esac
+                ;;
+            esac
             # subcmds
             case ${MYWORDS[2]} in
               cities)
@@ -201,6 +225,14 @@ _myapp() {
 
         ;;
         *)
+          case $INDEX in
+          *)
+            __comp_current_options true || return # after parameters
+            case ${MYWORDS[$INDEX-1]} in
+
+            esac
+            ;;
+        esac
         # subcmds
         case ${MYWORDS[1]} in
           cities)
