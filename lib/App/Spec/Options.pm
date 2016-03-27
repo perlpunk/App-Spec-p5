@@ -42,6 +42,9 @@ sub process {
     for my $name (sort keys %$specs) {
         my $spec = $specs->{ $name };
         my $value = $items->{ $name };
+        if ($spec->multiple and $spec->type ne "flag" and not defined $value) {
+            $items->{ $name } = $value = [];
+        }
         my $values = is_arrayref($value) ? $value : [ $value ];
 
         if ($spec->multiple and $spec->type ne "flag" and not @$value) {

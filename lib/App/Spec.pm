@@ -386,7 +386,12 @@ sub make_getopt {
         $specs->{ $name } = $opt;
         if ($opt->multiple) {
             if ($opt->multiple) {
-                $spec .= '+';
+                if ($opt->type eq 'flag') {
+                    $spec .= '+';
+                }
+                else {
+                    $spec .= '@';
+                }
             }
             else {
                 $result->{ $name } = [];
