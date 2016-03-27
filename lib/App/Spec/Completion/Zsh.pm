@@ -12,6 +12,7 @@ sub generate_completion {
     my $completion_outer = $self->completion_commands(
         commands => $spec->subcommands,
         options => $spec->options,
+        parameters => $spec->parameters,
         level => 1,
         functions => $functions,
     );
@@ -62,6 +63,7 @@ sub completion_commands {
     my $spec = $self->spec;
     my $commands = $args{commands};
     my $options = $args{options};
+    my $parameters = $args{parameters};
     my $level = $args{level};
     my $previous = $args{previous} || [];
 
@@ -78,7 +80,7 @@ sub completion_commands {
     }
 
     my ($param_args, $param_case) = $self->parameters(
-        parameters => $args{parameters},
+        parameters => $parameters,
         level => $level,
         count => $level,
         functions => $functions,
