@@ -13,6 +13,8 @@ Just a very simple example app to document some features
 =head2 GLOBAL OPTIONS
 
     --verbose -v   [] be verbose (flag; multiple)
+    --wc              word count (flag)          
+    --lc              line count (flag)          
     --help -h         Show command help (flag)   
 
 
