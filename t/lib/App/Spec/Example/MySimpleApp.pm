@@ -16,6 +16,8 @@ sub execute {
         say "Parameters: " .  App::Spec::Example::MyApp->_dump_hash($param);
         return;
     }
+    warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\$opt], ['opt']);
+    warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\$param], ['param']);
 
 }
 

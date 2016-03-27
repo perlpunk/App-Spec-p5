@@ -10,4 +10,14 @@ options:
   type: flag
   multiple: true
   aliases: [v]
+- name: wc
+  summary: word count
+  type: flag
+- name: lc
+  summary: line count
+  type: flag
+parameters:
+- name: file
+  summary: filename
+  type: file
 # vim:et:sts=2:sws=2:sw=2:foldmethod=indent

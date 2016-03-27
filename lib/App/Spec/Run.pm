@@ -182,6 +182,8 @@ sub process_commands_options {
     my $option_specs = $args{option_specs};
     my $param_list = $args{parameter_list};
     my $global_options = $spec->options;
+    my $global_parameters = $spec->parameters;
+    push @$param_list, @{ $global_parameters };
     my @getopt = $spec->make_getopt($global_options, \%options, $option_specs);
     GetOptions(@getopt);
 
@@ -222,7 +224,7 @@ sub process_commands_options {
         push @cmds, $cmd;
         $commands = $cmd_spec->subcommands || {};
         $op = $cmd_spec->op if $cmd_spec->op;
-        @$param_list = @{ $cmd_spec->parameters };
+        push @$param_list, @{ $cmd_spec->parameters };
     }
     my @names = sort keys %$commands;
     unless ($op) {

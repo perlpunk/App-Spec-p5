@@ -21,6 +21,7 @@ has class => ( is => 'rw' );
 has title => ( is => 'rw' );
 has markup => ( is => 'rw', default => 'pod' );
 has options => ( is => 'rw' );
+has parameters => ( is => 'rw' );
 has subcommands => ( is => 'rw', default => sub { +{} } );
 has abstract => ( is => 'rw' );
 has description => ( is => 'rw' );
@@ -112,6 +113,9 @@ sub read {
         options => [map {
             App::Spec::Option->build($_)
         } @{ $spec->{options} || [] }],
+        parameters => [map {
+            App::Spec::Parameter->build($_)
+        } @{ $spec->{parameters} || [] }],
         subcommands => $commands,
         abstract => $spec->{abstract},
         description => $spec->{description},

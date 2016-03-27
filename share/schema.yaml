@@ -1,5 +1,6 @@
 ---
 type: object
+additionalProperties: false
 required: [name, appspec]
 properties:
   name: { type: string }
@@ -12,8 +13,10 @@ properties:
   title: { type: string }
   abstract: { type: string }
   description: { type: string }
-  options:
-    '$ref': '#/definitions/options'
+  markup: { type: string }
+  class: { type: string }
+  options: { '$ref': '#/definitions/options' }
+  parameters: { '$ref': '#/definitions/options' }
   subcommands:
     type: object
     additionalProperties: false
