@@ -13,7 +13,7 @@ use Moo;
 
 has spec => ( is => 'ro' );
 has options => ( is => 'rw' );
-has parameters => ( is => 'rw' );
+has parameters => ( is => 'rw', default => sub { +{} } );
 has commands => ( is => 'rw' );
 has runmode => ( is => 'rw', default => 'normal' );
 has errors => ( is => 'rw' );
@@ -27,18 +27,15 @@ sub run {
 
     my %option_specs;
     my @param_list;
+    my %param_specs;
     unless ($op) {
         $op = $self->process_commands_options(
             option_specs => \%option_specs,
             parameter_list => \@param_list,
+            param_specs => \%param_specs,
         );
     }
 
-    my %param_specs;
-    $self->process_parameters(
-        parameter_list => \@param_list,
-        param_specs => \%param_specs,
-    );
 
     my $opt = App::Spec::Options->new({
         options => $self->options,
@@ -153,7 +150,7 @@ sub colorize {
 sub process_parameters {
     my ($self, %args) = @_;
     my $param_list = $args{parameter_list};
-    my %parameters;
+    my $parameters = $self->parameters;
     my $param_specs = $args{param_specs};
     for my $p (@$param_list) {
         my $name = $p->name;
@@ -168,10 +165,9 @@ sub process_parameters {
         else {
             $value = shift @ARGV;
         }
-        $parameters{ $name } = $value;
+        $parameters->{ $name } = $value;
         $param_specs->{ $name } = $p;
     }
-    $self->parameters(\%parameters);
 }
 
 sub process_commands_options {
@@ -180,12 +176,20 @@ sub process_commands_options {
     my @cmds;
     my $spec = $self->spec;
     my $option_specs = $args{option_specs};
+    my $param_specs = $args{param_specs};
     my $param_list = $args{parameter_list};
     my $global_options = $spec->options;
     my $global_parameters = $spec->parameters;
     push @$param_list, @{ $global_parameters };
     my @getopt = $spec->make_getopt($global_options, \%options, $option_specs);
     GetOptions(@getopt);
+
+    $self->process_parameters(
+        parameter_list => $param_list,
+        param_specs => $param_specs,
+    );
+
+
 
     my $commands = $spec->subcommands;
     my $op;
@@ -224,7 +228,12 @@ sub process_commands_options {
         push @cmds, $cmd;
         $commands = $cmd_spec->subcommands || {};
         $op = $cmd_spec->op if $cmd_spec->op;
-        push @$param_list, @{ $cmd_spec->parameters };
+        @$param_list = @{ $cmd_spec->parameters };
+
+        $self->process_parameters(
+            parameter_list => $param_list,
+            param_specs => $param_specs,
+        );
     }
     my @names = sort keys %$commands;
     unless ($op) {
