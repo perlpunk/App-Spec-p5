@@ -270,7 +270,7 @@ sub check_help {
 
     my $op;
     if ($self->spec->has_subcommands) {
-        if ($help and $ARGV[0] ne "help") {
+        if ($help and (not @ARGV or $ARGV[0] ne "help")) {
             # call subcommand 'help'
             unshift @ARGV, "help";
         }
