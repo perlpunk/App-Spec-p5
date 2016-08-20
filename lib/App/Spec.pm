@@ -531,3 +531,6 @@ subcommands:
 #                type: flag
 #                default: false
 #                description: generate without description
+    _pod:
+        summary: Generate self pod
+        op: cmd_self_pod

@@ -13,9 +13,8 @@ sub generate {
     my $spec = $self->spec;
     my $appname = $spec->name;
     my $title = $spec->title;
-    my $markup = $spec->markup;
-    my $abstract = $spec->abstract;
-    my $description = $spec->description;
+    my $abstract = $spec->abstract // '';
+    my $description = $spec->description // '';
     my $subcmds = $spec->subcommands;
     my $global_options = $spec->options;
 
@@ -69,7 +68,7 @@ sub subcommand_pod {
         @keys = sort keys %keys;
     }
     else {
-        for my $key (qw/ help _complete /) {
+        for my $key (qw/ help _complete _pod /) {
             if (exists $keys{ $key }) {
                 push @keys, $key;
                 delete $keys{ $key };
@@ -195,7 +194,7 @@ sub markup {
     my ($self, %args) = @_;
     my $text = $args{text};
     return unless defined $$text;
-    my $markup = $self->spec->markup;
+    my $markup = $self->spec->markup // '';
     if ($markup eq "swim") {
         $$text = $self->swim2pod($$text);
     }

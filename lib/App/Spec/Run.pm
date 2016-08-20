@@ -318,6 +318,14 @@ sub cmd_self_completion {
     say $completion;
 }
 
+sub cmd_self_pod {
+    my ($self) = @_;
+    my $spec = $self->spec;
+    my $pod = $spec->generate_pod(
+    );
+    say $pod;
+}
+
 1;
 
 __END__
