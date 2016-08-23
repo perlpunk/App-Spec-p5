@@ -195,5 +195,13 @@ Options:
     --bash    for bash (flag)    
 
 
+=head3  _pod
+
+    subrepo  _pod
+
+Generate self pod
+
+
+
 
 

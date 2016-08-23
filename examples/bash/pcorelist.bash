@@ -23,7 +23,7 @@ _pcorelist() {
 
     0)
         __comp_current_options || return
-        __pcorelist_dynamic_comp 'commands' '_complete'$'\t''Generate self completion'$'\n''diff'$'\t''Show diff between two Perl versions'$'\n''features'$'\t''List features with perl versions'$'\n''help'$'\t''Show command help'$'\n''module'$'\t''Show for which perl version the module was first released'$'\n''modules'$'\t''List all modules'$'\n''perl'$'\t''Perl Versions'
+        __pcorelist_dynamic_comp 'commands' '_complete'$'\t''Generate self completion'$'\n''_pod'$'\t''Generate self pod'$'\n''diff'$'\t''Show diff between two Perl versions'$'\n''features'$'\t''List features with perl versions'$'\n''help'$'\t''Show command help'$'\n''module'$'\t''Show for which perl version the module was first released'$'\n''modules'$'\t''List all modules'$'\n''perl'$'\t''Perl Versions'
 
     ;;
     *)
@@ -43,6 +43,12 @@ _pcorelist() {
             esac
             ;;
         esac
+      ;;
+      _pod)
+        FLAGS+=()
+        OPTIONS+=()
+        __pcorelist_handle_options_flags
+        __comp_current_options true || return # no subcmds, no params/opts
       ;;
       diff)
         FLAGS+=('--added' 'Show only added modules' '--removed' 'Show only removed modules')
@@ -90,13 +96,19 @@ _pcorelist() {
 
         1)
             __comp_current_options || return
-            __pcorelist_dynamic_comp 'commands' '_complete'$'\n''diff'$'\n''features'$'\n''module'$'\n''modules'$'\n''perl'
+            __pcorelist_dynamic_comp 'commands' '_complete'$'\n''_pod'$'\n''diff'$'\n''features'$'\n''module'$'\n''modules'$'\n''perl'
 
         ;;
         *)
         # subcmds
         case ${MYWORDS[1]} in
           _complete)
+            FLAGS+=()
+            OPTIONS+=()
+            __pcorelist_handle_options_flags
+            __comp_current_options true || return # no subcmds, no params/opts
+          ;;
+          _pod)
             FLAGS+=()
             OPTIONS+=()
             __pcorelist_handle_options_flags

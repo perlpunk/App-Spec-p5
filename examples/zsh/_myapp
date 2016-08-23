@@ -15,7 +15,7 @@ _myapp() {
 
         case $state in
         cmd1)
-            _alternative 'args:cmd2:((_complete\:"Generate self completion" convert\:"Various unit conversions" cook\:"Cook something" help\:"Show command help" palindrome\:"Check if a string is a palindrome" weather\:"Weather"))'
+            _alternative 'args:cmd2:((_complete\:"Generate self completion" _pod\:"Generate self pod" convert\:"Various unit conversions" cook\:"Cook something" help\:"Show command help" palindrome\:"Check if a string is a palindrome" weather\:"Weather"))'
         ;;
 
         args)
@@ -32,6 +32,19 @@ _myapp() {
                     '--name[name of the program]:name' \
                     '--zsh[for zsh]' \
                     '--bash[for bash]' \
+                    && ret=0
+
+
+            ;;
+            _pod)
+
+                # ---- Command: _pod
+                _arguments -s -C \
+                    '1: :->cmd1' \
+                    '*--verbose[be verbose]' \
+                    '*-v[be verbose]' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
                     && ret=0
 
 
@@ -101,7 +114,7 @@ _myapp_convert_param_target_completion
 
                 case $state in
                 cmd2)
-                    _alternative 'args:cmd3:((_complete convert cook palindrome weather))'
+                    _alternative 'args:cmd3:((_complete _pod convert cook palindrome weather))'
                 ;;
 
                 args)
@@ -109,6 +122,21 @@ _myapp_convert_param_target_completion
                     _complete)
 
                         # ---- Command: help _complete
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '*--verbose[be verbose]' \
+                            '*-v[be verbose]' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
+                            '--all[]' \
+                            && ret=0
+
+
+                    ;;
+                    _pod)
+
+                        # ---- Command: help _pod
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \

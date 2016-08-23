@@ -23,7 +23,7 @@ _myapp() {
 
     0)
         __comp_current_options || return
-        __myapp_dynamic_comp 'commands' '_complete'$'\t''Generate self completion'$'\n''convert'$'\t''Various unit conversions'$'\n''cook'$'\t''Cook something'$'\n''help'$'\t''Show command help'$'\n''palindrome'$'\t''Check if a string is a palindrome'$'\n''weather'$'\t''Weather'
+        __myapp_dynamic_comp 'commands' '_complete'$'\t''Generate self completion'$'\n''_pod'$'\t''Generate self pod'$'\n''convert'$'\t''Various unit conversions'$'\n''cook'$'\t''Cook something'$'\n''help'$'\t''Show command help'$'\n''palindrome'$'\t''Check if a string is a palindrome'$'\n''weather'$'\t''Weather'
 
     ;;
     *)
@@ -43,6 +43,12 @@ _myapp() {
             esac
             ;;
         esac
+      ;;
+      _pod)
+        FLAGS+=()
+        OPTIONS+=()
+        __myapp_handle_options_flags
+        __comp_current_options true || return # no subcmds, no params/opts
       ;;
       convert)
         FLAGS+=()
@@ -100,13 +106,19 @@ _myapp() {
 
         1)
             __comp_current_options || return
-            __myapp_dynamic_comp 'commands' '_complete'$'\n''convert'$'\n''cook'$'\n''palindrome'$'\n''weather'
+            __myapp_dynamic_comp 'commands' '_complete'$'\n''_pod'$'\n''convert'$'\n''cook'$'\n''palindrome'$'\n''weather'
 
         ;;
         *)
         # subcmds
         case ${MYWORDS[1]} in
           _complete)
+            FLAGS+=()
+            OPTIONS+=()
+            __myapp_handle_options_flags
+            __comp_current_options true || return # no subcmds, no params/opts
+          ;;
+          _pod)
             FLAGS+=()
             OPTIONS+=()
             __myapp_handle_options_flags

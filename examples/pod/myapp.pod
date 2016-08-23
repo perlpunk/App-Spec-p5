@@ -126,5 +126,12 @@ Options:
     --bash    for bash (flag)    
 
 
+=head3  _pod
+
+    myapp  _pod
+
+Generate self pod
+
+
 
 

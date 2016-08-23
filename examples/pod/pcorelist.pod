@@ -110,5 +110,12 @@ Options:
     --bash    for bash (flag)    
 
 
+=head3  _pod
+
+    pcorelist  _pod
+
+Generate self pod
+
+
 
 

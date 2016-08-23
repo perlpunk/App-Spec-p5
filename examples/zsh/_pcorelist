@@ -15,7 +15,7 @@ _pcorelist() {
 
         case $state in
         cmd1)
-            _alternative 'args:cmd2:((_complete\:"Generate self completion" diff\:"Show diff between two Perl versions" features\:"List features with perl versions" help\:"Show command help" module\:"Show for which perl version the module was first released" modules\:"List all modules" perl\:"Perl Versions"))'
+            _alternative 'args:cmd2:((_complete\:"Generate self completion" _pod\:"Generate self pod" diff\:"Show diff between two Perl versions" features\:"List features with perl versions" help\:"Show command help" module\:"Show for which perl version the module was first released" modules\:"List all modules" perl\:"Perl Versions"))'
         ;;
 
         args)
@@ -30,6 +30,17 @@ _pcorelist() {
                     '--name[name of the program]:name' \
                     '--zsh[for zsh]' \
                     '--bash[for bash]' \
+                    && ret=0
+
+
+            ;;
+            _pod)
+
+                # ---- Command: _pod
+                _arguments -s -C \
+                    '1: :->cmd1' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
                     && ret=0
 
 
@@ -87,7 +98,7 @@ _pcorelist_features_param_feature_completion
 
                 case $state in
                 cmd2)
-                    _alternative 'args:cmd3:((_complete diff features module modules perl))'
+                    _alternative 'args:cmd3:((_complete _pod diff features module modules perl))'
                 ;;
 
                 args)
@@ -95,6 +106,19 @@ _pcorelist_features_param_feature_completion
                     _complete)
 
                         # ---- Command: help _complete
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
+                            '--all[]' \
+                            && ret=0
+
+
+                    ;;
+                    _pod)
+
+                        # ---- Command: help _pod
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \

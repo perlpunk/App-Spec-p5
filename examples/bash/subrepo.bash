@@ -23,7 +23,7 @@ _subrepo() {
 
     0)
         __comp_current_options || return
-        __subrepo_dynamic_comp 'commands' '_complete'$'\t''Generate self completion'$'\n''branch'$'\t''Create a branch with local subrepo commits since last pull.'$'\n''clean'$'\t''Remove artifacts created by '"'"'fetch'"'"' and '"'"'branch'"'"' commands.'$'\n''clone'$'\t''Add a repository as a subrepo in a subdir of your repository.'$'\n''commit'$'\t''Add subrepo branch to current history as a single commit.'$'\n''fetch'$'\t''Fetch the remote/upstream content for a subrepo.'$'\n''help'$'\t''Same as '"'"'git help subrepo'"'"''$'\n''init'$'\t''Turn an existing subdirectory into a subrepo.'$'\n''pull'$'\t''Update the subrepo subdir with the latest upstream changes.'$'\n''push'$'\t''Push a properly merged subrepo branch back upstream.'$'\n''status'$'\t''Get the status of a subrepo.'$'\n''version'$'\t''display version information about git-subrepo'
+        __subrepo_dynamic_comp 'commands' '_complete'$'\t''Generate self completion'$'\n''_pod'$'\t''Generate self pod'$'\n''branch'$'\t''Create a branch with local subrepo commits since last pull.'$'\n''clean'$'\t''Remove artifacts created by '"'"'fetch'"'"' and '"'"'branch'"'"' commands.'$'\n''clone'$'\t''Add a repository as a subrepo in a subdir of your repository.'$'\n''commit'$'\t''Add subrepo branch to current history as a single commit.'$'\n''fetch'$'\t''Fetch the remote/upstream content for a subrepo.'$'\n''help'$'\t''Same as '"'"'git help subrepo'"'"''$'\n''init'$'\t''Turn an existing subdirectory into a subrepo.'$'\n''pull'$'\t''Update the subrepo subdir with the latest upstream changes.'$'\n''push'$'\t''Push a properly merged subrepo branch back upstream.'$'\n''status'$'\t''Get the status of a subrepo.'$'\n''version'$'\t''display version information about git-subrepo'
 
     ;;
     *)
@@ -43,6 +43,12 @@ _subrepo() {
             esac
             ;;
         esac
+      ;;
+      _pod)
+        FLAGS+=()
+        OPTIONS+=()
+        __subrepo_handle_options_flags
+        __comp_current_options true || return # no subcmds, no params/opts
       ;;
       branch)
         FLAGS+=('--all' 'All subrepos')
@@ -144,13 +150,19 @@ _subrepo() {
 
         1)
             __comp_current_options || return
-            __subrepo_dynamic_comp 'commands' '_complete'$'\n''branch'$'\n''clean'$'\n''clone'$'\n''commit'$'\n''fetch'$'\n''init'$'\n''pull'$'\n''push'$'\n''status'$'\n''version'
+            __subrepo_dynamic_comp 'commands' '_complete'$'\n''_pod'$'\n''branch'$'\n''clean'$'\n''clone'$'\n''commit'$'\n''fetch'$'\n''init'$'\n''pull'$'\n''push'$'\n''status'$'\n''version'
 
         ;;
         *)
         # subcmds
         case ${MYWORDS[1]} in
           _complete)
+            FLAGS+=()
+            OPTIONS+=()
+            __subrepo_handle_options_flags
+            __comp_current_options true || return # no subcmds, no params/opts
+          ;;
+          _pod)
             FLAGS+=()
             OPTIONS+=()
             __subrepo_handle_options_flags
