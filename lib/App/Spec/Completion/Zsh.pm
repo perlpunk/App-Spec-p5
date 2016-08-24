@@ -353,6 +353,7 @@ sub list_to_alternative {
             ($alt_name, $summary) = ($_, '');
         }
         $alt_name =~ s/:/\\\\:/g;
+        $summary =~ s/"/\\"/g;
         $summary =~ s/['`]/'"'"'/g;
         $summary =~ s/\$/\\\$/g;
         length $summary ? qq{$alt_name\\:"$summary"} : $alt_name
