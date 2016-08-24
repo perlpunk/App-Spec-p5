@@ -326,7 +326,7 @@ sub commands_alternative {
     return '' unless keys %$commands;
     my $level = $args{level};
     my @subcommands;
-    for my $key (sort keys %$commands) {
+    for my $key (sort grep { not m/^_/ } keys %$commands) {
         my $cmd = $commands->{ $key };
         my $name = $cmd->name;
         my $summary = $cmd->summary;

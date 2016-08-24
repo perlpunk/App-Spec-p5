@@ -124,7 +124,7 @@ sub completion_commands {
             s/\$/\\\$/g;
         }
         "'$name'" . (length $summary ? q{$'\t'} . "'$summary'" : '')
-    } sort keys %$commands;
+    } sort grep { not m/^_/ } keys %$commands;
     my $cmds = join q{$'\\n'}, @commands;
 
     my $index = $level - 1;
