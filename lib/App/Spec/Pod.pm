@@ -2,6 +2,8 @@ use strict;
 use warnings;
 package App::Spec::Pod;
 
+our $VERSION = '0.000'; # VERSION
+
 use Text::Table;
 
 use Moo;

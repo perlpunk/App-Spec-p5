@@ -3,7 +3,7 @@ Writing command line apps made easy
 
 ## Status
 
-This is still a draft. Structure of the spec will change.
+The structure of the spec will probably change.
 
 I wait for your suggestions, wishes, bug reports.
 

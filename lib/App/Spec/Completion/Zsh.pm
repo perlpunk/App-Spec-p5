@@ -2,6 +2,8 @@ use strict;
 use warnings;
 package App::Spec::Completion::Zsh;
 
+our $VERSION = '0.000'; # VERSION
+
 use base 'App::Spec::Completion';
 
 sub generate_completion {

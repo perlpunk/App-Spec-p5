@@ -26,7 +26,7 @@ my %WriteMakefileArgs = (
   "PREREQ_PM" => {
     "Data::Dumper" => 0,
     "Getopt::Long" => 0,
-    "List::Util" => 0,
+    "List::Util" => "1.33",
     "Moo" => 0,
     "Ref::Util" => 0,
     "Storable" => 0,
@@ -46,7 +46,7 @@ my %WriteMakefileArgs = (
     "constant" => 0,
     "lib" => 0
   },
-  "VERSION" => "0.001",
+  "VERSION" => "0.001_002",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -58,7 +58,7 @@ my %FallbackPrereqs = (
   "FindBin" => 0,
   "Getopt::Long" => 0,
   "IPC::Run" => 0,
-  "List::Util" => 0,
+  "List::Util" => "1.33",
   "Moo" => 0,
   "Ref::Util" => 0,
   "Storable" => 0,

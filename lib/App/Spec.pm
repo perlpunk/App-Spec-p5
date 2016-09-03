@@ -409,6 +409,10 @@ sub make_getopt {
 
 =pod
 
+=head1 NAME
+
+App::Spec - Specification for commandline apps
+
 =head1 SYNOPSIS
 
 WARNING: This is still experimental. The spec is subject to change.
@@ -419,6 +423,9 @@ structure in perl.
 
 The L<App::Spec::Run> module is the framework which will run the actual
 app.
+
+In the examples directory you will find the app C<myapp> which is supposed
+to demonstrate everything that App::Spec supports right now.
 
 Your script:
 
@@ -494,7 +501,15 @@ Returns options for Getopt::Long
 
     my @getopt = $spec->make_getopt($global_options, \%options, $option_specs);
 
+=item abstract, appspec, class, description, has_subcommands, markup, name, options, parameters, subcommands, title
+
+Accessors for the things defined in the spec (file)
+
 =back
+
+=head1 SEE ALSO
+
+L<App::AppSpec> - Utilities for App::Spec authors
 
 =cut
 
