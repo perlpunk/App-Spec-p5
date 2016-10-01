@@ -40,9 +40,8 @@ my %WriteMakefileArgs = (
   },
   "TEST_REQUIRES" => {
     "FindBin" => 0,
-    "IPC::Run" => 0,
     "Test::More" => 0,
-    "Test::Output" => 0,
+    "Test::Trap" => 0,
     "constant" => 0,
     "lib" => 0
   },
@@ -57,7 +56,6 @@ my %FallbackPrereqs = (
   "Data::Dumper" => 0,
   "FindBin" => 0,
   "Getopt::Long" => 0,
-  "IPC::Run" => 0,
   "List::Util" => "1.33",
   "Moo" => 0,
   "Ref::Util" => 0,
@@ -65,7 +63,7 @@ my %FallbackPrereqs = (
   "Swim" => 0,
   "Term::ANSIColor" => 0,
   "Test::More" => 0,
-  "Test::Output" => 0,
+  "Test::Trap" => 0,
   "Text::Table" => 0,
   "YAML::XS" => 0,
   "base" => 0,
