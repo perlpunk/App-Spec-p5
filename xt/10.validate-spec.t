@@ -4,7 +4,7 @@ use Test::More tests => 4;
 use FindBin '$Bin';
 my $v = eval "use App::AppSpec::Schema::Validator; 1";
 SKIP: {
-    skip "App::AppSpec::Schema::Validator not installed", 3 unless $v;
+    skip "App::AppSpec::Schema::Validator not installed", 4 unless $v;
     my $validator = App::AppSpec::Schema::Validator->new;
     my @files = qw/ myapp-spec.yaml mysimpleapp-spec.yaml subrepo-spec.yaml pcorelist-spec.yaml /;
 
