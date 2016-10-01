@@ -15,3 +15,7 @@ html:
 	done
 
 update: completion pod html
+
+cover:
+	HARNESS_PERL_SWITCHES="-MDevel::Cover=+ignore,local,+ignore,^t/,+ignore,^xt/" prove -lr t xt
+	cover
