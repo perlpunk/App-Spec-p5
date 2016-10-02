@@ -129,6 +129,7 @@ subcommands:
       type: string
       required: true
       multiple: true
+      unique: true
       values:
         op: convert_complete
       completion: true

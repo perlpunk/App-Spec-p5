@@ -74,6 +74,12 @@
    - regex: 'Usage: myapp convert <type> <source> <value> <target>\+'
    - regex: 'type.*invalid'
    exit: 255
+-
+   args: [ myapp, convert, distance, meter, 23, foot, foot ]
+   stderr:
+   - regex: 'Usage: myapp convert <type> <source> <value> <target>\+'
+   - regex: 'target.*not_unique'
+   exit: 255
 
 #completion:
 -
@@ -99,6 +105,24 @@
   args: [ myapp, weather, show, Netherlands ]
   stdout:
     regex: '^$'
+  exit: 0
+
+-
+  env:
+    PERL5_APPSPECRUN_COMPLETION_PARAMETER: target
+    PERL5_APPSPECRUN_SHELL: zsh
+  args: [ myapp, convert, distance, meter, 23 ]
+  stdout:
+    - regex: 'foot'
+    - regex: 'inch'
+  exit: 0
+-
+  env:
+    PERL5_APPSPECRUN_COMPLETION_PARAMETER: target
+    PERL5_APPSPECRUN_SHELL: zsh
+  args: [ myapp, convert, distance, meter, 23, foot ]
+  stdout:
+    - regex: '^inch\s+\S+$'
   exit: 0
 
 # vim:et:sts=2:sws=2:sw=2:foldmethod=indent

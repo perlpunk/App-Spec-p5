@@ -9,6 +9,7 @@ use List::Util qw/ any /;
 use Data::Dumper;
 use App::Spec::Options;
 use Getopt::Long qw/ :config pass_through bundling /;
+use Ref::Util qw/ is_arrayref /;
 use Moo;
 
 has spec => ( is => 'ro' );
@@ -69,6 +70,7 @@ sub completion_output {
     my $param_specs = $args{param_specs};
     my $shell = $ENV{PERL5_APPSPECRUN_SHELL} or return;
     my $param = $param_specs->{ $completion_parameter };
+    my $unique = $param->{unique};
     my $completion = $param->completion or return;
     my $op;
     if (ref $completion) {
@@ -85,13 +87,22 @@ sub completion_output {
     my $result = $self->$op($args);
 
     my $string = '';
+    my %seen;
+    if ($unique) {
+        my $params = $self->parameters;
+        my $value = $params->{ $completion_parameter };
+        $value = [$value] unless is_arrayref $value;
+        @seen{ @$value } = (1) x @$value;
+    }
     for my $item (@$result) {
         if (ref $item eq 'HASH') {
             my $name = $item->{name};
+            $unique and $seen{ $name }++ and next;
             my $desc = $item->{description};
             $string .= "$name\t$desc\n";
         }
         else {
+            $unique and $seen{ $item }++ and next;
             $string .= "$item\n";
         }
     }

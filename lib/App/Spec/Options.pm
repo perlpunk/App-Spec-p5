@@ -5,6 +5,7 @@ package App::Spec::Options;
 our $VERSION = '0.000'; # VERSION;
 
 use List::Util qw/ any /;
+use List::MoreUtils qw/ uniq /;
 use Ref::Util qw/ is_arrayref is_hashref /;
 use Moo;
 
@@ -68,6 +69,10 @@ sub process {
             next;
         }
         if ($spec->multiple and $spec->type ne "flag" and not @$value or not defined $value) {
+            next;
+        }
+        if ($spec->multiple and $spec->unique and (uniq @$value) != @$value) {
+            $errs->{ $type }->{ $name } = "not_unique";
             next;
         }
 

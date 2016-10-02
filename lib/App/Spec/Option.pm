@@ -10,6 +10,7 @@ has name => ( is => 'ro' );
 has type => ( is => 'ro' );
 has multiple => ( is => 'ro' );
 has required => ( is => 'ro' );
+has unique => ( is => 'ro' );
 has summary => ( is => 'ro' );
 has description => ( is => 'ro' );
 has default => ( is => 'ro' );
@@ -35,6 +36,7 @@ sub build {
         type => $type,
         multiple => $args->{multiple} ? 1 : 0,
         required => $args->{required} ? 1 : 0,
+        unique => $args->{unique} ? 1 : 0,
         summary => $summary,
         description => $description,
         default => $args->{default},

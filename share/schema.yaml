@@ -39,6 +39,7 @@ definitions:
       summary: { type: string }
       description: { type: string }
       multiple: { '$ref': '#/definitions/bool' }
+      unique: { '$ref': '#/definitions/bool' }
       type:
         oneOf:
           - '$ref': '#/definitions/optionTypeSimple'
