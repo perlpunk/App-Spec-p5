@@ -122,7 +122,7 @@
     PERL5_APPSPECRUN_SHELL: zsh
   args: [ myapp, convert, distance, meter, 23, foot ]
   stdout:
-    - regex: '^inch\s+\S+$'
+    - regex: '^inch$'
   exit: 0
 
 # vim:et:sts=2:sws=2:sw=2:foldmethod=indent

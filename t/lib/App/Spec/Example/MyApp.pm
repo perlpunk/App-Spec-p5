@@ -209,10 +209,15 @@ sub convert_complete {
             my $key = $source . '_' . $unit;
             my $sub = $conversions{ $type }->{ $key };
             my $result = $sub->($value);
-            push @result, {
-                name => $unit,
-                description => "$result$label",
-            };
+            if ($ENV{PERL5_APPSPECRUN_TEST}) {
+                push @result, $unit;
+            }
+            else {
+                push @result, {
+                    name => $unit,
+                    description => "$result$label",
+                };
+            }
         }
         return \@result;
     }
