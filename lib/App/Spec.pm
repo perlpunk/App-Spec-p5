@@ -513,6 +513,11 @@ Accessors for the things defined in the spec (file)
 
 L<App::AppSpec> - Utilities for App::Spec authors
 
+=head1 LICENSE
+
+This library is free software and may be distributed under the same terms
+as perl itself.
+
 =cut
 
 1;
