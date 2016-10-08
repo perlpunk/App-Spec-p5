@@ -7,7 +7,7 @@ our $VERSION = '0.000'; # VERSION
 
 use List::Util qw/ any /;
 use Data::Dumper;
-use App::Spec::Options;
+use App::Spec::Run::Validator;
 use Getopt::Long qw/ :config pass_through bundling /;
 use Ref::Util qw/ is_arrayref /;
 use Moo;
@@ -18,27 +18,25 @@ has parameters => ( is => 'rw', default => sub { +{} } );
 has commands => ( is => 'rw' );
 has runmode => ( is => 'rw', default => 'normal' );
 has errors => ( is => 'rw' );
+has op => ( is => 'rw' );
+has cmd => ( is => 'rw' );
 
 sub run {
     my ($self) = @_;
-    my $spec = $self->spec;
 
     my $completion_parameter = $ENV{PERL5_APPSPECRUN_COMPLETION_PARAMETER};
-    my $op = $self->check_help;
+    $self->check_help;
 
     my %option_specs;
-    my @param_list;
     my %param_specs;
-    unless ($op) {
-        $op = $self->process_commands_options(
+    unless ($self->op) {
+        $self->process_input(
             option_specs => \%option_specs,
-            parameter_list => \@param_list,
             param_specs => \%param_specs,
         );
     }
 
-
-    my $opt = App::Spec::Options->new({
+    my $opt = App::Spec::Run::Validator->new({
         options => $self->options,
         option_specs => \%option_specs,
         parameters => $self->parameters,
@@ -52,6 +50,9 @@ sub run {
     if (not $ok and not $completion_parameter) {
         $self->error_output;
     }
+
+    my $op = $self->op;
+
     if ($completion_parameter) {
         $self->completion_output(
             param_specs => \%param_specs,
@@ -59,7 +60,7 @@ sub run {
         );
     }
     else {
-        $self->$op;
+        $self->cmd->$op($self);
     }
 
 }
@@ -84,7 +85,7 @@ sub completion_output {
         runmode => "completion",
         parameter => $completion_parameter,
     };
-    my $result = $self->$op($args);
+    my $result = $self->cmd->$op($self, $args);
 
     my $string = '';
     my %seen;
@@ -181,22 +182,20 @@ sub process_parameters {
     }
 }
 
-sub process_commands_options {
+sub process_input {
     my ($self, %args) = @_;
     my %options;
     my @cmds;
     my $spec = $self->spec;
     my $option_specs = $args{option_specs};
     my $param_specs = $args{param_specs};
-    my $param_list = $args{parameter_list};
     my $global_options = $spec->options;
     my $global_parameters = $spec->parameters;
-    push @$param_list, @{ $global_parameters };
     my @getopt = $spec->make_getopt($global_options, \%options, $option_specs);
     GetOptions(@getopt);
 
     $self->process_parameters(
-        parameter_list => $param_list,
+        parameter_list => $global_parameters,
         param_specs => $param_specs,
     );
 
@@ -239,10 +238,9 @@ sub process_commands_options {
         push @cmds, $cmd;
         $commands = $cmd_spec->subcommands || {};
         $op = $cmd_spec->op if $cmd_spec->op;
-        @$param_list = @{ $cmd_spec->parameters };
 
         $self->process_parameters(
-            parameter_list => $param_list,
+            parameter_list => $cmd_spec->parameters,
             param_specs => $param_specs,
         );
     }
@@ -262,6 +260,7 @@ sub process_commands_options {
     }
     $self->commands(\@cmds);
     $self->options(\%options);
+    $self->op($op);
     return $op;
 }
 
@@ -293,25 +292,25 @@ sub check_help {
         }
     }
 
-    return $op;
+    $self->op($op);
 }
 
 
 sub cmd_help {
-    my ($self) = @_;
-    my $spec = $self->spec;
-    my $cmds = $self->commands;
+    my ($run) = @_;
+    my $spec = $run->spec;
+    my $cmds = $run->commands;
     shift @$cmds;
     my $help = $spec->usage(
         commands => $cmds,
-        color => $self->colorize,
+        color => $run->colorize,
     );
     say $help;
 }
 
 sub cmd_self_completion {
-    my ($self) = @_;
-    my $options = $self->options;
+    my ($run) = @_;
+    my $options = $run->options;
     my $shell = $options->{zsh} ? "zsh" : $options->{bash} ? "bash" : '';
     unless ($shell) {
         my $ppid = getppid();
@@ -322,7 +321,7 @@ sub cmd_self_completion {
     unless (any { $_ eq $shell } qw/ bash zsh / ) {
         die "Specify which shell, '$shell' not supported";
     }
-    my $spec = $self->spec;
+    my $spec = $run->spec;
     my $completion = $spec->generate_completion(
         shell => $shell,
     );
@@ -330,8 +329,8 @@ sub cmd_self_completion {
 }
 
 sub cmd_self_pod {
-    my ($self) = @_;
-    my $spec = $self->spec;
+    my ($run) = @_;
+    my $spec = $run->spec;
     my $pod = $spec->generate_pod(
     );
     say $pod;

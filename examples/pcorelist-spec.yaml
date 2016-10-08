@@ -1,6 +1,7 @@
 ---
 name: pcorelist
 appspec: { "version": 0.001 }
+class: App::Spec::Example::PCorelist
 title: corelist with shell completion
 abstract: This is a wrapper around the corelist tool which adds shell completion
 options: []

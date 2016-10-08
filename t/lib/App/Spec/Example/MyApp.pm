@@ -3,7 +3,7 @@ use warnings;
 use strict;
 use 5.010;
 
-use base 'App::Spec::Run';
+use base 'App::Spec::Run::Cmd';
 
 sub _dump_hash {
     my ($self, $hash) = @_;
@@ -16,9 +16,9 @@ sub _dump_hash {
 }
 
 sub cook {
-    my ($self) = @_;
-    my $param = $self->parameters;
-    my $opt = $self->options;
+    my ($self, $run) = @_;
+    my $param = $run->parameters;
+    my $opt = $run->options;
     if ($ENV{PERL5_APPSPECRUN_TEST}) {
         say "Subcommands: cook";
         say "Options: " . $self->_dump_hash($opt);
@@ -55,16 +55,16 @@ my %countries = (
 );
 
 sub weather {
-    my ($self) = @_;
-    my $param = $self->parameters;
+    my ($self, $run) = @_;
+    my $param = $run->parameters;
     my $cities = $param->{city};
     for my $city (@$cities) {
         my $info = $countries{ $param->{country} }->{ $city };
         my $output = sprintf "Weather in %s/%s: %s", $param->{country}, $city, $info->{weather};
-        if ($self->options->{temperature}) {
+        if ($run->options->{temperature}) {
             my $temp = $info->{temperature};
             my $label = "°C";
-            if ($self->options->{fahrenheit}) {
+            if ($run->options->{fahrenheit}) {
               $temp = int($temp * 9 / 5 + 32);
               $label = "F";
             }
@@ -79,19 +79,19 @@ sub countries {
 }
 
 sub cities {
-    my ($self) = @_;
-    my $country = $self->{options}->{country};
+    my ($self, $run) = @_;
+    my $country = $run->options->{country};
     my @countries = @$country ? @$country : sort keys %countries;
     say for map { sort keys %$_ } @countries{ @countries };
 }
 
 sub weather_complete {
-    my ($self, $args) = @_;
+    my ($self, $run, $args) = @_;
     my $runmode = $args->{runmode};
     return if $runmode ne "completion";
     my $comp_param = $args->{parameter};
 
-    my $param = $self->parameters;
+    my $param = $run->parameters;
     if ($comp_param eq "city") {
         my $country = $param->{country};
         my $cities = $countries{ $country } or return;
@@ -105,8 +105,8 @@ sub weather_complete {
 }
 
 sub palindrome{
-    my ($self) = @_;
-    my $string = $self->parameters->{string};
+    my ($self, $run) = @_;
+    my $string = $run->parameters->{string};
     say +($string eq reverse $string) ? "yes" : "nope";
 }
 
@@ -164,8 +164,8 @@ my %conversions = (
 );
 
 sub convert {
-    my ($self) = @_;
-    my $param = $self->parameters;
+    my ($self, $run) = @_;
+    my $param = $run->parameters;
     my $type = $param->{type};
     my $source = $param->{source};
     my $targets = $param->{target};
@@ -181,11 +181,11 @@ sub convert {
 
 
 sub convert_complete {
-    my ($self, $args) = @_;
+    my ($self, $run, $args) = @_;
     my $runmode = $args->{runmode};
     return if ($runmode ne "completion" and $runmode ne "validation");
     my $comp_param = $args->{parameter};
-    my $param = $self->parameters;
+    my $param = $run->parameters;
 
     if ($comp_param eq 'type') {
         return [sort keys %units];

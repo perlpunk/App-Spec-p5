@@ -3,14 +3,14 @@ use warnings;
 use strict;
 use 5.010;
 
-use base 'App::Spec::Run';
+use base 'App::Spec::Run::Cmd';
 
 use App::Spec::Example::MyApp;
 
 sub execute {
-    my ($self) = @_;
-    my $opt = $self->options;
-    my $param = $self->parameters;
+    my ($self, $run) = @_;
+    my $opt = $run->options;
+    my $param = $run->parameters;
     if ($ENV{PERL5_APPSPECRUN_TEST}) {
         say "Options: " . App::Spec::Example::MyApp->_dump_hash($opt);
         say "Parameters: " .  App::Spec::Example::MyApp->_dump_hash($param);

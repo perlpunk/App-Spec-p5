@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-package App::Spec::Options;
+package App::Spec::Run::Validator;
 
 our $VERSION = '0.000'; # VERSION;
 
@@ -101,7 +101,7 @@ sub process {
                 runmode => "validation",
                 parameter => $name,
             };
-            $possible_values = $app->$op($args) || [];
+            $possible_values = $app->cmd->$op($self, $args) || [];
         }
 
         for my $v (@$values) {

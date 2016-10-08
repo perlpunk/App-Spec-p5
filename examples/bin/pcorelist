@@ -8,12 +8,12 @@ use Text::Table;
 use FindBin '$Bin';
 package App::Spec::Example::PCorelist;
 
-use base 'App::Spec::Run';
+use base 'App::Spec::Run::Cmd';
 
 sub module {
-    my ($self) = @_;
-    my $options = $self->options;
-    my $param = $self->parameters;
+    my ($self, $run) = @_;
+    my $options = $run->options;
+    my $param = $run->parameters;
 
     my @cmd = qw/ corelist /;
     if ($options->{all}) {
@@ -27,14 +27,13 @@ sub module {
 }
 
 sub perl {
-    my ($self) = @_;
-    my $options = $self->options;
-    if ($self->options->{release}) {
+    my ($self, $run) = @_;
+    if ($run->options->{release}) {
         my @cmd = qw/ corelist -r /;
         my @out = qx{@cmd};
         shift @out;
         shift @out;
-        if ($self->{options}->{raw}) {
+        if ($run->options->{raw}) {
             @out = map {
                 (split ' ', $_)[1] . "\n"
             } @out;
@@ -43,7 +42,7 @@ sub perl {
         return;
     }
     my @cmd = qw/ corelist -v /;
-    if ($self->options->{raw}) {
+    if ($run->options->{raw}) {
         my @out = qx{@cmd};
         shift @out;
         shift @out;
@@ -55,9 +54,9 @@ sub perl {
 }
 
 sub diff {
-    my ($self) = @_;
-    my $options = $self->options;
-    my $param = $self->parameters;
+    my ($self, $run) = @_;
+    my $options = $run->options;
+    my $param = $run->parameters;
 
     my @cmd = (qw/ corelist --diff /, $param->{perl1}, $param->{perl2});
     chomp(my @out = qx{@cmd});
@@ -80,8 +79,8 @@ sub diff {
 }
 
 sub features {
-    my ($self) = @_;
-    my $param = $self->parameters;
+    my ($self, $run) = @_;
+    my $param = $run->parameters;
 
     no warnings 'once';
     require feature;
@@ -120,7 +119,7 @@ sub features {
         }
     }
     else {
-        if ($self->options->{raw}) {
+        if ($run->options->{raw}) {
             say for @features;
         }
         else {
@@ -143,7 +142,7 @@ sub numify_version {
 }
 
 sub modules {
-    my ($self) = @_;
+    my ($self, $run) = @_;
 
     my %modules;
     require Module::CoreList;
@@ -161,9 +160,7 @@ package main;
 use App::Spec;
 
 my $spec = App::Spec->read("$Bin/../pcorelist-spec.yaml");
-my $run = App::Spec::Example::PCorelist->new({
-    spec => $spec,
-});
+my $run = $spec->runner;
 $run->run;
 
 

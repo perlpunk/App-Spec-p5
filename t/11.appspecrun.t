@@ -20,7 +20,7 @@ for my $test (@$testdata) {
     my $runner = $spec->runner;
     my $exit = $test->{exit};
     my $env = $test->{env};
-    my $name = "args: (@$args)";
+    my $name = "$app args: (@$args)";
     $name .= ", $_=$env->{$_}" for sort keys %$env;
 
     subtest $name => sub {
@@ -42,6 +42,7 @@ for my $test (@$testdata) {
             like ( $trap->stdout, qr{$regex}, "Expecting STDOUT: $regex" );
         }
         my $err = ($trap->die // '') . ($trap->stderr // '');
+        diag("STDERR: " . substr($err, 0, 240)) if $err;
         for my $item (@$stderr) {
             my $regex = $item->{regex};
             like ( $err, qr{$regex}, "Expecting STDERR: $regex" );

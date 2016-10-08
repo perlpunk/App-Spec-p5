@@ -37,8 +37,10 @@ sub _read_default_spec {
 sub runner {
     my ($self) = @_;
     my $class = $self->class;
-    my $run = $class->new({
-        spec => $self
+    my $cmd = $class->new;
+    my $run = App::Spec::Run->new({
+        spec => $self,
+        cmd => $cmd,
     });
     return $run;
 }
