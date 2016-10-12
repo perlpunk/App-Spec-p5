@@ -57,6 +57,7 @@ sub process {
         elsif (not defined $value) {
             if (defined (my $default = $spec->default)) {
                 $value = $default;
+                $values = [ $value ];
                 $items->{ $name } = $value;
             }
         }

@@ -29,6 +29,13 @@ has description => ( is => 'rw' );
 my $DATA = do { local $/; <DATA> };
 my $default_spec;
 
+sub build {
+    my ($class, $spec) = @_;
+    $_ = App::Spec::Option->build($_) for @{ $spec->{options} || [] };
+    $_ = App::Spec::Parameter->build($_) for @{ $spec->{parameters} || [] };
+    my $self = $class->new($spec);
+}
+
 sub _read_default_spec {
     $default_spec ||= YAML::XS::Load($DATA);
     return dclone $default_spec;
@@ -51,25 +58,7 @@ sub read {
         die "No filename given";
     }
 
-    my $spec;
-    if (ref $file eq 'GLOB') {
-        my $data = do { local $/; <$file> };
-        $spec = eval { YAML::XS::Load($data) };
-    }
-    elsif (not ref $file) {
-        $spec = eval { YAML::XS::LoadFile($file) };
-    }
-    elsif (ref $file eq 'SCALAR') {
-        my $data = $$file;
-        $spec = eval { YAML::XS::Load($data) };
-    }
-    elsif (ref $file eq 'HASH') {
-        $spec = $file;
-    }
-
-    unless ($spec) {
-        die "Error reading '$file': $@";
-    }
+    my $spec = $class->load_data($file);
 
     my $has_subcommands = $spec->{subcommands} ? 1 : 0;
     my $default;
@@ -106,23 +95,33 @@ sub read {
         }
     }
 
-    my $self = $class->new({
-        name => $spec->{name},
-        appspec => $spec->{appspec},
-        class => $spec->{class},
-        title => $spec->{title},
-        markup => $spec->{markup},
-        options => [map {
-            App::Spec::Option->build($_)
-        } @{ $spec->{options} || [] }],
-        parameters => [map {
-            App::Spec::Parameter->build($_)
-        } @{ $spec->{parameters} || [] }],
-        subcommands => $commands,
-        abstract => $spec->{abstract},
-        description => $spec->{description},
-    });
+    $spec->{subcommands} = $commands;
+    my $self = $class->build($spec);
     return $self;
+}
+
+sub load_data {
+    my ($class, $file) = @_;
+    my $spec;
+    if (ref $file eq 'GLOB') {
+        my $data = do { local $/; <$file> };
+        $spec = eval { YAML::XS::Load($data) };
+    }
+    elsif (not ref $file) {
+        $spec = eval { YAML::XS::LoadFile($file) };
+    }
+    elsif (ref $file eq 'SCALAR') {
+        my $data = $$file;
+        $spec = eval { YAML::XS::Load($data) };
+    }
+    elsif (ref $file eq 'HASH') {
+        $spec = $file;
+    }
+
+    unless ($spec) {
+        die "Error reading '$file': $@";
+    }
+    return $spec;
 }
 
 sub _add_subcommands {
@@ -463,6 +462,18 @@ Your App class:
 =item read
 
     my $spec = App::Spec->read("/path/to/myapp-spec.yaml");
+
+=item load_data
+
+Takes a file, hashref or glob and returns generated appspec hashref
+
+    my $hash = $class->load_data($file);
+
+=item build
+
+Builds objects out of the hashref
+
+    my $appspec = App::Spec->build($hashref);
 
 =item runner
 
