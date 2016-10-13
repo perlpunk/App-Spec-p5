@@ -344,7 +344,7 @@ __END__
 =head1 DESCRIPTION
 
 App::Spec::Run is the framework which runs your app defined by the spec.
-Your app class should inherit from App::Spec::Run.
+Your app class should inherit from App::Spec::Run::Cmd.
 
 =head1 METHODS
 
