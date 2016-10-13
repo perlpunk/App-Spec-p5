@@ -425,6 +425,8 @@ structure in perl.
 The L<App::Spec::Run> module is the framework which will run the actual
 app.
 
+Have a look at the L<App::Spec::Tutorial> for how to write an app.
+
 In the examples directory you will find the app C<myapp> which is supposed
 to demonstrate everything that App::Spec supports right now.
 
@@ -437,15 +439,18 @@ Your script:
     $run->run;
 
     # this is equivalent to
-    #my $run = Your::App->new({
+    #my $run = App::Spec::Run->new(
     #    spec => $spec,
-    #});
+    #    cmd => Your::App->new(
+    #        spec => $spec,
+    #    ),
+    #);
     #$run->run;
 
 Your App class:
 
     package Your::App;
-    use base 'App::Spec::Run';
+    use base 'App::Spec::Run::Cmd';
 
     sub command1 {
         my ($self) = @_;
