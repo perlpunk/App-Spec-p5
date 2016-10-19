@@ -97,22 +97,43 @@ Options:
     --all     (flag)
 
 
-=head3  _complete
+=head3  _meta
 
-    pcorelist  _complete [options]
+    pcorelist  _meta <subcommands>
+
+Information and utilities for this app
+
+
+=head3 _meta completion
+
+    pcorelist _meta completion <subcommands>
+
+Shell completion functions
+
+
+=head3 _meta completion generate
+
+    pcorelist _meta completion generate [options]
 
 Generate self completion
 
 Options:
 
-    --name    name of the program
-    --zsh     for zsh (flag)     
-    --bash    for bash (flag)    
+    --name    name of the program (optional, override name in spec)
+    --zsh     for zsh (flag)                                       
+    --bash    for bash (flag)                                      
 
 
-=head3  _pod
+=head3 _meta pod
 
-    pcorelist  _pod
+    pcorelist _meta pod <subcommands>
+
+Pod documentation
+
+
+=head3 _meta pod generate
+
+    pcorelist _meta pod generate
 
 Generate self pod
 

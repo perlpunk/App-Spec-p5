@@ -20,30 +20,105 @@ _pcorelist() {
 
         args)
             case $line[1] in
-            _complete)
+            _meta)
 
-                # ---- Command: _complete
+                # ---- Command: _meta
                 _arguments -s -C \
                     '1: :->cmd1' \
-                    '--help[Show command help]' \
-                    '-h[Show command help]' \
-                    '--name[name of the program]:name' \
-                    '--zsh[for zsh]' \
-                    '--bash[for bash]' \
+                    '2: :->cmd2' \
+                    '*: :->args' \
                     && ret=0
 
 
-            ;;
-            _pod)
+                case $state in
+                cmd2)
+                    _alternative 'args:cmd3:((completion\:"Shell completion functions" pod\:"Pod documentation"))'
+                ;;
 
-                # ---- Command: _pod
-                _arguments -s -C \
-                    '1: :->cmd1' \
-                    '--help[Show command help]' \
-                    '-h[Show command help]' \
-                    && ret=0
+                args)
+                    case $line[2] in
+                    completion)
+
+                        # ---- Command: _meta completion
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '3: :->cmd3' \
+                            '*: :->args' \
+                            && ret=0
 
 
+                        case $state in
+                        cmd3)
+                            _alternative 'args:cmd4:((generate\:"Generate self completion"))'
+                        ;;
+
+                        args)
+                            case $line[3] in
+                            generate)
+
+                                # ---- Command: _meta completion generate
+                                _arguments -s -C \
+                                    '1: :->cmd1' \
+                                    '2: :->cmd2' \
+                                    '3: :->cmd3' \
+                                    '--help[Show command help]' \
+                                    '-h[Show command help]' \
+                                    '--name[name of the program (optional, override name in spec)]:name' \
+                                    '--zsh[for zsh]' \
+                                    '--bash[for bash]' \
+                                    && ret=0
+
+
+                            ;;
+                            esac
+
+                        ;;
+
+                        esac
+                    ;;
+                    pod)
+
+                        # ---- Command: _meta pod
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '3: :->cmd3' \
+                            '*: :->args' \
+                            && ret=0
+
+
+                        case $state in
+                        cmd3)
+                            _alternative 'args:cmd4:((generate\:"Generate self pod"))'
+                        ;;
+
+                        args)
+                            case $line[3] in
+                            generate)
+
+                                # ---- Command: _meta pod generate
+                                _arguments -s -C \
+                                    '1: :->cmd1' \
+                                    '2: :->cmd2' \
+                                    '3: :->cmd3' \
+                                    '--help[Show command help]' \
+                                    '-h[Show command help]' \
+                                    && ret=0
+
+
+                            ;;
+                            esac
+
+                        ;;
+
+                        esac
+                    ;;
+                    esac
+
+                ;;
+
+                esac
             ;;
             diff)
 
@@ -103,31 +178,109 @@ _pcorelist_features_param_feature_completion
 
                 args)
                     case $line[2] in
-                    _complete)
+                    _meta)
 
-                        # ---- Command: help _complete
+                        # ---- Command: help _meta
                         _arguments -s -C \
                             '1: :->cmd1' \
                             '2: :->cmd2' \
-                            '--help[Show command help]' \
-                            '-h[Show command help]' \
-                            '--all[]' \
+                            '3: :->cmd3' \
+                            '*: :->args' \
                             && ret=0
 
 
-                    ;;
-                    _pod)
+                        case $state in
+                        cmd3)
+                            _alternative 'args:cmd4:((completion pod))'
+                        ;;
 
-                        # ---- Command: help _pod
-                        _arguments -s -C \
-                            '1: :->cmd1' \
-                            '2: :->cmd2' \
-                            '--help[Show command help]' \
-                            '-h[Show command help]' \
-                            '--all[]' \
-                            && ret=0
+                        args)
+                            case $line[3] in
+                            completion)
+
+                                # ---- Command: help _meta completion
+                                _arguments -s -C \
+                                    '1: :->cmd1' \
+                                    '2: :->cmd2' \
+                                    '3: :->cmd3' \
+                                    '4: :->cmd4' \
+                                    '*: :->args' \
+                                    && ret=0
 
 
+                                case $state in
+                                cmd4)
+                                    _alternative 'args:cmd5:((generate))'
+                                ;;
+
+                                args)
+                                    case $line[4] in
+                                    generate)
+
+                                        # ---- Command: help _meta completion generate
+                                        _arguments -s -C \
+                                            '1: :->cmd1' \
+                                            '2: :->cmd2' \
+                                            '3: :->cmd3' \
+                                            '4: :->cmd4' \
+                                            '--help[Show command help]' \
+                                            '-h[Show command help]' \
+                                            '--all[]' \
+                                            && ret=0
+
+
+                                    ;;
+                                    esac
+
+                                ;;
+
+                                esac
+                            ;;
+                            pod)
+
+                                # ---- Command: help _meta pod
+                                _arguments -s -C \
+                                    '1: :->cmd1' \
+                                    '2: :->cmd2' \
+                                    '3: :->cmd3' \
+                                    '4: :->cmd4' \
+                                    '*: :->args' \
+                                    && ret=0
+
+
+                                case $state in
+                                cmd4)
+                                    _alternative 'args:cmd5:((generate))'
+                                ;;
+
+                                args)
+                                    case $line[4] in
+                                    generate)
+
+                                        # ---- Command: help _meta pod generate
+                                        _arguments -s -C \
+                                            '1: :->cmd1' \
+                                            '2: :->cmd2' \
+                                            '3: :->cmd3' \
+                                            '4: :->cmd4' \
+                                            '--help[Show command help]' \
+                                            '-h[Show command help]' \
+                                            '--all[]' \
+                                            && ret=0
+
+
+                                    ;;
+                                    esac
+
+                                ;;
+
+                                esac
+                            ;;
+                            esac
+
+                        ;;
+
+                        esac
                     ;;
                     diff)
 

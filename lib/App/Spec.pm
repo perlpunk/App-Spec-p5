@@ -189,7 +189,23 @@ EOM
         }
         $usage .= " $usage_string";
         $body .= "$header\n";
-        for my $name (sort keys %$subcmds) {
+
+        my %keys;
+        @keys{ keys %$subcmds } = ();
+        my @keys;
+        if (@$cmds) {
+            @keys = sort keys %keys;
+        }
+        else {
+            for my $key (qw/ help _meta /) {
+                if (exists $keys{ $key }) {
+                    push @keys, $key;
+                    delete $keys{ $key };
+                }
+            }
+            unshift @keys, sort keys %keys;
+        }
+        for my $name (@keys) {
             my $cmd_spec = $subcmds->{ $name };
             my $summary = $cmd_spec->summary;
             push @table, [$name, $summary];
@@ -553,22 +569,27 @@ subcommands:
         options:
         -   name: all
             type: flag
-    _complete:
-        summary: Generate self completion
-        op: cmd_self_completion
-        options:
-            -   name: name
-                description: name of the program
-            -   name: zsh
-                description: for zsh
-                type: flag
-            -   name: bash
-                description: for bash
-                type: flag
-#            -   name: without-description
-#                type: flag
-#                default: false
-#                description: generate without description
-    _pod:
-        summary: Generate self pod
-        op: cmd_self_pod
+    _meta:
+        summary: Information and utilities for this app
+        subcommands:
+            completion:
+                summary: Shell completion functions
+                subcommands:
+                    generate:
+                        summary: Generate self completion
+                        op: cmd_self_completion
+                        options:
+                            -   name: name
+                                description: name of the program (optional, override name in spec)
+                            -   name: zsh
+                                description: for zsh
+                                type: flag
+                            -   name: bash
+                                description: for bash
+                                type: flag
+            pod:
+                summary: Pod documentation
+                subcommands:
+                    generate:
+                        summary: Generate self pod
+                        op: cmd_self_pod

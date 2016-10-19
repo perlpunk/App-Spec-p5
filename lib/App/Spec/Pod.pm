@@ -70,7 +70,7 @@ sub subcommand_pod {
         @keys = sort keys %keys;
     }
     else {
-        for my $key (qw/ help _complete _pod /) {
+        for my $key (qw/ help _meta /) {
             if (exists $keys{ $key }) {
                 push @keys, $key;
                 delete $keys{ $key };
