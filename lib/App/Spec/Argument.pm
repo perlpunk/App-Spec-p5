@@ -43,6 +43,7 @@ sub common {
         values => $args->{values},
         filter => $args->{filter},
     );
+    not defined $hash{ $_ } and delete $hash{ $_ } for keys %hash;
     return %hash;
 }
 
