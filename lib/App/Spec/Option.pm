@@ -13,8 +13,8 @@ sub build {
     my ($class, $args) = @_;
     my %hash = $class->common($args);
     my $self = $class->new({
-        %hash,
         aliases => $args->{aliases} || [],
+        %hash,
     });
     return $self;
 }
