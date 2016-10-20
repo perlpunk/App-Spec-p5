@@ -47,6 +47,18 @@ is still buggy.
 
 =item birthdays.yaml
 
+Short version:
+
+    name: birthdays.pl
+    title: Show birthdays
+    appspec: { version: '0.001' }
+    class: App::Birthdays
+    options:
+    - date=s =today --Date
+    - age           --Show age
+
+Long version:
+
     name: birthdays.pl
     title: Show birthdays
     appspec: { version: '0.001' }
@@ -55,8 +67,10 @@ is still buggy.
     - name: date
       type: string
       default: today
+      summary: Date
     - name: age
       type: flag
+      summary: Show age
 
 =back
 
