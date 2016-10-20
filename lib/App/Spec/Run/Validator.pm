@@ -74,12 +74,12 @@ sub process {
                 }
             }
 
-            if ( not @$value and $spec->required) {
+            if ( not @$values and $spec->required) {
                 $errs->{ $type }->{ $name } = "missing";
                 next;
             }
 
-            if (not @$value) {
+            if (not @$values) {
                 next;
             }
 
@@ -154,6 +154,7 @@ sub process {
             }
             if ($param_type eq 'file' and $v eq '-') {
                 $v = do { local $/; my $t = <STDIN>; \$t };
+                # TODO does not work for multiple
                 $items->{ $name } = $v;
             }
             if (@$possible_values) {
