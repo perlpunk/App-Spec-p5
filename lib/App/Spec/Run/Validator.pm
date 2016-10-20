@@ -18,7 +18,7 @@ my %validate = (
     string => sub { length($_[0]) > 0 },
     file => sub { $_[0] eq '-' or -f $_[0] },
     dir => sub { -d $_[0] },
-    integer => sub { $_[0] =~ m/^[+-]?\d+/ },
+    integer => sub { $_[0] =~ m/^[+-]?\d+$/ },
     flag => sub { 1 },
     enum => sub {
         my ($value, $list) = @_;

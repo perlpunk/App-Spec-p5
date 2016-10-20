@@ -80,6 +80,12 @@
    - regex: 'Usage: myapp convert <type> <source> <value> <target>\+'
    - regex: 'target.*not_unique'
    exit: 255
+-
+  args: [ myapp, convert, distance, meter, foobar, foot ]
+  stderr:
+  - regex: 'Usage: myapp convert <type> <source> <value> <target>\+'
+  - regex: 'value.*invalid'
+  exit: 255
 
 #completion:
 -
