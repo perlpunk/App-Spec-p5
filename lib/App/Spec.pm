@@ -31,6 +31,9 @@ my $default_spec;
 
 sub build {
     my ($class, $spec) = @_;
+    for (@{ $spec->{options} || [] }, @{ $spec->{parameters} || [] }) {
+        $_ = { spec => $_ } unless ref $_;
+    }
     $_ = App::Spec::Option->build($_) for @{ $spec->{options} || [] };
     $_ = App::Spec::Parameter->build($_) for @{ $spec->{parameters} || [] };
     my $self = $class->new($spec);
@@ -67,7 +70,7 @@ sub read {
 
         for my $opt (@{ $default->{options} }) {
             my $name = $opt->{name};
-            unless (any { $_->{name} eq $name } @{ $spec->{options} }) {
+            unless (any { (ref $_ ? $_->{name} : $_) eq $name } @{ $spec->{options} }) {
                 push @{ $spec->{options} }, $opt;
             }
         }

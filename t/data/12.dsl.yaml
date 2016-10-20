@@ -5,6 +5,7 @@ class: App::Spec::Example::MyApp
 title: My Very Cool App
 abstract: This app can do very cool things
 options:
+  - foo --Foo
   - spec: verbose|v+ --be verbose
   - spec: +req --Some required flag
   - spec: number=i --integer option
@@ -17,6 +18,9 @@ class: App::Spec::Example::MyApp
 title: My Very Cool App
 abstract: This app can do very cool things
 options:
+  - name: foo
+    type: flag
+    summary: Foo
   - name: verbose
     summary: be verbose
     type: flag

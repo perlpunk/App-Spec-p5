@@ -21,9 +21,6 @@ has values => ( is => 'ro' );
 
 sub common {
     my ($class, $args) = @_;
-    unless (ref $args) {
-        $args = { spec => $args };
-    }
     my %dsl;
     if (defined $args->{spec}) {
         %dsl = $class->from_dsl(delete $args->{spec});
