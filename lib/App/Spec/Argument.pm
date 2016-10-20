@@ -144,10 +144,67 @@ sub from_dsl {
 
 =head1 NAME
 
-App::Spec::Parameter - App::Spec objects representing command line options or parameters
+App::Spec::Argument - App::Spec objects representing command line options or parameters
 
 =head1 SYNOPSIS
 
+=head1 EXAMPLES
+
+You can see a list of supported syntax in this example from C<t/data/12.dsl.yaml>:
+
+=for comment
+START INLINE t/data/12.dsl.yaml
+
+    ---
+    name: myapp
+    appspec: { "version": 0.001 }
+    class: App::Spec::Example::MyApp
+    title: My Very Cool App
+    abstract: This app can do very cool things
+    options:
+      - foo --Foo
+      - spec: verbose|v+ --be verbose
+      - spec: +req --Some required flag
+      - spec: number=i --integer option
+      - spec: number2|n= +integer --integer option
+      - date|d=s =today
+    
+    ---
+    name: myapp
+    appspec: { "version": 0.001 }
+    class: App::Spec::Example::MyApp
+    title: My Very Cool App
+    abstract: This app can do very cool things
+    options:
+      - name: foo
+        type: flag
+        summary: Foo
+      - name: verbose
+        summary: be verbose
+        type: flag
+        multiple: true
+        aliases: ["v"]
+      - name: req
+        summary: Some required flag
+        required: true
+        type: flag
+      - name: number
+        summary: integer option
+        type: integer
+      - name: number2
+        summary: integer option
+        type: integer
+        aliases: ["n"]
+      - name: date
+        type: string
+        default: today
+        aliases: ["d"]
+    
+    
+
+
+=for comment
+STOP INLINE
 
 =head1 METHODS
 
