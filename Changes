@@ -1,5 +1,12 @@
 Revision history for Perl module App::Spec
 
+0.003_001 Fri Oct 21 00:17:56 CEST 2016
+    - more refactoring
+    - more documentation
+    - schema fixes
+    - integer validation fix
+    - add DSL for defining options
+
 0.003 Thu Oct 13 21:06:00 CEST 2016
     - Change: refactoring. Apps should now inherit from App::Spec::Run::Cmd
     - Feature: add 'unique' feature for params/options

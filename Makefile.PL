@@ -40,12 +40,13 @@ my %WriteMakefileArgs = (
   },
   "TEST_REQUIRES" => {
     "FindBin" => 0,
+    "Test::Deep" => 0,
     "Test::More" => 0,
     "Test::Trap" => 0,
     "constant" => 0,
     "lib" => 0
   },
-  "VERSION" => "0.003",
+  "VERSION" => "0.003_001",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -62,6 +63,7 @@ my %FallbackPrereqs = (
   "Ref::Util" => 0,
   "Storable" => 0,
   "Term::ANSIColor" => 0,
+  "Test::Deep" => 0,
   "Test::More" => 0,
   "Test::Trap" => 0,
   "Text::Table" => 0,
