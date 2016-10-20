@@ -1,3 +1,4 @@
+# ABSTRACT: App::Spec objects representing command line options or parameters
 use strict;
 use warnings;
 package App::Spec::Argument;
@@ -138,3 +139,32 @@ sub from_dsl {
 }
 
 1;
+
+=pod
+
+=head1 NAME
+
+App::Spec::Parameter - App::Spec objects representing command line options or parameters
+
+=head1 SYNOPSIS
+
+
+=head1 METHODS
+
+=over 4
+
+=item common
+
+Builds a hash with the given hashref and fills in some defaults.
+
+    my %hash = $class->common($args);
+
+=item from_dsl
+
+Builds a hash from the dsl string
+
+    %dsl = $class->from_dsl("verbose|v+ --Be verbose");
+
+=back
+
+=cut
