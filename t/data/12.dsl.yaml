@@ -10,6 +10,7 @@ options:
   - spec: +req --Some required flag
   - spec: number=i --integer option
   - spec: number2|n= +integer --integer option
+  - date|d=s =today
 
 ---
 name: myapp
@@ -37,6 +38,10 @@ options:
     summary: integer option
     type: integer
     aliases: ["n"]
+  - name: date
+    type: string
+    default: today
+    aliases: ["d"]
 
 
 # vim:et:sts=2:sws=2:sw=2:foldmethod=indent

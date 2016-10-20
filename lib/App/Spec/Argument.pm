@@ -109,16 +109,19 @@ sub from_dsl {
 
     $dsl =~ s/^\s+//;
 
-    if ($dsl =~ s/^\+(\w+)//) {
-        $type = $1;
-        if ($getopt_type and $type ne $getopt_type) {
-            die "Explicit type '$type' conflicts with getopt type '$getopt_type'";
+    while ($dsl =~ s/^\s*([=+])(\S+)//) {
+        if ($1 eq '+') {
+            $type = $2;
+            if ($getopt_type and $type ne $getopt_type) {
+                die "Explicit type '$type' conflicts with getopt type '$getopt_type'";
+            }
+        }
+        else {
+            $hash{default} = $2;
         }
     }
 
-    $dsl =~ s/^\s+//;
-
-    if ($dsl =~ s/^--\s*(.*)//) {
+    if ($dsl =~ s/^\s*--\s*(.*)//) {
         # TODO only summary should be supported
         $hash{summary} = $1;
         $hash{description} = $1;
