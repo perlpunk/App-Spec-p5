@@ -70,6 +70,10 @@ sub read {
 
         for my $opt (@{ $default->{options} }) {
             my $name = $opt->{name};
+            # TODO
+            # this should be moved somewhere else since the name might not
+            # be parsed from dsl yet
+            no warnings 'uninitialized';
             unless (any { (ref $_ ? $_->{name} : $_) eq $name } @{ $spec->{options} }) {
                 push @{ $spec->{options} }, $opt;
             }
