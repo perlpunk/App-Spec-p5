@@ -1,4 +1,5 @@
 ---
+# version with short dsl syntax
 name: myapp
 appspec: { "version": 0.001 }
 class: App::Spec::Example::MyApp
@@ -11,8 +12,10 @@ options:
   - spec: number=i --integer option
   - spec: number2|n= +integer --integer option
   - date|d=s =today
+  - items=s@ --multi option
 
 ---
+# version with verbose syntax
 name: myapp
 appspec: { "version": 0.001 }
 class: App::Spec::Example::MyApp
@@ -42,6 +45,9 @@ options:
     type: string
     default: today
     aliases: ["d"]
-
+  - name: items
+    type: string
+    multiple: true
+    summary: multi option
 
 # vim:et:sts=2:sws=2:sw=2:foldmethod=indent

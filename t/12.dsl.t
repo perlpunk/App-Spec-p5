@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 6;
+use Test::More tests => 7;
 
 use FindBin '$Bin';
 use YAML::XS qw/ LoadFile /;
@@ -13,7 +13,7 @@ my @docs = LoadFile("$Bin/data/12.dsl.yaml");
 my $spec1 = App::Spec->read($docs[0]);
 my $spec2 = App::Spec->read($docs[1]);
 
-for my $i (0 .. 5) {
+for my $i (0 .. 6) {
     my $dsl = $spec1->options->[$i];
     my $compare = $spec2->options->[$i];
 #    warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\$dsl], ['dsl']);

@@ -2,6 +2,17 @@
 
 App::Spec::Tutorial - How to write an app with App::Spec::Run
 
+=head1 LINKS
+
+=over 4
+
+=item Options and parameters
+
+See L<App::Spec::Argument> for documentation and examples on how to
+define options and parameters.
+
+=back
+
 =head1 GENERATOR
 
 You can generate a boilerplate with appspec:
