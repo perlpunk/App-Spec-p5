@@ -123,7 +123,7 @@ subcommands:
     - name: value
       summary: The value to convert
       required: true
-      type: string
+      type: integer
     - name: target
       summary: The target unit
       type: string
