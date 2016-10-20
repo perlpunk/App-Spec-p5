@@ -43,50 +43,82 @@ sub process {
     for my $name (sort keys %$specs) {
         my $spec = $specs->{ $name };
         my $value = $items->{ $name };
-        if ($spec->multiple and $spec->type ne "flag" and not defined $value) {
-            $items->{ $name } = $value = [];
-        }
-        my $values = is_arrayref($value) ? $value : [ $value ];
+        my $param_type = $spec->type;
+        my $enum = $spec->enum;
 
-        if ($spec->multiple and $spec->type ne "flag" and not @$value) {
-            if (defined (my $default = $spec->default)) {
-                $value = [ $default ];
-                $items->{ $name } = $value;
+        if ($spec->type eq "flag") {
+            if ($spec->multiple) {
+                if (defined $value and $value !~ m/^\d+$/) {
+                    die "Value for '$name': '$value' shouldn't happen";
+                }
             }
-        }
-        elsif (not defined $value) {
-            if (defined (my $default = $spec->default)) {
-                $value = $default;
-                $values = [ $value ];
-                $items->{ $name } = $value;
+            else {
+                if (defined $value and $value != 1) {
+                    die "Value for '$name': '$value' shouldn't happen";
+                }
             }
-        }
-        if ( (
-                ($spec->multiple and $spec->type ne "flag" and not @$value)
-                ||
-                (not defined $value)
-            ) and $spec->required) {
-            $errs->{ $type }->{ $name } = "missing";
             next;
         }
-        if ($spec->multiple and $spec->type ne "flag" and not @$value or not defined $value) {
-            next;
+
+        my $values;
+        if ($spec->multiple) {
+            if (not defined $value) {
+                $items->{ $name } = $value = [];
+            }
+            $values = $value;
+
+            if (not @$values) {
+                if (defined (my $default = $spec->default)) {
+                    $values = [ $default ];
+                    $items->{ $name } = $values;
+                }
+            }
+
+            if ( not @$value and $spec->required) {
+                $errs->{ $type }->{ $name } = "missing";
+                next;
+            }
+
+            if (not @$value) {
+                next;
+            }
+
+            if ($spec->unique and (uniq @$values) != @$values) {
+                $errs->{ $type }->{ $name } = "not_unique";
+                next;
+            }
+
         }
-        if ($spec->multiple and $spec->unique and (uniq @$value) != @$value) {
-            $errs->{ $type }->{ $name } = "not_unique";
-            next;
+        else {
+
+            if (not defined $value) {
+                if (defined (my $default = $spec->default)) {
+                    $value = $default;
+                    $items->{ $name } = $value;
+                }
+            }
+
+            if ( not defined $value and $spec->required) {
+                $errs->{ $type }->{ $name } = "missing";
+                next;
+            }
+
+            if (not defined $value) {
+                next;
+            }
+
+            $values = [ $value ];
         }
 
         if (my $filter = $spec->filter) {
             my $method = $filter->{method}
                 or warn "Missing method for filter for $type '$name'";
-            $value = $app->$method(
-                $name => $value, $self->parameters, $self->options,
-            );
+            @$values = map {
+                $app->$method(
+                    $name => $_, $self->parameters, $self->options,
+                );
+            } @$values;
         }
-
-        my $param_type = $spec->type;
-        my $enum = $spec->enum;
 
         my $def;
         if (ref $param_type eq 'HASH') {
