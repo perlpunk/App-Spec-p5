@@ -6,7 +6,9 @@ title: My Very Cool App
 abstract: This app can do very cool things
 options:
   - spec: verbose|v+ --be verbose
-  - spec: +req --Some required option
+  - spec: +req --Some required flag
+  - spec: number=i --integer option
+  - spec: number2|n= +integer --integer option
 
 ---
 name: myapp
@@ -21,9 +23,16 @@ options:
     multiple: true
     aliases: ["v"]
   - name: req
-    summary: Some required option
+    summary: Some required flag
     required: true
     type: flag
+  - name: number
+    summary: integer option
+    type: integer
+  - name: number2
+    summary: integer option
+    type: integer
+    aliases: ["n"]
 
 
 # vim:et:sts=2:sws=2:sw=2:foldmethod=indent

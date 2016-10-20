@@ -84,18 +84,20 @@ sub from_dsl {
         $hash{aliases} = \@aliases;
     }
 
+    my $getopt_type = '';
     if ($dsl =~ s/^=//) {
         # not a flag, default string
         $type = "string";
         # TODO support all of Getopt::Long types
         if ($dsl =~ s/^([is])//) {
-            if ($1 eq "i") {
+            $getopt_type = $1;
+            if ($getopt_type eq "i") {
                 $type = "integer";
             }
-            elsif ($1 eq "s") {
+            elsif ($getopt_type eq "s") {
             }
             else {
-                die "Option $name: type $1 not supported";
+                die "Option $name: type $getopt_type not supported";
             }
         }
     }
@@ -108,14 +110,25 @@ sub from_dsl {
         $multiple = 1;
     }
 
-    if ($dsl =~ s/^\s+//) {
-        # end of getopt spec
+    $dsl =~ s/^\s+//;
+
+    if ($dsl =~ s/^\+(\w+)//) {
+        $type = $1;
+        if ($getopt_type and $type ne $getopt_type) {
+            die "Explicit type '$type' conflicts with getopt type '$getopt_type'";
+        }
     }
 
-    if ($dsl =~ m/^--\s*(.*)/) {
+    $dsl =~ s/^\s+//;
+
+    if ($dsl =~ s/^--\s*(.*)//) {
         # TODO only summary should be supported
         $hash{summary} = $1;
         $hash{description} = $1;
+    }
+
+    if (length $dsl) {
+        die "Invalid spec: trailing '$dsl'";
     }
 
     $hash{type} = $type;
