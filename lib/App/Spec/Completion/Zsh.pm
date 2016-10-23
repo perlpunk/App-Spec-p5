@@ -373,7 +373,7 @@ sub options {
     my @options;
     for my $opt (@$options) {
         my $name = $opt->name;
-        my $desc = $opt->description;
+        my $summary = $opt->summary;
         my $type = $opt->type;
         my $enum = $opt->enum;
         my $aliases = $opt->aliases;
@@ -402,8 +402,8 @@ sub options {
         elsif (not ref $type and $type ne "flag") {
             $values = ":$name";
         }
-        $desc =~ s/['`]/'"'"'/g;
-        $desc =~ s/\$/\\\$/g;
+        $summary =~ s/['`]/'"'"'/g;
+        $summary =~ s/\$/\\\$/g;
 
         my $multiple = $opt->multiple ? "*" : "";
 #        '(-c --count)'{-c,--count}'[Number of list items to show]:c' \
@@ -412,7 +412,7 @@ sub options {
             length > 1 ? "--$_" : "-$_"
         } ($name, @$aliases);
         for my $name (@names) {
-            my $str = "'$multiple$name\[$desc\]$values'";
+            my $str = "'$multiple$name\[$summary\]$values'";
             push @options, $indent . "    $str";
         }
     }

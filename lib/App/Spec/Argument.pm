@@ -25,11 +25,11 @@ sub common {
     if (defined $args->{spec}) {
         %dsl = $class->from_dsl(delete $args->{spec});
     }
-    my $description = $args->{description};
-    my $summary = $args->{summary};
-    $summary //= $description // '';
-    $description //= $summary;
-    my $type = $args->{type} // 'string';
+    my $description = $args{description};
+    my $summary = $args{summary};
+    $summary //= '';
+    $description //= '';
+    my $type = $args{type} // 'string';
     my %hash = (
         name => $args->{name},
         summary => $summary,
@@ -48,7 +48,7 @@ sub common {
     return %hash;
 }
 
-my $name_re = qr{\w+};
+my $name_re = qr{[\w-]+};
 
 sub from_dsl {
     my ($class, $dsl) = @_;
@@ -57,7 +57,7 @@ sub from_dsl {
     my $name;
     my $type = "flag";
     my $multiple = 0;
-    my$required = 0;
+    my $required = 0;
     $dsl =~ s/^\s+//;
 
     if ($dsl =~ s/^\+//) {
@@ -123,7 +123,6 @@ sub from_dsl {
     if ($dsl =~ s/^\s*--\s*(.*)//) {
         # TODO only summary should be supported
         $hash{summary} = $1;
-        $hash{description} = $1;
     }
 
     if (length $dsl) {

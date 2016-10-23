@@ -30,12 +30,12 @@ subcommands:
     options:
       - &option_branch
         name: branch
-        description: Upstream branch
+        summary: Upstream branch
         aliases: ["b"]
       -
         name: force
         aliases: ["f"]
-        description: 'reclone (completely replace) an existing subdir.'
+        summary: 'reclone (completely replace) an existing subdir.'
         type: flag
   init:
     summary: Turn an existing subdirectory into a subrepo.
@@ -48,7 +48,7 @@ subcommands:
       - &option_remote
         name: remote
         aliases: ["r"]
-        description: Specify remote repository
+        summary: Specify remote repository
       -  *option_branch
   pull:
     summary: Update the subrepo subdir with the latest upstream changes.
@@ -56,7 +56,7 @@ subcommands:
       - &param_subrepo_optional
         name: subrepo
         required: false
-        description: Subrepo
+        summary: Subrepo
         completion:
           command:
             - replace: SELF
@@ -66,13 +66,13 @@ subcommands:
       - &option_all
         name: all
         type: flag
-        description: All subrepos
+        summary: All subrepos
       - *option_branch
       - *option_remote
       -
         name: update
         aliases: ["u"]
-        description: update
+        summary: update
   push:
     summary: Push a properly merged subrepo branch back upstream.
     parameters: *pull_parameters
@@ -95,7 +95,7 @@ subcommands:
       - &param_subrepo
         name: subrepo
         required: true
-        description: Subrepo
+        summary: Subrepo
         completion:
           command:
             - replace: SELF
@@ -103,7 +103,7 @@ subcommands:
             - '--quiet'
       -
         name: subreporef
-        description: Subrepo ref
+        summary: Subrepo ref
   status:
     summary: Get the status of a subrepo.
     parameters:
@@ -112,7 +112,7 @@ subcommands:
       -
         name: quiet
         aliases: ["q"]
-        description: Just print names
+        summary: Just print names
   clean:
     summary: 'Remove artifacts created by `fetch` and `branch` commands.'
     parameters:

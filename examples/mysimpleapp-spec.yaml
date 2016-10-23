@@ -6,7 +6,7 @@ title: a simple app
 abstract: Just a very simple example app to document some features
 options:
 - name: verbose
-  description: be verbose
+  summary: be verbose
   type: flag
   multiple: true
   aliases: [v]

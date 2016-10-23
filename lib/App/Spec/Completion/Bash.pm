@@ -291,7 +291,7 @@ EOM
         my $type = $opt->type;
         next if $type eq "flag";
         my $enum = $opt->enum;
-        my $summary = $opt->description;
+        my $summary = $opt->summary;
         $summary =~ s/['`]/'"'"'/g;
         $summary =~ s/\$/\\\$/g;
         my $aliases = $opt->aliases;

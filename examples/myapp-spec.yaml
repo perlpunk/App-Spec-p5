@@ -12,7 +12,7 @@ description: |
 options:
   -
     name: verbose
-    description: be verbose
+    summary: be verbose
     type: flag
     multiple: true
     aliases: ["v"]
@@ -31,14 +31,14 @@ subcommands:
     options:
       -
         name: with
-        description: Drink with ...
+        summary: Drink with ...
         type: string
         enum: ["almond milk", "soy milk", "oat milk", "spelt milk", "cow milk"]
       -
         name: sugar
         type: flag
         aliases: ["s"]
-        description: add sugar
+        summary: add sugar
 
   weather:
     summary: Weather
@@ -48,15 +48,15 @@ subcommands:
         op: weather
         options:
           - name: temperature
-            description: show temperature
+            summary: show temperature
             aliases: [T]
             type: flag
           - name: celsius
-            description: show temperature in celsius
+            summary: show temperature in celsius
             aliases: [C]
             type: flag
           - name: fahrenheit
-            description: show temperature in fahrenheit
+            summary: show temperature in fahrenheit
             aliases: [F]
             type: flag
         parameters:
@@ -85,7 +85,7 @@ subcommands:
           - name: country
             aliases: ["c"]
             multiple: true
-            description: country name(s)
+            summary: country name(s)
             completion:
               command:
                 - replace: SELF
