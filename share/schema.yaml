@@ -23,19 +23,26 @@ properties:
     patternProperties:
       "^[a-zA-Z0-9_]+$":
         '$ref': '#/definitions/command'
+
 definitions:
+
   optionTypeSimple:
     enum: [flag, string, integer, file]
+
   options:
     type: array
     items:
       '$ref': '#/definitions/option'
+
   option:
     type: object
     additionalProperties: false
-    required: [name]
+    anyOf:
+    - required: [name]
+    - required: [spec]
     properties:
       name: { type: string }
+      spec: { type: string }
       summary: { type: string }
       description: { type: string }
       multiple: { '$ref': '#/definitions/bool' }
@@ -59,6 +66,7 @@ definitions:
         oneOf:
           - { type: object }
           - { '$ref': '#/definitions/bool' }
+
   command:
     type: object
     additionalProperties: false
@@ -74,6 +82,7 @@ definitions:
         patternProperties:
           "^[a-zA-Z0-9_]+$":
             '$ref': '#/definitions/command'
+
   bool:
     anyOf:
       - { type: boolean }
