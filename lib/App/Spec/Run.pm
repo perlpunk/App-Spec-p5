@@ -130,30 +130,43 @@ sub error_output {
             push @error_output, $err;
         }
     }
-    $self->colorize and require Term::ANSIColor;
     my $help = $self->spec->usage(
         commands => $self->commands,
         highlights => $errs,
-        color => $self->colorize,
+        colored => $self->colorize_code('err'),
     );
     say STDERR $help;
     for my $msg (@error_output) {
         $self->colorize
-            and $msg = Term::ANSIColor::colored([qw/ bold red /], $msg);
+            and $msg = $self->colored('err', [qw/ error /], $msg);
         print STDERR "$msg\n";
     }
     die "sorry =(\n";
 }
 
+sub colorize_code {
+    my ($self, $out) = @_;
+    $self->colorize($out)
+        ? sub {
+            my $colored = $self->colored($out, $_[0], $_[1]);
+            unless (defined wantarray) {
+                $_[1] = $colored;
+            }
+            return $colored;
+        }
+        : sub { $_[1] },
+}
+
 sub colorize {
-    my ($self) = @_;
+    my ($self, $out) = @_;
+    $out ||= 'out';
     if (($ENV{PERL5_APPSPECRUN_COLOR} // '') eq 'always') {
         return 1;
     }
     if (($ENV{PERL5_APPSPECRUN_COLOR} // '') eq 'never') {
         return 0;
     }
-    if (-t STDOUT and -t STDERR) {
+    if ($out eq 'out' and -t STDOUT or $out eq 'err' and -t STDERR) {
         return 1;
     }
     return 0;
@@ -212,7 +225,7 @@ sub process_input {
             if (not $op or $subcommand_required) {
                 warn $spec->usage(
                     commands => \@cmds,
-                    color => $self->colorize,
+                    colored => $self->colorize_code('err'),
                     highlights => {
                         subcommands => 1,
                     },
@@ -224,7 +237,7 @@ sub process_input {
         $cmd_spec = $commands->{ $cmd } or do {
             warn $spec->usage(
                 commands => \@cmds,
-                color => $self->colorize,
+                colored => $self->colorize_code('err'),
                 highlights => {
                     subcommands => 1,
                 },
@@ -250,7 +263,7 @@ sub process_input {
             warn "Missing op for commands (@cmds)\n";
             my $help = $spec->usage(
                 commands => \@cmds,
-                color => $self->colorize,
+                colored => $self->colorize_code('err'),
             );
             die $help;
         }
@@ -266,10 +279,16 @@ sub process_input {
 
 sub error {
     my ($self, $msg) = @_;
+    $msg = $self->colored('err', [qw/ error /], $msg) . "\n";
+}
+
+sub colored {
+    my ($self, $out, $colors, $msg) = @_;
+    $colors = [ map { $_ eq 'error' ? qw/ bold red / : $_ } @$colors ];
     require Term::ANSIColor;
-    $self->colorize
-        and $msg = Term::ANSIColor::colored([qw/ bold red /], $msg);
-    return "$msg\n";
+    $self->colorize($out)
+        and $msg = Term::ANSIColor::colored($colors, $msg);
+    return $msg;
 }
 
 sub check_help {
@@ -303,7 +322,7 @@ sub cmd_help {
     shift @$cmds;
     my $help = $spec->usage(
         commands => $cmds,
-        color => $run->colorize,
+        colored => $run->colorize_code,
     );
     say $help;
 }

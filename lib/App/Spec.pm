@@ -155,20 +155,13 @@ sub usage {
     my ($self, %args) = @_;
     my $cmds = $args{commands};
     my %highlights = %{ $args{highlights} || {} };
-    my $color = $args{color};
+    my $colored = $args{colored} || sub { $_[1] };
     my $appname = $self->name;
-
-    if ($color) {
-        require Term::ANSIColor;
-    }
 
     my $abstract = $self->abstract // '';
     my $title = $self->title;
     my ($options, $parameters, $subcmds) = $self->_gather_options_parameters($cmds);
-    my $header = "$appname - $title";
-    if ($color) {
-        $header = Term::ANSIColor::colored([qw/ bold /], $header);
-    }
+    my $header = $colored->(['bold'], "$appname - $title");
     my $usage = <<"EOM";
 $header
 $abstract
@@ -176,10 +169,7 @@ $abstract
 EOM
 
     my $body = '';
-    my $usage_header = "Usage:";
-    if ($color) {
-        $usage_header = Term::ANSIColor::colored([qw/ bold /], $usage_header);
-    }
+    my $usage_header = $colored->([qw/ bold /], "Usage:");
     $usage .= "$usage_header $appname";
     $usage .= " @$cmds" if @$cmds;
     if (keys %$subcmds) {
@@ -187,12 +177,12 @@ EOM
         my @table;
         my $usage_string = "<subcommands>";
         my $header = "Subcommands:";
-        if ($color and $highlights{subcommands}) {
-            $usage_string = Term::ANSIColor::colored([qw/ bold red /], $usage_string);
-            $header = Term::ANSIColor::colored([qw/ bold red /], $header);
+        if ($highlights{subcommands}) {
+            $colored->([qw/ bold red /], $usage_string);
+            $colored->([qw/ bold red /], $header);
         }
-        elsif ($color) {
-            $header = Term::ANSIColor::colored([qw/ bold /], $header);
+        else {
+            $colored->([qw/ bold /], $header);
         }
         $usage .= " $usage_string";
         $body .= "$header\n";
@@ -230,11 +220,11 @@ EOM
         for my $param (@$parameters) {
             my $name = $param->name;
             my $highlight = $highlights{parameters}->{ $name };
-            push @highlights, ($color and $highlight) ? 1 : 0;
+            push @highlights, $highlight ? 1 : 0;
             my $summary = $param->summary;
             my $param_usage_header = $param->to_usage_header;
-            if ($color and $highlight) {
-                $param_usage_header = Term::ANSIColor::colored([qw/ bold red /], $param_usage_header);
+            if ($highlight) {
+                $colored->([qw/ bold red /], $param_usage_header);
             }
             $usage .= " " . $param_usage_header;
             my ($req, $multi) = (' ', '  ');
@@ -252,13 +242,10 @@ EOM
                 $maxlength = length $name;
             }
         }
-        my $parameters_string = "Parameters:";
-        if ($color) {
-            $parameters_string = Term::ANSIColor::colored([qw/ bold /], $parameters_string);
-        }
+        my $parameters_string = $colored->([qw/ bold /], "Parameters:");
         $body .= "$parameters_string\n";
         my @lines = $self->_output_table(\@table, [$maxlength]);
-        my $lines = $self->_colorize_lines(\@lines, \@highlights);
+        my $lines = $self->_colorize_lines(\@lines, \@highlights, $colored);
         $body .= $lines;
     }
 
@@ -270,7 +257,7 @@ EOM
         for my $opt (sort { $a->name cmp $b->name } @$options) {
             my $name = $opt->name;
             my $highlight = $highlights{options}->{ $name };
-            push @highlights, ($color and $highlight) ? 1 : 0;
+            push @highlights, $highlight ? 1 : 0;
             my $aliases = $opt->aliases;
             my $summary = $opt->summary;
             my @names = map {
@@ -292,13 +279,10 @@ EOM
 
             push @table, [$string, $req, $multi, $summary . $flags];
         }
-        my $options_string = "Options:";
-        if ($color) {
-            $options_string = Term::ANSIColor::colored([qw/ bold /], $options_string);
-        }
+        my $options_string = $colored->([qw/ bold /], "Options:");
         $body .= "\n$options_string\n";
         my @lines = $self->_output_table(\@table, [$maxlength]);
-        my $lines = $self->_colorize_lines(\@lines, \@highlights);
+        my $lines = $self->_colorize_lines(\@lines, \@highlights, $colored);
         $body .= $lines;
     }
 
@@ -331,12 +315,12 @@ sub generate_pod {
 }
 
 sub _colorize_lines {
-    my ($self, $lines, $highlights) = @_;
+    my ($self, $lines, $highlights, $colored) = @_;
     my $output = '';
     for my $i (0 .. $#$lines) {
         my $line = $lines->[ $i ];
         if ($highlights->[ $i ]) {
-            $line = Term::ANSIColor::colored([qw/ bold red /], $line);
+            $colored->([qw/ bold red /], $line);
         }
         $output .= $line;
     }
