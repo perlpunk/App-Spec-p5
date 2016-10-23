@@ -61,7 +61,30 @@ sub process {
         }
 
         my $values;
-        if ($spec->multiple) {
+        if ($spec->multiple and $spec->mapping) {
+            if (not defined $value) {
+                $items->{ $name } = $value = {};
+            }
+            $values = $value;
+
+            if (not keys %$values) {
+                if (defined (my $default = $spec->default)) {
+                    $values = { split m/=/, $default, 2 };
+                    $items->{ $name } = $values;
+                }
+            }
+
+            if (not keys %$values and $spec->required) {
+                $errs->{ $type }->{ $name } = "missing";
+                next;
+            }
+
+            if (not keys %$values) {
+                next;
+            }
+
+        }
+        elsif ($spec->multiple) {
             if (not defined $value) {
                 $items->{ $name } = $value = [];
             }
@@ -117,17 +140,34 @@ sub process {
         my $code = $validate{ $param_type }
             or die "Missing method for validation type $param_type";
 
-        my $possible_values = [];
+        my $possible_values = $spec->mapping ? {} : [];
         if (my $spec_values = $spec->values) {
-            my $op = $spec_values->{op};
-            my $args = {
-                runmode => "validation",
-                parameter => $name,
-            };
-            $possible_values = $app->cmd->$op($app, $args) || [];
+            if (my $op = $spec_values->{op}) {
+                my $args = {
+                    runmode => "validation",
+                    parameter => $name,
+                };
+                $possible_values = $app->cmd->$op($app, $args) || [];
+            }
+            elsif ($spec->mapping) {
+                $possible_values = $spec_values->{mapping};
+            }
+            else {
+                $possible_values = $values->{enum};
+            }
         }
 
-        for my $v (@$values) {
+        my @to_check = $spec->mapping
+            ? map { [ $_ => $values->{ $_ } ] } keys %$values
+            : @$values;
+        for my $item (@to_check) {
+            my ($key, $v);
+            if ($spec->mapping) {
+                ($key, $v) = @$item;
+            }
+            else {
+                $v = $item;
+            }
             # check type validity
             my $ok = $code->($v, $def);
             unless ($ok) {
@@ -147,7 +187,23 @@ sub process {
                 # TODO does not work for multiple
                 $items->{ $name } = $v;
             }
-            if (@$possible_values) {
+
+            if ($spec->mapping and keys %$possible_values) {
+                my $ok = 0;
+                if (exists $possible_values->{ $key }) {
+                    if (my $list = $possible_values->{ $key }) {
+                        $ok = any { $_ eq $v } @$list;
+                    }
+                    else {
+                        # can have any value
+                        $ok = 1;
+                    }
+                }
+                unless ($ok) {
+                    $errs->{ $type }->{ $name } = "invalid value";
+                }
+            }
+            elsif (@$possible_values) {
                 my $ok = any {
                     is_hashref($_) ? $_->{name} eq $v : $_ eq $v
                 } @$possible_values;

@@ -400,6 +400,10 @@ sub make_getopt {
             if ($opt->type eq 'flag') {
                 $spec .= '+';
             }
+            elsif ($opt->mapping) {
+                $result->{ $name } = {};
+                $spec .= '%';
+            }
             else {
                 $result->{ $name } = [];
                 $spec .= '@';

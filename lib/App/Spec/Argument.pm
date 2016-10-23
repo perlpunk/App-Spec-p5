@@ -10,6 +10,7 @@ use Moo;
 has name => ( is => 'ro' );
 has type => ( is => 'ro' );
 has multiple => ( is => 'ro' );
+has mapping => ( is => 'ro' );
 has required => ( is => 'ro' );
 has unique => ( is => 'ro' );
 has summary => ( is => 'ro' );
@@ -36,6 +37,7 @@ sub common {
         description => $description,
         type => $type,
         multiple => $args{multiple} ? 1 : 0,
+        mapping => $args{mapping} ? 1 : 0,
         required => $args{required} ? 1 : 0,
         unique => $args{unique} ? 1 : 0,
         default => $args{default},
@@ -234,7 +236,7 @@ Builds a hash from the dsl string
     %dsl = $class->from_dsl("verbose|v+ --Be verbose");
 
 
-=item name, type, multiple, required, unique, summary, description, default, completion, enum, values
+=item name, type, multiple, required, unique, summary, description, default, completion, enum, values, mapping
 
 Attributes which represent the ones from the spec.
 

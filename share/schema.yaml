@@ -46,6 +46,7 @@ definitions:
       summary: { type: string }
       description: { type: string }
       multiple: { '$ref': '#/definitions/bool' }
+      mapping: { '$ref': '#/definitions/bool' }
       unique: { '$ref': '#/definitions/bool' }
       type:
         oneOf:
@@ -62,6 +63,11 @@ definitions:
         additionalProperties: false
         properties:
           op: { type: string }
+          mapping:
+            type: object
+          enum:
+            type: array
+            items: { type: string }
       completion:
         oneOf:
           - { type: object }

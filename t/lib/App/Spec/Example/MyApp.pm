@@ -179,6 +179,12 @@ sub convert {
     }
 }
 
+sub config {
+    my ($self, $run, $args) = @_;
+    my $opt = $run->options;
+    my $param = $run->parameters;
+    warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\$opt], ['opt']);
+}
 
 sub convert_complete {
     my ($self, $run, $args) = @_;
