@@ -20,10 +20,10 @@ has enum => ( is => 'ro' );
 has values => ( is => 'ro' );
 
 sub common {
-    my ($class, $args) = @_;
+    my ($class, %args) = @_;
     my %dsl;
-    if (defined $args->{spec}) {
-        %dsl = $class->from_dsl(delete $args->{spec});
+    if (defined $args{spec}) {
+        %dsl = $class->from_dsl(delete $args{spec});
     }
     my $description = $args{description};
     my $summary = $args{summary};
@@ -31,17 +31,17 @@ sub common {
     $description //= '';
     my $type = $args{type} // 'string';
     my %hash = (
-        name => $args->{name},
+        name => $args{name},
         summary => $summary,
         description => $description,
         type => $type,
-        multiple => $args->{multiple} ? 1 : 0,
-        required => $args->{required} ? 1 : 0,
-        unique => $args->{unique} ? 1 : 0,
-        default => $args->{default},
-        completion => $args->{completion},
-        enum => $args->{enum},
-        values => $args->{values},
+        multiple => $args{multiple} ? 1 : 0,
+        required => $args{required} ? 1 : 0,
+        unique => $args{unique} ? 1 : 0,
+        default => $args{default},
+        completion => $args{completion},
+        enum => $args{enum},
+        values => $args{values},
         %dsl,
     );
     not defined $hash{ $_ } and delete $hash{ $_ } for keys %hash;

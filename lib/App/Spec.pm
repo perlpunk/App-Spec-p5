@@ -30,13 +30,13 @@ my $DATA = do { local $/; <DATA> };
 my $default_spec;
 
 sub build {
-    my ($class, $spec) = @_;
-    for (@{ $spec->{options} || [] }, @{ $spec->{parameters} || [] }) {
+    my ($class, %spec) = @_;
+    for (@{ $spec{options} || [] }, @{ $spec{parameters} || [] }) {
         $_ = { spec => $_ } unless ref $_;
     }
-    $_ = App::Spec::Option->build($_) for @{ $spec->{options} || [] };
-    $_ = App::Spec::Parameter->build($_) for @{ $spec->{parameters} || [] };
-    my $self = $class->new($spec);
+    $_ = App::Spec::Option->build(%$_) for @{ $spec{options} || [] };
+    $_ = App::Spec::Parameter->build(%$_) for @{ $spec{parameters} || [] };
+    my $self = $class->new(%spec);
 }
 
 sub _read_default_spec {
@@ -95,15 +95,15 @@ sub read {
 
         for my $name (keys %{ $spec->{subcommands} || [] }) {
             my $cmd = $spec->{subcommands}->{ $name };
-            $commands->{ $name } = App::Spec::Command->build({
+            $commands->{ $name } = App::Spec::Command->build(
                 name => $name,
                 %$cmd,
-            });
+            );
         }
     }
 
     $spec->{subcommands} = $commands;
-    my $self = $class->build($spec);
+    my $self = $class->build(%$spec);
     return $self;
 }
 
@@ -480,7 +480,7 @@ Takes a file, hashref or glob and returns generated appspec hashref
 
 Builds objects out of the hashref
 
-    my $appspec = App::Spec->build($hashref);
+    my $appspec = App::Spec->build(%hash);
 
 =item runner
 

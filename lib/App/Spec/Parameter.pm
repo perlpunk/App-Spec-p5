@@ -9,8 +9,8 @@ use base 'App::Spec::Argument';
 use Moo;
 
 sub build {
-    my ($class, $args) = @_;
-    my %hash = $class->common($args);
+    my ($class, %args) = @_;
+    my %hash = $class->common(%args);
     my $self = $class->new({
         %hash,
     });
@@ -53,10 +53,10 @@ This class inherits from L<App::Spec::Argument>
 
 =item build
 
-    my $param = App::Spec::Parameter->build({
+    my $param = App::Spec::Parameter->build(
         name => 'verbose',
         summary => 'lala',
-    });
+    );
 
 =item to_usage_header
 

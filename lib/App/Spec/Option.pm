@@ -11,10 +11,10 @@ use Moo;
 has aliases => ( is => 'ro' );
 
 sub build {
-    my ($class, $args) = @_;
-    my %hash = $class->common($args);
+    my ($class, %args) = @_;
+    my %hash = $class->common(%args);
     my $self = $class->new({
-        aliases => $args->{aliases} || [],
+        aliases => $args{aliases} || [],
         %hash,
     });
     return $self;
@@ -38,11 +38,11 @@ This class inherits from L<App::Spec::Argument>
 
 =item build
 
-    my $option = App::Spec::Option->build({
+    my $option = App::Spec::Option->build(
         name => 'verbose',
         summary => 'lala',
         aliases => ['v'],
-    });
+    );
 
 =back
 
