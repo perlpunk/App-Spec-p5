@@ -22,6 +22,7 @@ has errors => ( is => 'rw' );
 has op => ( is => 'rw' );
 has cmd => ( is => 'rw' );
 has response => ( is => 'rw' );
+has validation_errors => ( is => 'rw' );
 
 sub process {
     my ($self) = @_;
@@ -55,8 +56,11 @@ sub process {
         my ($ok) = $opt->process( \%errs, type => "parameters", app => $self );
         $ok &&= $opt->process( \%errs, type => "options", app => $self );
         $self->errors(\%errs) if not $ok;
-        if (not $ok and not $completion_parameter) {
-            $self->error_output;
+        unless ($ok) {
+            $self->validation_errors(\%errs);
+            if (not $completion_parameter) {
+                $self->error_output;
+            }
         }
     }
 

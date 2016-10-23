@@ -182,6 +182,7 @@ sub convert {
 
 sub convert_complete {
     my ($self, $run, $args) = @_;
+    my $errors = $run->validation_errors;
     my $runmode = $args->{runmode};
     return if ($runmode ne "completion" and $runmode ne "validation");
     my $comp_param = $args->{parameter};
@@ -190,19 +191,35 @@ sub convert_complete {
     if ($comp_param eq 'type') {
         return [sort keys %units];
     }
-    elsif ($comp_param eq 'source') {
+    if (delete $errors->{parameters}->{type}) {
+        $run->err("Invalid type\n");
+        return;
+    }
+    if ($comp_param eq 'source') {
         my $type = $param->{type};
         my $units = $units{ $type };
         return [map {
             +{ name => $_, description => $units->{ $_ }->{label} }
         } keys %$units];
     }
-    elsif ($comp_param eq 'target') {
+    if (delete $errors->{parameters}->{source}) {
+        $run->err("Invalid source\n");
+        return;
+    }
+    delete $errors->{parameters}->{target};
+    if (delete $errors->{parameters}->{value}) {
+        $run->err("Invalid value\n");
+        return;
+    }
+    if ($comp_param eq 'target') {
         my $type = $param->{type};
         my $source = $param->{source};
         my $value = $param->{value};
         my $units = $units{ $type };
         my @result;
+        if ($runmode eq "validation") {
+            return [sort keys %$units];
+        }
         for my $unit (sort keys %$units) {
             next if $unit eq $source;
             my $label = $units->{ $unit }->{label};
