@@ -15,7 +15,6 @@ has unique => ( is => 'ro' );
 has summary => ( is => 'ro' );
 has description => ( is => 'ro' );
 has default => ( is => 'ro' );
-has filter => ( is => 'ro' );
 has completion => ( is => 'ro' );
 has enum => ( is => 'ro' );
 has values => ( is => 'ro' );
@@ -43,7 +42,6 @@ sub common {
         completion => $args->{completion},
         enum => $args->{enum},
         values => $args->{values},
-        filter => $args->{filter},
         %dsl,
     );
     not defined $hash{ $_ } and delete $hash{ $_ } for keys %hash;

@@ -110,16 +110,6 @@ sub process {
             $values = [ $value ];
         }
 
-        if (my $filter = $spec->filter) {
-            my $method = $filter->{method}
-                or warn "Missing method for filter for $type '$name'";
-            @$values = map {
-                $app->$method(
-                    $name => $_, $self->parameters, $self->options,
-                );
-            } @$values;
-        }
-
         my $def;
         if (ref $param_type eq 'HASH') {
             ($param_type, $def) = %$param_type;
