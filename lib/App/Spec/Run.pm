@@ -8,6 +8,7 @@ our $VERSION = '0.000'; # VERSION
 use List::Util qw/ any /;
 use Data::Dumper;
 use App::Spec::Run::Validator;
+use App::Spec::Run::Response;
 use Getopt::Long qw/ :config pass_through bundling /;
 use Ref::Util qw/ is_arrayref /;
 use Moo;
@@ -20,9 +21,16 @@ has runmode => ( is => 'rw', default => 'normal' );
 has errors => ( is => 'rw' );
 has op => ( is => 'rw' );
 has cmd => ( is => 'rw' );
+has response => ( is => 'rw' );
 
-sub run {
+sub process {
     my ($self) = @_;
+
+    my $res = $self->response;
+    unless ($res) {
+        $res = App::Spec::Run::Response->new;
+        $self->response($res);
+    }
 
     my $completion_parameter = $ENV{PERL5_APPSPECRUN_COMPLETION_PARAMETER};
     $self->check_help;
@@ -36,33 +44,76 @@ sub run {
         );
     }
 
-    my $opt = App::Spec::Run::Validator->new({
-        options => $self->options,
-        option_specs => \%option_specs,
-        parameters => $self->parameters,
-        param_specs => \%param_specs,
-    });
-    my %errs;
-    my ($ok) = $opt->process( \%errs, type => "parameters", app => $self );
-    $ok &&= $opt->process( \%errs, type => "options", app => $self );
-    $self->errors(\%errs) if not $ok;
-
-    if (not $ok and not $completion_parameter) {
-        $self->error_output;
-    }
-
-    my $op = $self->op;
-
-    if ($completion_parameter) {
-        $self->completion_output(
+    unless ($self->response->halted) {
+        my $opt = App::Spec::Run::Validator->new({
+            options => $self->options,
+            option_specs => \%option_specs,
+            parameters => $self->parameters,
             param_specs => \%param_specs,
-            completion_parameter => $completion_parameter,
-        );
-    }
-    else {
-        $self->cmd->$op($self);
+        });
+        my %errs;
+        my ($ok) = $opt->process( \%errs, type => "parameters", app => $self );
+        $ok &&= $opt->process( \%errs, type => "options", app => $self );
+        $self->errors(\%errs) if not $ok;
+        if (not $ok and not $completion_parameter) {
+            $self->error_output;
+        }
     }
 
+    unless ($self->response->halted) {
+
+        my $op = $self->op;
+
+        if ($completion_parameter) {
+            $self->completion_output(
+                param_specs => \%param_specs,
+                completion_parameter => $completion_parameter,
+            );
+        }
+        else {
+            $self->cmd->$op($self);
+        }
+    }
+
+}
+
+sub run {
+    my ($self) = @_;
+
+    $self->process;
+
+    $self->finish;
+
+}
+
+sub out {
+    my ($self, $text) = @_;
+    my $res = $self->response;
+    $text .= "\n" unless $text =~ m/\n\z/;
+    $res->add_output($text);
+}
+
+sub err {
+    my ($self, $text) = @_;
+    my $res = $self->response;
+    $text .= "\n" unless $text =~ m/\n\z/;
+    $res->add_error($text);
+}
+
+sub halt {
+    my ($self, $exit) = @_;
+    $self->response->halted(1);
+    $self->response->exit($exit || 0);
+}
+
+sub finish {
+    my ($self) = @_;
+    my $res = $self->response;
+    $res->print_output;
+    $res->finished(1);
+    if (my $exit = $res->exit) {
+        exit $exit;
+    }
 }
 
 sub completion_output {
@@ -108,7 +159,7 @@ sub completion_output {
         }
     }
 
-    print $string;
+    $self->out($string);
     return;
 }
 
@@ -135,13 +186,13 @@ sub error_output {
         highlights => $errs,
         colored => $self->colorize_code('err'),
     );
-    say STDERR $help;
+    $self->err($help);
     for my $msg (@error_output) {
         $self->colorize
             and $msg = $self->colored('err', [qw/ error /], $msg);
-        print STDERR "$msg\n";
+        $self->err("$msg\n");
     }
-    die "sorry =(\n";
+    $self->halt(1);
 }
 
 sub colorize_code {
@@ -223,26 +274,29 @@ sub process_input {
         my $cmd = shift @ARGV;
         if (not defined $cmd) {
             if (not $op or $subcommand_required) {
-                warn $spec->usage(
+                $self->err($spec->usage(
                     commands => \@cmds,
                     colored => $self->colorize_code('err'),
                     highlights => {
                         subcommands => 1,
                     },
-                );
-                die $self->error("Missing subcommand(s)");
+                ));
+                $self->err( $self->error("Missing subcommand(s)") );
+                $self->halt(1);
             }
             last;
         }
         $cmd_spec = $commands->{ $cmd } or do {
-            warn $spec->usage(
+            $self->err($spec->usage(
                 commands => \@cmds,
                 colored => $self->colorize_code('err'),
                 highlights => {
                     subcommands => 1,
                 },
-            );
-            die $self->error("Unknown subcommand '$cmd'");
+            ));
+            $self->err( $self->error("Unknown subcommand '$cmd'") );
+            $self->halt(1);
+            last;
         };
         $subcommand_required = $cmd_spec->{subcommand_required} // 1;
         my $cmd_options = $cmd_spec->options;
@@ -257,24 +311,29 @@ sub process_input {
             param_specs => $param_specs,
         );
     }
-    my @names = sort keys %$commands;
-    unless ($op) {
-        if ($spec->has_subcommands) {
-            warn "Missing op for commands (@cmds)\n";
-            my $help = $spec->usage(
-                commands => \@cmds,
-                colored => $self->colorize_code('err'),
-            );
-            die $help;
+
+    unless ($self->response->halted) {
+        unless ($op) {
+            if ($spec->has_subcommands) {
+                $self->err( "Missing op for commands (@cmds)\n" );
+                my $help = $spec->usage(
+                    commands => \@cmds,
+                    colored => $self->colorize_code('err'),
+                );
+                $self->err( $help );
+                $self->halt(1);
+            }
+            else {
+                $op = "execute";
+            }
         }
-        else {
-            $op = "execute";
-        }
+        $self->commands(\@cmds);
+        $self->options(\%options);
+        $self->op($op);
+        return $op;
     }
-    $self->commands(\@cmds);
-    $self->options(\%options);
-    $self->op($op);
-    return $op;
+
+    return;
 }
 
 sub error {
@@ -324,7 +383,7 @@ sub cmd_help {
         commands => $cmds,
         colored => $run->colorize_code,
     );
-    say $help;
+    $run->out($help);
 }
 
 sub cmd_self_completion {
@@ -344,7 +403,7 @@ sub cmd_self_completion {
     my $completion = $spec->generate_completion(
         shell => $shell,
     );
-    say $completion;
+    $run->out($completion);
 }
 
 sub cmd_self_pod {
@@ -352,7 +411,7 @@ sub cmd_self_pod {
     my $spec = $run->spec;
     my $pod = $spec->generate_pod(
     );
-    say $pod;
+    $run->out($pod);
 }
 
 1;

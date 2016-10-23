@@ -12,8 +12,8 @@ sub execute {
     my $opt = $run->options;
     my $param = $run->parameters;
     if ($ENV{PERL5_APPSPECRUN_TEST}) {
-        say "Options: " . App::Spec::Example::MyApp->_dump_hash($opt);
-        say "Parameters: " .  App::Spec::Example::MyApp->_dump_hash($param);
+        $run->out("Options: " . App::Spec::Example::MyApp->_dump_hash($opt));
+        $run->out("Parameters: " .  App::Spec::Example::MyApp->_dump_hash($param));
         return;
     }
     warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\$opt], ['opt']);
