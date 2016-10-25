@@ -20,9 +20,9 @@ sub cook {
     my $param = $run->parameters;
     my $opt = $run->options;
     if ($ENV{PERL5_APPSPECRUN_TEST}) {
-        say "Subcommands: cook";
-        say "Options: " . $self->_dump_hash($opt);
-        say "Parameters: " .  $self->_dump_hash($param);
+        $run->out("Subcommands: cook");
+        $run->out("Options: " . $self->_dump_hash($opt));
+        $run->out("Parameters: " .  $self->_dump_hash($param));
         return;
     }
 
@@ -34,8 +34,8 @@ sub cook {
     push @with, $with if $with;
     push @with, "sugar" if $opt->{sugar};
 
-    say "Starting to cook $param->{drink}"
-    . (@with ? " with ". (join " and ", @with) : '');
+    $run->out("Starting to cook $param->{drink}"
+    . (@with ? " with ". (join " and ", @with) : ''));
 }
 
 my %countries = (
@@ -175,7 +175,7 @@ sub convert {
         my $sub = $conversions{ $type }->{ $key };
         my $result = $sub->($value);
         my $label = $units{ $type }->{ $target }->{label};
-        say "$result$label";
+        $run->out("$result$label");
     }
 }
 

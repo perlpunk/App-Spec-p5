@@ -1,7 +1,6 @@
 use strict;
 use warnings;
 use Test::More;
-use Test::Trap;
 use FindBin '$Bin';
 use lib "$Bin/lib";
 use App::Spec::Example::MyApp;
@@ -24,28 +23,39 @@ for my $test (@$testdata) {
     $name .= ", $_=$env->{$_}" for sort keys %$env;
 
     subtest $name => sub {
-        my @r = trap {
+        {
             local @ARGV = @$args;
             local %ENV = %ENV;
             if ($env) {
                 @ENV{ keys %$env } = values %$env;
             }
-            $runner->run;
+            $runner->process;
         };
-        ok ( defined $trap->die, "Expecting to exit with $exit" ) if $exit;
+        my $res = $runner->response;
+        my $exit = $res->exit;
+        my $outputs = $res->outputs;
+        my @stdout_output = map { $_->content } grep { not $_->error } @$outputs;
+        my @stderr_output = map { $_->content } grep { $_->error } @$outputs;
+
+        if ($exit) {
+            ok ( $exit, "Expecting to exit with $exit" );
+        }
+        else {
+            ok ( ! $exit, "Expecting to exit with $exit" );
+        }
         my $stdout = $test->{stdout} || [];
         my $stderr = $test->{stderr} || [];
         $stdout = [$stdout] unless ref $stdout eq 'ARRAY';
         $stderr = [$stderr] unless ref $stderr eq 'ARRAY';
+
         for my $item (@$stdout) {
             my $regex = $item->{regex};
-            like ( $trap->stdout, qr{$regex}, "Expecting STDOUT: $regex" );
+            like ( "@stdout_output", qr{$regex}, "Expecting STDOUT: $regex" );
         }
-        my $err = ($trap->die // '') . ($trap->stderr // '');
-        diag("STDERR: " . substr($err, 0, 240)) if $err;
+#        diag("STDERR: " . substr($err, 0, 240)) if $err;
         for my $item (@$stderr) {
             my $regex = $item->{regex};
-            like ( $err, qr{$regex}, "Expecting STDERR: $regex" );
+            like ( "@stderr_output", qr{$regex}, "Expecting STDERR: $regex" );
         }
     };
 }

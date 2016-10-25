@@ -35,20 +35,22 @@ is still buggy.
 
     use strict;
     use warnings;
-    use 5.010;
     package App::Birthdays;
     use base 'App::Spec::Run::Cmd';
 
     sub execute {
         my ($self, $run) = @_;
-        if (my $date = $run->options->{date}) {
-            say "Birthdays $date:\n";
-            print "Larry Wall";
-            if ($run->options->{age}) {
-                print " (Age: unknown)";
-            }
-            print "\n";
+        my $date = $run->options->{date};
+        my $output = <<"EOM";
+    Birthdays $date:
+
+    EOM
+        $output .= "Larry Wall";
+        if ($run->options->{age}) {
+            $output .= " (Age: unknown)";
         }
+        $output .= "\n";
+        $run->out($output);
     }
 
     package main;

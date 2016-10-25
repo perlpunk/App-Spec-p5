@@ -443,9 +443,7 @@ Your script:
     # this is equivalent to
     #my $run = App::Spec::Run->new(
     #    spec => $spec,
-    #    cmd => Your::App->new(
-    #        spec => $spec,
-    #    ),
+    #    cmd => Your::App->new,
     #);
     #$run->run;
 
@@ -455,10 +453,13 @@ Your App class:
     use base 'App::Spec::Run::Cmd';
 
     sub command1 {
-        my ($self) = @_;
-        my $options = $self->options;
-        my $param = $self->parameters;
+        my ($self, $run) = @_;
+        my $options = $run->options;
+        my $param = $run->parameters;
         # Do something
+        $run->out("Hello world!");
+        $run->err("oops");
+        # you can also use print directly
     }
 
 

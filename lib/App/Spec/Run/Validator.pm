@@ -124,7 +124,7 @@ sub process {
                 runmode => "validation",
                 parameter => $name,
             };
-            $possible_values = $app->cmd->$op($self, $args) || [];
+            $possible_values = $app->cmd->$op($app, $args) || [];
         }
 
         for my $v (@$values) {
