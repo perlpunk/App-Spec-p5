@@ -150,10 +150,10 @@ App::Spec::Argument - App::Spec objects representing command line options or par
 Options can be defined in a verbose way via key value pairs, but you can also
 use a shorter syntax.
 
+The idea comes from Ingy's L<http://www.schematype.org/>.
+
 The first item of the string is the name of the option using a syntax
 very similar to the one from L<Getopt::Long>.
-
-The idea comes from Ingy's L<http://www.schematype.org/>.
 
 Then you can optionally define a type, a default value and a summary.
 
@@ -165,26 +165,24 @@ START INLINE t/data/12.dsl.yaml
     ---
     # version with short dsl syntax
     name: myapp
-    appspec: { "version": 0.001 }
+    appspec: { version: 0.001 }
     class: App::Spec::Example::MyApp
     title: My Very Cool App
-    abstract: This app can do very cool things
     options:
-      - foo --Foo
-      - spec: verbose|v+ --be verbose
-      - spec: +req --Some required flag
-      - spec: number=i --integer option
+      - spec: foo                 --Foo
+      - spec: verbose|v+          --be verbose
+      - spec: +req                --Some required flag
+      - spec: number=i            --integer option
       - spec: number2|n= +integer --integer option
-      - date|d=s =today
-      - items=s@ --multi option
+      - spec: date|d=s =today
+      - spec: items=s@            --multi option
     
     ---
     # version with verbose syntax
     name: myapp
-    appspec: { "version": 0.001 }
+    appspec: { version: 0.001 }
     class: App::Spec::Example::MyApp
     title: My Very Cool App
-    abstract: This app can do very cool things
     options:
       - name: foo
         type: flag

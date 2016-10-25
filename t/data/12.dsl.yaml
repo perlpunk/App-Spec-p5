@@ -1,26 +1,24 @@
 ---
 # version with short dsl syntax
 name: myapp
-appspec: { "version": 0.001 }
+appspec: { version: 0.001 }
 class: App::Spec::Example::MyApp
 title: My Very Cool App
-abstract: This app can do very cool things
 options:
-  - foo --Foo
-  - spec: verbose|v+ --be verbose
-  - spec: +req --Some required flag
-  - spec: number=i --integer option
+  - spec: foo                 --Foo
+  - spec: verbose|v+          --be verbose
+  - spec: +req                --Some required flag
+  - spec: number=i            --integer option
   - spec: number2|n= +integer --integer option
-  - date|d=s =today
-  - items=s@ --multi option
+  - spec: date|d=s =today
+  - spec: items=s@            --multi option
 
 ---
 # version with verbose syntax
 name: myapp
-appspec: { "version": 0.001 }
+appspec: { version: 0.001 }
 class: App::Spec::Example::MyApp
 title: My Very Cool App
-abstract: This app can do very cool things
 options:
   - name: foo
     type: flag
