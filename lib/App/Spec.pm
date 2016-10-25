@@ -543,7 +543,7 @@ as perl itself.
 __DATA__
 options:
     -   name: help
-        description: Show command help
+        summary: Show command help
         type: flag
         aliases:
         - h
@@ -566,12 +566,12 @@ subcommands:
                         op: cmd_self_completion
                         options:
                             -   name: name
-                                description: name of the program (optional, override name in spec)
+                                summary: name of the program (optional, override name in spec)
                             -   name: zsh
-                                description: for zsh
+                                summary: for zsh
                                 type: flag
                             -   name: bash
-                                description: for bash
+                                summary: for bash
                                 type: flag
             pod:
                 summary: Pod documentation
