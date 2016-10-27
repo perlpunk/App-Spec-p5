@@ -233,6 +233,11 @@ Builds a hash from the dsl string
 
     %dsl = $class->from_dsl("verbose|v+ --Be verbose");
 
+
+=item name, type, multiple, required, unique, summary, description, default, completion, enum, values
+
+Attributes which represent the ones from the spec.
+
 =back
 
 =cut

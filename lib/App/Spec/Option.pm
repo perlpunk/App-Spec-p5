@@ -44,6 +44,10 @@ This class inherits from L<App::Spec::Argument>
         aliases => ['v'],
     );
 
+=item aliases
+
+Attribute which represents the one from the spec.
+
 =back
 
 =cut
