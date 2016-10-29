@@ -10,14 +10,17 @@ use YAML::XS ();
 $ENV{PERL5_APPSPECRUN_COLOR} = 'never';
 $ENV{PERL5_APPSPECRUN_TEST} = 1;
 
-my $testdata = YAML::XS::LoadFile("$Bin/appspec-tests.yaml");
+my @datafiles = map {
+    "$Bin/data/$_"
+} qw/ 11.completion.yaml 11.invalid.yaml 11.valid.yaml /;
+my @testdata = map { my $d = YAML::XS::LoadFile($_); @$d } @datafiles;
 
-for my $test (@$testdata) {
+for my $test (@testdata) {
     my $args = $test->{args};
     my $app = shift @$args;
     my $spec = App::Spec->read("$Bin/../examples/$app-spec.yaml");
     my $runner = $spec->runner;
-    my $exit = $test->{exit};
+    my $exit = $test->{exit} || 0;
     my $env = $test->{env};
     my $name = "$app args: (@$args)";
     $name .= ", $_=$env->{$_}" for sort keys %$env;
@@ -32,17 +35,13 @@ for my $test (@$testdata) {
             $runner->process;
         };
         my $res = $runner->response;
-        my $exit = $res->exit;
         my $outputs = $res->outputs;
         my @stdout_output = map { $_->content } grep { not $_->error } @$outputs;
         my @stderr_output = map { $_->content } grep { $_->error } @$outputs;
 
-        if ($exit) {
-            ok ( $exit, "Expecting to exit with $exit" );
-        }
-        else {
-            ok ( ! $exit, "Expecting to exit with $exit" );
-        }
+        my $res_exit = $res->exit;
+        cmp_ok ( $res_exit, '==', $exit, "Expecting to exit with $exit" );
+
         my $stdout = $test->{stdout} || [];
         my $stderr = $test->{stderr} || [];
         $stdout = [$stdout] unless ref $stdout eq 'ARRAY';

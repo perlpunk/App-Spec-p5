@@ -1,0 +1,53 @@
+---
+-
+  # missing parameter
+  args: [ myapp, cook ]
+  stderr:
+    - regex: 'Usage: myapp cook <drink> \[options\]'
+    - regex: (?s:drink.*missing)
+  exit: 1
+-
+  # invalid subcommand
+  args: [ myapp, foo ]
+  stderr:
+  - regex: 'Usage: myapp <subcommands>'
+  - regex: Unknown subcommand 'foo'
+  exit: 1
+-
+  args: [ myapp, cook, tea, --with, salt ]
+  stderr:
+  - regex: 'Usage: myapp cook <drink> \[options\]'
+  - regex: 'with.*invalid'
+  exit: 1
+-
+  args: [ myapp ]
+  stderr:
+  - regex: 'Usage: myapp <subcommands>'
+  - regex: Missing subcommand
+  exit: 1
+-
+  args: [ myapp, weather, show, Netherlands ]
+  stderr:
+  - regex: 'Usage: myapp weather show <country> <city>\+'
+  - regex: 'city.*missing'
+  exit: 1
+-
+   args: [ myapp, convert, nonsense ]
+   stderr:
+   - regex: 'Usage: myapp convert <type> <source> <value> <target>\+'
+   - regex: 'type.*invalid'
+   exit: 1
+-
+   args: [ myapp, convert, distance, meter, 23, foot, foot ]
+   stderr:
+   - regex: 'Usage: myapp convert <type> <source> <value> <target>\+'
+   - regex: 'target.*not_unique'
+   exit: 1
+-
+  args: [ myapp, convert, distance, meter, foobar, foot ]
+  stderr:
+  - regex: 'Usage: myapp convert <type> <source> <value> <target>\+'
+  - regex: 'value.*invalid'
+  exit: 1
+
+# vim:et:sts=2:sws=2:sw=2:foldmethod=indent

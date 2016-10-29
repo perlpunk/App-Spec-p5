@@ -1,0 +1,37 @@
+---
+-
+  args: [ mysimpleapp, -h ]
+  stdout:
+  - regex: 'Usage: mysimpleapp \[options\]'
+  exit: 0
+-
+  args: [ mysimpleapp, -vvv ]
+  stdout:
+  - regex: 'Options: verbose=3'
+  exit: 0
+-
+  args: [ myapp, cook, tea, --sugar, -vv, --verbose ]
+  stdout:
+    - regex: 'Options: sugar=1,verbose=3'
+    - regex: 'Parameters: drink=tea'
+    - regex: 'Subcommands: cook'
+  exit: 0
+-
+  args: [ myapp, cook, tea, --with, "almond milk" ]
+  stdout:
+    - regex: 'Options: with=almond milk'
+    - regex: 'Parameters: drink=tea'
+    - regex: 'Subcommands: cook'
+  exit: 0
+-
+  args: [ myapp, help ]
+  stdout:
+    regex: 'Usage: myapp <subcommands> \[options\]'
+  exit: 0
+-
+  args: [ myapp, convert, temperature, celsius, 23, kelvin ]
+  stdout:
+    - regex: 296\.15K
+  exit: 0
+
+# vim:et:sts=2:sws=2:sw=2:foldmethod=indent

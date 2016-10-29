@@ -1,0 +1,45 @@
+---
+-
+  env:
+    PERL5_APPSPECRUN_COMPLETION_PARAMETER: country
+    PERL5_APPSPECRUN_SHELL: zsh
+  args: [ myapp, weather, show ]
+  stdout:
+    regex: Austria\nGermany\nNetherlands
+  exit: 0
+-
+  env:
+    PERL5_APPSPECRUN_COMPLETION_PARAMETER: city
+    PERL5_APPSPECRUN_SHELL: bash
+  args: [ myapp, weather, show, Netherlands ]
+  stdout:
+    - regex: Amsterdam\tAmsterdam
+    - regex: Echt\tEcht
+  exit: 0
+-
+  env:
+    PERL5_APPSPECRUN_COMPLETION_PARAMETER: city
+  args: [ myapp, weather, show, Netherlands ]
+  stdout:
+    regex: '^$'
+  exit: 0
+
+-
+  env:
+    PERL5_APPSPECRUN_COMPLETION_PARAMETER: target
+    PERL5_APPSPECRUN_SHELL: zsh
+  args: [ myapp, convert, distance, meter, 23 ]
+  stdout:
+    - regex: 'foot'
+    - regex: 'inch'
+  exit: 0
+-
+  env:
+    PERL5_APPSPECRUN_COMPLETION_PARAMETER: target
+    PERL5_APPSPECRUN_SHELL: zsh
+  args: [ myapp, convert, distance, meter, 23, foot ]
+  stdout:
+    - regex: '^inch$'
+  exit: 0
+
+# vim:et:sts=2:sws=2:sw=2:foldmethod=indent
