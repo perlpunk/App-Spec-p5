@@ -158,7 +158,10 @@ sub params2pod {
         my $required = $param->required ? '*' : '';
         my $summary = $param->summary;
         my $multi = '';
-        if ($param->multiple) {
+        if ($param->mapping) {
+            $multi = '{}';
+        }
+        elsif ($param->multiple) {
             $multi = '[]';
         }
         my $flags = $self->spec->_param_flags_string($param);
@@ -179,7 +182,10 @@ sub options2pod {
         my $summary = $opt->summary;
         my $required = $opt->required ? '*' : '';
         my $multi = '';
-        if ($opt->multiple) {
+        if ($opt->mapping) {
+            $multi = '{}';
+        }
+        elsif ($opt->multiple) {
             $multi = '[]';
         }
         my @names = map {

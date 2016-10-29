@@ -30,7 +30,7 @@ configuration
 
 Options:
 
-    --set   [] key=value pair(s) (multiple)
+    --set   {} key=value pair(s) (multiple; mapping)
 
 
 =head3  convert
