@@ -75,7 +75,7 @@ sub process {
             );
         }
         else {
-            $self->cmd->$op($self);
+            $self->run_op($op);
         }
     }
 
@@ -88,6 +88,11 @@ sub run {
 
     $self->finish;
 
+}
+
+sub run_op {
+    my ($self, $op, $args) = @_;
+    $self->cmd->$op($self, $args);
 }
 
 sub out {
@@ -140,7 +145,7 @@ sub completion_output {
         runmode => "completion",
         parameter => $completion_parameter,
     };
-    my $result = $self->cmd->$op($self, $args);
+    my $result = $self->run_op($op, $args);
 
     my $string = '';
     my %seen;
