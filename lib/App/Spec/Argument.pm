@@ -10,6 +10,7 @@ use Moo;
 has name => ( is => 'ro' );
 has type => ( is => 'ro' );
 has multiple => ( is => 'ro' );
+has mapping => ( is => 'ro' );
 has required => ( is => 'ro' );
 has unique => ( is => 'ro' );
 has summary => ( is => 'ro' );
@@ -36,6 +37,7 @@ sub common {
         description => $description,
         type => $type,
         multiple => $args{multiple} ? 1 : 0,
+        mapping => $args{mapping} ? 1 : 0,
         required => $args{required} ? 1 : 0,
         unique => $args{unique} ? 1 : 0,
         default => $args{default},
@@ -57,6 +59,7 @@ sub from_dsl {
     my $name;
     my $type = "flag";
     my $multiple = 0;
+    my $mapping = 0;
     my $required = 0;
     $dsl =~ s/^\s+//;
 
@@ -105,6 +108,10 @@ sub from_dsl {
     elsif ($type eq 'string' and $dsl =~ s/^\@//) {
         $multiple = 1;
     }
+    elsif ($type eq 'string' and $dsl =~ s/^\%//) {
+        $multiple = 1;
+        $mapping = 1;
+    }
 
     $dsl =~ s/^\s+//;
 
@@ -131,6 +138,7 @@ sub from_dsl {
 
     $hash{type} = $type;
     $hash{multiple} = $multiple;
+    $hash{mapping} = $mapping;
     $hash{required} = $required;
     return %hash;
 }
@@ -176,6 +184,7 @@ START INLINE t/data/12.dsl.yaml
       - spec: number2|n= +integer --integer option
       - spec: date|d=s =today
       - spec: items=s@            --multi option
+      - spec: set=s%              --multiple key=value pairs
     
     ---
     # version with verbose syntax
@@ -211,6 +220,11 @@ START INLINE t/data/12.dsl.yaml
         type: string
         multiple: true
         summary: multi option
+      - name: set
+        type: string
+        multiple: true
+        mapping: true
+        summary: multiple key=value pairs
     
 
 
@@ -234,7 +248,7 @@ Builds a hash from the dsl string
     %dsl = $class->from_dsl("verbose|v+ --Be verbose");
 
 
-=item name, type, multiple, required, unique, summary, description, default, completion, enum, values
+=item name, type, multiple, required, unique, summary, description, default, completion, enum, values, mapping
 
 Attributes which represent the ones from the spec.
 

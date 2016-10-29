@@ -231,7 +231,10 @@ EOM
             if ($param->required) {
                 $req = "*";
             }
-            if ($param->multiple) {
+            if ($param->mapping) {
+                $multi = '{}';
+            }
+            elsif ($param->multiple) {
                 $multi = '[]';
             }
 
@@ -271,7 +274,10 @@ EOM
             if ($opt->required) {
                 $req = "*";
             }
-            if ($opt->multiple) {
+            if ($opt->mapping) {
+                $multi = '{}';
+            }
+            elsif ($opt->multiple) {
                 $multi = '[]';
             }
 
@@ -297,6 +303,9 @@ sub _param_flags_string {
     }
     if ($param->multiple) {
         push @flags, "multiple";
+    }
+    if ($param->mapping) {
+        push @flags, "mapping";
     }
     my $flags = @flags ? " (" . join("; ", @flags) . ")" : '';
     return $flags;
@@ -399,6 +408,10 @@ sub make_getopt {
         if ($opt->multiple) {
             if ($opt->type eq 'flag') {
                 $spec .= '+';
+            }
+            elsif ($opt->mapping) {
+                $result->{ $name } = {};
+                $spec .= '%';
             }
             else {
                 $result->{ $name } = [];

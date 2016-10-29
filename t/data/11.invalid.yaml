@@ -50,4 +50,29 @@
   - regex: 'value.*invalid'
   exit: 1
 
+-
+  args: [ myapp, config, --set, colour=auto ]
+  stderr:
+    - regex: 'set.*invalid'
+  exit: 1
+
+-
+  args: [ myapp, config, --set, colour= ]
+  stderr:
+    - regex: 'set.*invalid'
+  exit: 1
+
+-
+  args: [ myapp, config, --set, colour=nothanks ]
+  stderr:
+    - regex: 'set.*invalid'
+  exit: 1
+
+# TODO
+#-
+#  args: [ myapp, config, --set, colour ]
+#  stderr:
+#    - regex: 'set.*invalid'
+#  exit: 1
+
 # vim:et:sts=2:sws=2:sw=2:foldmethod=indent

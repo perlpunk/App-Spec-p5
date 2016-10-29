@@ -133,4 +133,20 @@ subcommands:
       values:
         op: convert_complete
       completion: true
+
+  config:
+    summary: configuration
+    op: config
+    options:
+    - name: set
+      summary: key=value pair(s)
+      multiple: true
+      mapping: true
+      values:
+        mapping:
+          color: [auto, never, always]
+          push.default: [current, matching, nothing, simple, upstream]
+          name: null
+          email: null
+
 # vim:et:sts=2:sws=2:sw=2:foldmethod=indent
