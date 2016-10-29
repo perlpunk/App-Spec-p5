@@ -23,7 +23,7 @@ _myapp() {
 
     0)
         __comp_current_options || return
-        __myapp_dynamic_comp 'commands' 'convert'$'\t''Various unit conversions'$'\n''cook'$'\t''Cook something'$'\n''help'$'\t''Show command help'$'\n''palindrome'$'\t''Check if a string is a palindrome'$'\n''weather'$'\t''Weather'
+        __myapp_dynamic_comp 'commands' 'config'$'\t''configuration'$'\n''convert'$'\t''Various unit conversions'$'\n''cook'$'\t''Cook something'$'\n''help'$'\t''Show command help'$'\n''palindrome'$'\t''Check if a string is a palindrome'$'\n''weather'$'\t''Weather'
 
     ;;
     *)
@@ -107,6 +107,21 @@ _myapp() {
         ;;
         esac
       ;;
+      config)
+        FLAGS+=()
+        OPTIONS+=('--set' 'key=value pair(s)')
+        __myapp_handle_options_flags
+          case $INDEX in
+          *)
+            __comp_current_options true || return # after parameters
+            case ${MYWORDS[$INDEX-1]} in
+              --set)
+              ;;
+
+            esac
+            ;;
+        esac
+      ;;
       convert)
         FLAGS+=()
         OPTIONS+=()
@@ -163,7 +178,7 @@ _myapp() {
 
         1)
             __comp_current_options || return
-            __myapp_dynamic_comp 'commands' 'convert'$'\n''cook'$'\n''palindrome'$'\n''weather'
+            __myapp_dynamic_comp 'commands' 'config'$'\n''convert'$'\n''cook'$'\n''palindrome'$'\n''weather'
 
         ;;
         *)
@@ -237,6 +252,12 @@ _myapp() {
 
             ;;
             esac
+          ;;
+          config)
+            FLAGS+=()
+            OPTIONS+=()
+            __myapp_handle_options_flags
+            __comp_current_options true || return # no subcmds, no params/opts
           ;;
           convert)
             FLAGS+=()

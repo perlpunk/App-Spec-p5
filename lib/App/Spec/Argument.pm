@@ -178,6 +178,7 @@ START INLINE t/data/12.dsl.yaml
       - spec: number2|n= +integer --integer option
       - spec: date|d=s =today
       - spec: items=s@            --multi option
+      - spec: set=s%            --multiple key=value pairs
     
     ---
     # version with verbose syntax
@@ -213,6 +214,11 @@ START INLINE t/data/12.dsl.yaml
         type: string
         multiple: true
         summary: multi option
+      - name: set
+        type: string
+        multiple: true
+        mapping: true
+        summary: multiple key=value pairs
     
 
 

@@ -22,6 +22,17 @@ This is a very useful description for myapp.
 
 =head2 SUBCOMMANDS
 
+=head3  config
+
+    myapp  config [options]
+
+configuration
+
+Options:
+
+    --set   [] key=value pair(s) (multiple)
+
+
 =head3  convert
 
     myapp  convert <type> <source> <value> <target>+

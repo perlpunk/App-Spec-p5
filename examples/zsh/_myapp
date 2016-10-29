@@ -15,7 +15,7 @@ _myapp() {
 
         case $state in
         cmd1)
-            _alternative 'args:cmd2:((convert\:"Various unit conversions" cook\:"Cook something" help\:"Show command help" palindrome\:"Check if a string is a palindrome" weather\:"Weather"))'
+            _alternative 'args:cmd2:((config\:"configuration" convert\:"Various unit conversions" cook\:"Cook something" help\:"Show command help" palindrome\:"Check if a string is a palindrome" weather\:"Weather"))'
         ;;
 
         args)
@@ -124,6 +124,20 @@ _myapp() {
 
                 esac
             ;;
+            config)
+
+                # ---- Command: config
+                _arguments -s -C \
+                    '1: :->cmd1' \
+                    '*--verbose[be verbose]' \
+                    '*-v[be verbose]' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
+                    '*--set[key=value pair(s)]:set' \
+                    && ret=0
+
+
+            ;;
             convert)
 
                 # ---- Command: convert
@@ -189,7 +203,7 @@ _myapp_convert_param_target_completion
 
                 case $state in
                 cmd2)
-                    _alternative 'args:cmd3:((convert cook palindrome weather))'
+                    _alternative 'args:cmd3:((config convert cook palindrome weather))'
                 ;;
 
                 args)
@@ -301,6 +315,21 @@ _myapp_convert_param_target_completion
                         ;;
 
                         esac
+                    ;;
+                    config)
+
+                        # ---- Command: help config
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '*--verbose[be verbose]' \
+                            '*-v[be verbose]' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
+                            '--all[]' \
+                            && ret=0
+
+
                     ;;
                     convert)
 
