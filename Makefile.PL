@@ -42,7 +42,6 @@ my %WriteMakefileArgs = (
     "FindBin" => 0,
     "Test::Deep" => 0,
     "Test::More" => 0,
-    "Test::Trap" => 0,
     "constant" => 0,
     "lib" => 0
   },
@@ -65,7 +64,6 @@ my %FallbackPrereqs = (
   "Term::ANSIColor" => 0,
   "Test::Deep" => 0,
   "Test::More" => 0,
-  "Test::Trap" => 0,
   "Text::Table" => 0,
   "YAML::XS" => 0,
   "base" => 0,
