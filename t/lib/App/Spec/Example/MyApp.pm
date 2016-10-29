@@ -3,14 +3,24 @@ use warnings;
 use strict;
 use 5.010;
 
+use Ref::Util qw/ is_arrayref is_hashref /;
+
 use base 'App::Spec::Run::Cmd';
 
 sub _dump_hash {
     my ($self, $hash) = @_;
     my @strings;
     for my $key (sort keys %$hash) {
-    next unless defined $hash->{ $key };
-        push @strings, "$key=$hash->{ $key }";
+        next unless defined $hash->{ $key };
+        my $value = $hash->{ $key };
+        if (is_hashref($value)) {
+            for my $key2 (sort keys %$value) {
+                push @strings, "$key=($key2=$value->{ $key2 })";
+            }
+        }
+        else {
+            push @strings, "$key=$value";
+        }
     }
     return join ",", @strings;
 }
@@ -183,6 +193,10 @@ sub config {
     my ($self, $run, $args) = @_;
     my $opt = $run->options;
     my $param = $run->parameters;
+    if ($ENV{PERL5_APPSPECRUN_TEST}) {
+        $run->out("Options: " . $self->_dump_hash($opt));
+        return;
+    }
     warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\$opt], ['opt']);
 }
 

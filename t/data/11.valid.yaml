@@ -34,4 +34,16 @@
     - regex: 296\.15K
   exit: 0
 
+-
+  args: [ myapp, config, --set, color=auto, --set, push.default=current ]
+  stdout:
+    - regex: 'Options: set=\(color=auto\),set=\(push.default=current\)'
+  exit: 0
+
+-
+  args: [ myapp, config, --set, name=wall]
+  stdout:
+    - regex: 'Options: set=\(name=wall\)'
+  exit: 0
+
 # vim:et:sts=2:sws=2:sw=2:foldmethod=indent
