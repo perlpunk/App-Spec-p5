@@ -59,6 +59,7 @@ sub from_dsl {
     my $name;
     my $type = "flag";
     my $multiple = 0;
+    my $mapping = 0;
     my $required = 0;
     $dsl =~ s/^\s+//;
 
@@ -107,6 +108,10 @@ sub from_dsl {
     elsif ($type eq 'string' and $dsl =~ s/^\@//) {
         $multiple = 1;
     }
+    elsif ($type eq 'string' and $dsl =~ s/^\%//) {
+        $multiple = 1;
+        $mapping = 1;
+    }
 
     $dsl =~ s/^\s+//;
 
@@ -133,6 +138,7 @@ sub from_dsl {
 
     $hash{type} = $type;
     $hash{multiple} = $multiple;
+    $hash{mapping} = $mapping;
     $hash{required} = $required;
     return %hash;
 }
@@ -178,7 +184,7 @@ START INLINE t/data/12.dsl.yaml
       - spec: number2|n= +integer --integer option
       - spec: date|d=s =today
       - spec: items=s@            --multi option
-      - spec: set=s%            --multiple key=value pairs
+      - spec: set=s%              --multiple key=value pairs
     
     ---
     # version with verbose syntax
