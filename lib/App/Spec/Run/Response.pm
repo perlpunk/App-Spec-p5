@@ -1,6 +1,9 @@
 use strict;
 use warnings;
 package App::Spec::Run::Response;
+
+our $VERSION = '0.000'; # VERSION
+
 use App::Spec::Run::Output;
 
 use Moo;
