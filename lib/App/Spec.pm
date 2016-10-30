@@ -6,7 +6,7 @@ use 5.010;
 
 our $VERSION = '0.000'; # VERSION
 
-use App::Spec::Command;
+use App::Spec::Subcommand;
 use App::Spec::Option;
 use App::Spec::Parameter;
 use List::Util qw/ any /;
@@ -95,7 +95,7 @@ sub read {
 
         for my $name (keys %{ $spec->{subcommands} || [] }) {
             my $cmd = $spec->{subcommands}->{ $name };
-            $commands->{ $name } = App::Spec::Command->build(
+            $commands->{ $name } = App::Spec::Subcommand->build(
                 name => $name,
                 %$cmd,
             );

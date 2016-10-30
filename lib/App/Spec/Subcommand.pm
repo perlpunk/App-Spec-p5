@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-package App::Spec::Command;
+package App::Spec::Subcommand;
 
 our $VERSION = '0.000'; # VERSION
 
@@ -36,7 +36,7 @@ sub build {
     }
     for my $name (keys %$subcommands) {
         my $cmd = $subcommands->{ $name };
-        $subcommands{ $name } = App::Spec::Command->build(
+        $subcommands{ $name } = App::Spec::Subcommand->build(
             name => $name,
             %$cmd
         );
