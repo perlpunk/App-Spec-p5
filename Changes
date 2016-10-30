@@ -1,5 +1,11 @@
 Revision history for Perl module App::Spec
 
+0.003_002 Sun Oct 30 11:09:16 CET 2016
+    - more refactoring
+    - update schema
+    - Feture: allow 'mapping' options and parameters (Like Getopt::Long
+      supports)
+
 0.003_001 Fri Oct 21 00:17:56 CEST 2016
     - more refactoring
     - more documentation
