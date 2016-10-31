@@ -377,16 +377,16 @@ sub generate_completion {
 
     if ($shell eq "zsh") {
         require App::Spec::Completion::Zsh;
-        my $completer = App::Spec::Completion::Zsh->new({
+        my $completer = App::Spec::Completion::Zsh->new(
             spec => $self,
-        });
+        );
         return $completer->generate_completion(%args);
     }
     elsif ($shell eq "bash") {
         require App::Spec::Completion::Bash;
-        my $completer = App::Spec::Completion::Bash->new({
+        my $completer = App::Spec::Completion::Bash->new(
             spec => $self,
-        });
+        );
         return $completer->generate_completion(%args);
     }
 }

@@ -1,10 +1,12 @@
+# ABSTRACT: Shell Completion generator for bash
 use strict;
 use warnings;
 package App::Spec::Completion::Bash;
 
 our $VERSION = '0.000'; # VERSION
 
-use base 'App::Spec::Completion';
+use Moo;
+extends 'App::Spec::Completion';
 
 sub generate_completion {
     my ($self, %args) = @_;
@@ -441,34 +443,34 @@ EOM
     return $function_name;
 }
 
-sub list_to_alternative {
-    my ($self, %args) = @_;
-    my $list = $args{list};
-    my $maxlength = 0;
-    for (@$list) {
-        if (length($_) > $maxlength) {
-            $maxlength = length $_;
-        }
-    }
-    my @alt = map {
-        my ($alt_name, $summary);
-        if (ref $_ eq 'ARRAY') {
-            ($alt_name, $summary) = @$_;
-        }
-        else {
-            ($alt_name, $summary) = ($_, '');
-        }
-        $summary //= '';
-        $alt_name =~ s/:/\\\\:/g;
-        $summary =~ s/['`]/'"'"'/g;
-        $summary =~ s/\$/\\\$/g;
-        if (length $summary) {
-            $alt_name .= " " x ($maxlength - length($alt_name));
-        }
-        $alt_name;
-    } @$list;
-    return join '', map { "$_\n" } @alt;
-}
+# sub list_to_alternative {
+#     my ($self, %args) = @_;
+#     my $list = $args{list};
+#     my $maxlength = 0;
+#     for (@$list) {
+#         if (length($_) > $maxlength) {
+#             $maxlength = length $_;
+#         }
+#     }
+#     my @alt = map {
+#         my ($alt_name, $summary);
+#         if (ref $_ eq 'ARRAY') {
+#             ($alt_name, $summary) = @$_;
+#         }
+#         else {
+#             ($alt_name, $summary) = ($_, '');
+#         }
+#         $summary //= '';
+#         $alt_name =~ s/:/\\\\:/g;
+#         $summary =~ s/['`]/'"'"'/g;
+#         $summary =~ s/\$/\\\$/g;
+#         if (length $summary) {
+#             $alt_name .= " " x ($maxlength - length($alt_name));
+#         }
+#         $alt_name;
+#     } @$list;
+#     return join '', map { "$_\n" } @alt;
+# }
 
 sub completion_parameter {
     my ($self, %args) = @_;
@@ -640,3 +642,47 @@ EOM
 }
 
 1;
+
+__DATA__
+
+=pod
+
+=head1 NAME
+
+App::Spec::Completion::Bash - Shell Completion generator for bash
+
+See also L<App::Spec::Completion> and L<App::Spec::Completion::Zsh>
+
+=head1 SYNOPSIS
+
+my $completer = App::Spec::Completion::Bash->new( spec => $appspec );
+
+=head1 METHODS
+
+=over 4
+
+=item generate_completion
+
+    my $completion = $completer->generate_completion;
+
+=item completion_commands
+
+=item completion_options
+
+=item completion_parameter
+
+=item completion_parameters
+
+=item dynamic_completion
+
+=item escape_singlequote
+
+    (@names) = $self->escape_singlequote( @names );
+
+=item flags_options
+
+    my ($flags_string, $options_string) = $completer->flags_options($global_options);
+
+=back
+
+=cut

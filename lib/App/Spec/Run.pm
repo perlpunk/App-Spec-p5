@@ -17,12 +17,11 @@ has spec => ( is => 'ro' );
 has options => ( is => 'rw' );
 has parameters => ( is => 'rw', default => sub { +{} } );
 has commands => ( is => 'rw' );
-has runmode => ( is => 'rw', default => 'normal' );
-has errors => ( is => 'rw' );
+#has runmode => ( is => 'rw', default => 'normal' );
+has validation_errors => ( is => 'rw' );
 has op => ( is => 'rw' );
 has cmd => ( is => 'rw' );
 has response => ( is => 'rw' );
-has validation_errors => ( is => 'rw' );
 
 sub process {
     my ($self) = @_;
@@ -55,9 +54,8 @@ sub process {
         my %errs;
         my ($ok) = $opt->process( \%errs, type => "parameters", app => $self );
         $ok &&= $opt->process( \%errs, type => "options", app => $self );
-        $self->errors(\%errs) if not $ok;
+        $self->validation_errors(\%errs) if not $ok;
         unless ($ok) {
-            $self->validation_errors(\%errs);
             if (not $completion_parameter) {
                 $self->error_output;
             }
@@ -174,7 +172,7 @@ sub completion_output {
 
 sub error_output {
     my ($self) = @_;
-    my $errs = $self->errors;
+    my $errs = $self->validation_errors;
     my @error_output;
     for my $key (sort keys %$errs) {
         my $errors = $errs->{ $key };
@@ -197,8 +195,7 @@ sub error_output {
     );
     $self->err($help);
     for my $msg (@error_output) {
-        $self->colorize
-            and $msg = $self->colored('err', [qw/ error /], $msg);
+        $msg = $self->colored('err', [qw/ error /], $msg);
         $self->err("$msg\n");
     }
     $self->halt(1);
@@ -290,7 +287,7 @@ sub process_input {
                         subcommands => 1,
                     },
                 ));
-                $self->err( $self->error("Missing subcommand(s)") );
+                $self->err( $self->colorize_error("Missing subcommand(s)") );
                 $self->halt(1);
             }
             last;
@@ -303,7 +300,7 @@ sub process_input {
                     subcommands => 1,
                 },
             ));
-            $self->err( $self->error("Unknown subcommand '$cmd'") );
+            $self->err( $self->colorize_error("Unknown subcommand '$cmd'") );
             $self->halt(1);
             last;
         };
@@ -345,7 +342,7 @@ sub process_input {
     return;
 }
 
-sub error {
+sub colorize_error {
     my ($self, $msg) = @_;
     $msg = $self->colored('err', [qw/ error /], $msg) . "\n";
 }
@@ -428,10 +425,22 @@ sub cmd_self_pod {
 __END__
 =pod
 
+=head1 NAME
+
+App::Spec::Run - App::Spec framework to run your app
+
 =head1 DESCRIPTION
 
 App::Spec::Run is the framework which runs your app defined by the spec.
 Your app class should inherit from App::Spec::Run::Cmd.
+
+=head1 SYNOPSIS
+
+    sub your_command {
+        my ($self, $run) = @_;
+        my $options = $run->options;
+        $run->out("It works");
+    }
 
 =head1 METHODS
 
@@ -439,7 +448,161 @@ Your app class should inherit from App::Spec::Run::Cmd.
 
 =item run
 
+    $run->run;
+
 Actually runs your app
+
+=item process
+
+    $run->process;
+
+Processes input, validates, runs your command and fills the
+response object.
+
+Does not print the output and does not exit.
+
+=item out
+
+    $run->out("Hello world!");
+
+Appends to response output. Adds a newline if not present
+
+=item err
+
+    $run->err("Oops, that went wrong");
+
+Appends to response error output. Adds a newline if not present
+
+=item halt
+
+    $run->halt;
+
+Further processing is halted.
+
+=item finish
+
+    $run->finish;
+
+Prints the output and exits with the exit code stored in C<response>.
+
+=item process_input
+
+    $run->process_input(
+        option_specs => \%option_specs,
+        param_specs => \%param_specs,
+    );
+
+=item process_parameters
+
+    $run->process_parameters(
+        parameter_list => $global_parameters,
+        param_specs => $param_specs,
+    );
+
+=item run_op
+
+    $run->run_op("yourcommand");
+    # shortcut for
+    $run->cmd->yourcommand($run);
+
+=item completion_output
+
+    $run->completion_output(
+        param_specs => \%param_specs,
+        completion_parameter => $completion_parameter,
+    );
+
+Is called when in completion mode
+
+=item colored
+
+Returns the given text colored, if colors are active for the given
+output.
+
+    $msg = $run->colored('err', [qw/ error /], "Oops");
+    $msg = $run->colored('out', [qw/ green /], "Everything is fine!");
+
+=item colorize
+
+    my $color_active = $run->colorize('out');
+    my $color_error_active = $run->colorize('err');
+
+Returns 1 or 0 if given output color are active. That means, the output
+is going to a terminal instead of being redirected.
+
+=item colorize_code
+
+    my $colored = $run->colorize_code('out');
+    my $text = $colored->(['green'], "Hurray");
+    # or
+    my $text = "Hurray";
+    $colored->(['green'], $text);
+
+Returns a coderef which you can use for coloring
+
+=item colorize_error
+
+    my $msg = $run->colorize_error("ouch");
+
+Returns the message in the standard error color (bold red).
+
+=item error_output
+
+    $run->error_output;
+
+Outputs any errors.
+
+Calls C<halt>
+
+=item check_help, cmd_help, cmd_self_completion, cmd_self_pod
+
+Will probably be removed as soon as help is turned into a plugin
+
+=back
+
+=head1 ATTRIBUTES
+
+=over 4
+
+=item spec
+
+Your spec, (App::Spec)
+
+=item options
+
+A hashref with the given options
+
+    {
+        verbose => 1,
+        foo => 23,
+    }
+
+=item parameters
+
+A hashref with the given parameters
+
+=item commands
+
+An arrayref containing all subcommands from the commandline
+
+=item validation_errors
+
+Contains errors from option/parameter validation
+
+=item op
+
+Contains the operation (subroutine) which will be executed to run
+yor command
+
+=item cmd
+
+This is an instance of your app class
+
+=item response
+
+This contains the response of your command (exit code, output, ...)
+
+See L<App::Spec::Run::Response>
 
 =back
 

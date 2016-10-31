@@ -1,10 +1,12 @@
+# ABSTRACT: Shell Completion generator for zsh
 use strict;
 use warnings;
 package App::Spec::Completion::Zsh;
 
 our $VERSION = '0.000'; # VERSION
 
-use base 'App::Spec::Completion';
+use Moo;
+extends 'App::Spec::Completion';
 
 sub generate_completion {
     my ($self, %args) = @_;
@@ -422,3 +424,41 @@ sub options {
 
 
 1;
+
+__DATA__
+
+=pod
+
+=head1 NAME
+
+App::Spec::Completion::Zsh - Shell Completion generator for zsh
+
+See also L<App::Spec::Completion> and L<App::Spec::Completion::Zsh>
+
+=head1 SYNOPSIS
+
+my $completer = App::Spec::Completion::Zsh->new( spec => $appspec );
+
+=head1 METHODS
+
+=over 4
+
+=item generate_completion
+
+    my $completion = $completer->generate_completion;
+
+=item commands_alternative
+
+=item completion_commands
+
+=item dynamic_completion
+
+=item list_to_alternative
+
+=item options
+
+=item parameters
+
+=back
+
+=cut
