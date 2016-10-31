@@ -3,6 +3,7 @@ use warnings;
 package App::Spec::Role::Command;
 
 use List::Util qw/ any /;
+use App::Spec::Option;
 
 use Moo::Role;
 
@@ -65,22 +66,6 @@ sub read {
     my $spec = $class->load_data($file);
 
     my $has_subcommands = $spec->{subcommands} ? 1 : 0;
-    my $default;
-    {
-        $default = App::Spec->_read_default_spec;
-
-        for my $opt (@{ $default->{options} }) {
-            my $name = $opt->{name};
-            # TODO
-            # this should be moved somewhere else since the name might not
-            # be parsed from dsl yet
-            no warnings 'uninitialized';
-            unless (any { (ref $_ ? $_->{name} : $_) eq $name } @{ $spec->{options} }) {
-                push @{ $spec->{options} }, $opt;
-            }
-        }
-
-    }
 
     my @plugins = $class->default_plugins;
     push @plugins, @{ $spec->{plugins} || [] };
@@ -139,13 +124,31 @@ sub init_plugins {
     my $plugins = $self->plugins;
     if (@$plugins) {
         my $subcommands = $self->subcommands;
+        my $options = $self->options;
         for my $plugin (@$plugins) {
             if ($plugin->does('App::Spec::Role::Plugin::Subcommand')) {
                 my $subc = $plugin->install_subcommands( spec => $self );
+
                 if ($subcommands) {
                     $subcommands->{ $subc->name } ||= $subc;
                 }
             }
+
+            if ($plugin->does('App::Spec::Role::Plugin::GlobalOptions')) {
+                my $new_opts = $plugin->install_options( spec => $self );
+                if ($new_opts) {
+                    $options ||= [];
+
+                    for my $opt (@$new_opts) {
+                        $opt = App::Spec::Option->build(%$opt);
+                        unless (any { $_->name eq $opt->name } @$options) {
+                            push @$options, $opt;
+                        }
+                    }
+
+                }
+            }
+
         }
     }
 }

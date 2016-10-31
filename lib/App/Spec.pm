@@ -10,7 +10,6 @@ use App::Spec::Subcommand;
 use App::Spec::Option;
 use App::Spec::Parameter;
 use YAML::XS ();
-use Storable qw/ dclone /;
 
 use Moo;
 
@@ -19,13 +18,6 @@ with('App::Spec::Role::Command');
 has title => ( is => 'rw' );
 has abstract => ( is => 'rw' );
 
-my $DATA = do { local $/; <DATA> };
-my $default_spec;
-
-sub _read_default_spec {
-    $default_spec ||= YAML::XS::Load($DATA);
-    return dclone $default_spec;
-}
 
 
 
@@ -446,10 +438,3 @@ as perl itself.
 
 1;
 
-__DATA__
-options:
-    -   name: help
-        summary: Show command help
-        type: flag
-        aliases:
-        - h

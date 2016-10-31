@@ -1,16 +1,27 @@
 use strict;
 use warnings;
 package App::Spec::Plugin::Help;
+use YAML::XS ();
 
 use Moo;
 with 'App::Spec::Role::Plugin::Subcommand';
+with 'App::Spec::Role::Plugin::GlobalOptions';
 
-my $yaml = do { local $/; <DATA> };
+my $yaml;
+my $cmd;
+my $options;
+sub read_data {
+    unless ($yaml) {
+        $yaml = do { local $/; <DATA> };
+        ($cmd, $options) = YAML::XS::Load($yaml);
+    }
+}
 
 sub install_subcommands {
     my ($class, %args) = @_;
     my $parent = $args{spec};
-    my $appspec = App::Spec::Subcommand->read(\$yaml);
+    read_data();
+    my $appspec = App::Spec::Subcommand->read($cmd);
 
     my $help_subcmds = $appspec->subcommands || {};
 
@@ -48,6 +59,11 @@ sub _add_subcommands {
     }
 }
 
+sub install_options {
+    my ($class, %args) = @_;
+    read_data();
+    return $options;
+}
 
 1;
 
@@ -60,4 +76,10 @@ op: cmd_help
 subcommand_required: 0
 options:
     - spec: all
+---
+-   name: help
+    summary: Show command help
+    type: flag
+    aliases:
+      - h
 
