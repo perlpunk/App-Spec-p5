@@ -117,7 +117,13 @@ sub weather_complete {
 sub palindrome{
     my ($self, $run) = @_;
     my $string = $run->parameters->{string};
-    say +($string eq reverse $string) ? "yes" : "nope";
+    my $argv = $run->argv;
+    if (@$argv) {
+        $run->err("Sorry, only one palindrome at a time");
+        $run->halt(1);
+        return;
+    }
+    $run->out( ($string eq reverse $string) ? "yes" : "nope" );
 }
 
 my %units = (

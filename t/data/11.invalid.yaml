@@ -75,4 +75,9 @@
 #    - regex: 'set.*invalid'
 #  exit: 1
 
+-
+  args: [ myapp, palindrome, aha, heh ]
+  stderr:
+    - regex: 'Sorry, only one palindrome at a time'
+  exit: 1
 # vim:et:sts=2:sws=2:sw=2:foldmethod=indent

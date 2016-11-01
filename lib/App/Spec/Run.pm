@@ -17,6 +17,8 @@ has spec => ( is => 'ro' );
 has options => ( is => 'rw' );
 has parameters => ( is => 'rw', default => sub { +{} } );
 has commands => ( is => 'rw' );
+has argv => ( is => 'rw', default => sub { +[] } );
+has argv_orig => ( is => 'rw', default => sub { +[] } );
 #has runmode => ( is => 'rw', default => 'normal' );
 has validation_errors => ( is => 'rw' );
 has op => ( is => 'rw' );
@@ -26,6 +28,8 @@ has response => ( is => 'rw' );
 sub process {
     my ($self) = @_;
 
+    $self->argv_orig([ @ARGV ]);
+    $self->argv( \@ARGV );
     my $res = $self->response;
     unless ($res) {
         $res = App::Spec::Run::Response->new;
@@ -241,11 +245,11 @@ sub process_parameters {
         my $required = $p->required;
         my $value;
         if ($multiple) {
-            $value = [@ARGV];
-            @ARGV = ();
+            $value = [@{ $self->argv }];
+            @{ $self->argv } = ();
         }
         else {
-            $value = shift @ARGV;
+            $value = shift @{ $self->argv };
         }
         $parameters->{ $name } = $value;
         $param_specs->{ $name } = $p;
@@ -277,7 +281,7 @@ sub process_input {
     my $subcommand_required = 1;
     while (keys %$commands) {
         my @k = keys %$commands;
-        my $cmd = shift @ARGV;
+        my $cmd = shift @{ $self->argv };
         if (not defined $cmd) {
             if (not $op or $subcommand_required) {
                 $self->err($spec->usage(
@@ -364,15 +368,15 @@ sub check_help {
 
     my $op;
     if ($self->spec->has_subcommands) {
-        if ($help and (not @ARGV or $ARGV[0] ne "help")) {
+        if ($help and (not @{ $self->argv } or $self->argv->[0] ne "help")) {
             # call subcommand 'help'
-            unshift @ARGV, "help";
+            unshift @{ $self->argv }, "help";
         }
     }
     else {
         if ($help) {
             $op = "cmd_help";
-            unshift @ARGV, "--help";
+            unshift @{ $self->argv }, "--help";
         }
     }
 
@@ -584,6 +588,15 @@ A hashref with the given parameters
 =item commands
 
 An arrayref containing all subcommands from the commandline
+
+=item argv_orig
+
+This contains the original contents of C<@ARGV> before processing
+
+=item argv
+
+This is a reference to C<@ARGV>. It will contain the rest of the
+arguments which weren't processed as any subcommand, option or parameter.
 
 =item validation_errors
 

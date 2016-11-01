@@ -51,7 +51,6 @@ for my $test (@testdata) {
             my $regex = $item->{regex};
             like ( "@stdout_output", qr{$regex}, "Expecting STDOUT: $regex" );
         }
-#        diag("STDERR: " . substr($err, 0, 240)) if $err;
         for my $item (@$stderr) {
             my $regex = $item->{regex};
             like ( "@stderr_output", qr{$regex}, "Expecting STDERR: $regex" );
