@@ -17,8 +17,8 @@ has spec => ( is => 'ro' );
 has options => ( is => 'rw' );
 has parameters => ( is => 'rw', default => sub { +{} } );
 has commands => ( is => 'rw' );
-has argv => ( is => 'rw', default => sub { +[] } );
-has argv_orig => ( is => 'rw', default => sub { +[] } );
+has argv => ( is => 'rw' );
+has argv_orig => ( is => 'rw' );
 #has runmode => ( is => 'rw', default => 'normal' );
 has validation_errors => ( is => 'rw' );
 has op => ( is => 'rw' );
@@ -28,8 +28,13 @@ has response => ( is => 'rw' );
 sub process {
     my ($self) = @_;
 
-    $self->argv_orig([ @ARGV ]);
-    $self->argv( \@ARGV );
+    my $argv = $self->argv;
+    unless ($argv) {
+        $argv = \@ARGV;
+        $self->argv($argv);
+        $self->argv_orig([ @$argv ]);
+    }
+
     my $res = $self->response;
     unless ($res) {
         $res = App::Spec::Run::Response->new;
@@ -436,7 +441,7 @@ App::Spec::Run - App::Spec framework to run your app
 =head1 DESCRIPTION
 
 App::Spec::Run is the framework which runs your app defined by the spec.
-Your app class should inherit from App::Spec::Run::Cmd.
+Your app class should inherit from L<App::Spec::Run::Cmd>.
 
 =head1 SYNOPSIS
 
@@ -450,11 +455,35 @@ Your app class should inherit from App::Spec::Run::Cmd.
 
 =over 4
 
+=item Constructor
+
+You can create the object yourself like this:
+
+    my $run = App::Spec::Run->new(
+        spec => $appspec,
+        cmd => App::YourApp->new,
+    );
+
+Or you use the runner method of L<App::Spec>, which will create it for you:
+
+    my $run = $appspec->runner(...);
+
+Both methods take optional arguments:
+
+    my $run = App::Spec::Run->new(
+        spec => $appspec,
+        cmd => App::YourApp->new,
+
+        # Custom array instead of the default ARGV.
+        # The contents of this array will be modified
+        argv => \@my_arguments,
+    );
+
 =item run
 
     $run->run;
 
-Actually runs your app
+Actually runs your app. Calls C<process> and C<finish>.
 
 =item process
 
@@ -591,12 +620,14 @@ An arrayref containing all subcommands from the commandline
 
 =item argv_orig
 
-This contains the original contents of C<@ARGV> before processing
+This contains the original contents of C<argv> before processing
 
 =item argv
 
-This is a reference to C<@ARGV>. It will contain the rest of the
-arguments which weren't processed as any subcommand, option or parameter.
+This is a reference to the commandline arguments array C<@ARGV>, or the
+array reference you specified otherwise. When calling your command method,
+it will contain the rest of the arguments which weren't processed as
+any subcommand, option or parameter.
 
 =item validation_errors
 
