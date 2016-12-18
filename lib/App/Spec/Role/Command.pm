@@ -9,11 +9,11 @@ use Ref::Util qw/ is_arrayref /;
 use Moo::Role;
 
 has name => ( is => 'rw' );
-has appspec => ( is => 'rw' );
 has markup => ( is => 'rw', default => 'pod' );
 has class => ( is => 'rw' );
 has op => ( is => 'ro' );
 has plugins => ( is => 'ro' );
+has plugins_by_type => ( is => 'ro', default => sub { +{} } );
 has options => ( is => 'rw', default => sub { +[] } );
 has parameters => ( is => 'rw', default => sub { +[] } );
 has subcommands => ( is => 'rw', default => sub { +{} } );
@@ -65,8 +65,6 @@ sub read {
     }
 
     my $spec = $class->load_data($file);
-
-    my $has_subcommands = $spec->{subcommands} ? 1 : 0;
 
     my @plugins = $class->default_plugins;
     push @plugins, @{ $spec->{plugins} || [] };
@@ -128,6 +126,7 @@ sub init_plugins {
         my $options = $self->options;
         for my $plugin (@$plugins) {
             if ($plugin->does('App::Spec::Role::Plugin::Subcommand')) {
+                push @{ $self->plugins_by_type->{Subcommand} }, $plugin;
                 my $subc = $plugin->install_subcommands( spec => $self );
                 $subc = [ $subc ] unless is_arrayref($subc);
 
@@ -139,6 +138,7 @@ sub init_plugins {
             }
 
             if ($plugin->does('App::Spec::Role::Plugin::GlobalOptions')) {
+                push @{ $self->plugins_by_type->{GlobalOptions} }, $plugin;
                 my $new_opts = $plugin->install_options( spec => $self );
                 if ($new_opts) {
                     $options ||= [];

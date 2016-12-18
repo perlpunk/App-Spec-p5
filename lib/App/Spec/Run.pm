@@ -34,7 +34,6 @@ sub process {
     }
 
     my $completion_parameter = $ENV{PERL5_APPSPECRUN_COMPLETION_PARAMETER};
-    $self->check_help;
 
     my %option_specs;
     my %param_specs;
@@ -257,6 +256,7 @@ sub process_parameters {
 sub process_input {
     my ($self, %args) = @_;
     my %options;
+    $self->options(\%options);
     my @cmds;
     my $spec = $self->spec;
     my $option_specs = $args{option_specs};
@@ -265,6 +265,8 @@ sub process_input {
     my $global_parameters = $spec->parameters;
     my @getopt = $spec->make_getopt($global_options, \%options, $option_specs);
     GetOptions(@getopt);
+    $self->event_globaloptions;
+    my $op = $self->op;
 
     $self->process_parameters(
         parameter_list => $global_parameters,
@@ -274,7 +276,6 @@ sub process_input {
 
 
     my $commands = $spec->subcommands;
-    my $op;
     my $opclass = $self->spec->class;
     my $cmd_spec;
     my $subcommand_required = 1;
@@ -312,7 +313,7 @@ sub process_input {
         GetOptions(@getopt);
         push @cmds, $cmd;
         $commands = $cmd_spec->subcommands || {};
-        $op = $cmd_spec->op if $cmd_spec->op;
+        $op = '::' . $cmd_spec->op if $cmd_spec->op;
         $opclass = $cmd_spec->class if $cmd_spec->class;
 
         $self->process_parameters(
@@ -333,12 +334,15 @@ sub process_input {
                 $self->halt(1);
             }
             else {
-                $op = "execute";
+                $op = "::execute";
             }
         }
         $self->commands(\@cmds);
         $self->options(\%options);
-        $self->op($opclass . '::' . $op);
+        if ($op =~ m/^::/) {
+            $op = $opclass . $op;
+        }
+        $self->op($op);
         return $op;
     }
 
@@ -359,27 +363,16 @@ sub colored {
     return $msg;
 }
 
-sub check_help {
+sub event_globaloptions {
     my ($self) = @_;
-    GetOptions(
-        "help|h" => \my $help,
-    );
 
-    my $op;
-    if ($self->spec->has_subcommands) {
-        if ($help and (not @{ $self->argv } or $self->argv->[0] ne "help")) {
-            # call subcommand 'help'
-            unshift @{ $self->argv }, "help";
-        }
+    my $plugins = $self->spec->plugins_by_type->{GlobalOptions};
+    for my $plugin (@$plugins) {
+        next unless $plugin->can("event_globaloptions");
+        $plugin->event_globaloptions(
+            run => $self,
+        );
     }
-    else {
-        if ($help) {
-            $op = "cmd_help";
-            unshift @{ $self->argv }, "--help";
-        }
-    }
-
-    $self->op("App::Spec::Plugin::Help::$op") if $op;
 }
 
 
@@ -541,9 +534,9 @@ Outputs any errors.
 
 Calls C<halt>
 
-=item check_help
+=item event_globaloptions
 
-Will probably be removed as soon as help is turned into a plugin
+Calls any plugin that needs to know
 
 =back
 

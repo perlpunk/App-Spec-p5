@@ -65,6 +65,28 @@ sub install_options {
     return $options;
 }
 
+sub event_globaloptions {
+    my ($self, %args) = @_;
+    my $run = $args{run};
+    my $options = $run->options;
+    my $op;
+
+    if ($run->spec->has_subcommands) {
+        if ($options->{help} and (not @{ $run->argv } or $run->argv->[0] ne "help")) {
+            # call subcommand 'help'
+            unshift @{ $run->argv }, "help";
+        }
+    }
+    else {
+        if ($options->{help}) {
+            $op = "::cmd_help";
+        }
+    }
+
+    $run->op("App::Spec::Plugin::Help$op") if $op;
+}
+
+
 1;
 
 __DATA__
