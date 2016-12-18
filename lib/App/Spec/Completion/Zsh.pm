@@ -120,7 +120,7 @@ sub completion_commands {
             my $name = $cmd_spec->name;
             $subcmds .= $indent2 . "$name)\n";
             my $sc = $self->completion_commands(
-                commands => $cmd_spec->subcommands || [],
+                commands => $cmd_spec->subcommands || {},
                 options => [ @$options, @{ $cmd_spec->options } ],
                 parameters => $cmd_spec->parameters,
                 level => $level + 1,

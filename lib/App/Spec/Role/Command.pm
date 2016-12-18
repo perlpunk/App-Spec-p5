@@ -11,10 +11,15 @@ has appspec => ( is => 'rw' );
 has markup => ( is => 'rw', default => 'pod' );
 has class => ( is => 'rw' );
 has op => ( is => 'ro' );
+has plugins => ( is => 'ro' );
 has options => ( is => 'rw', default => sub { +[] } );
 has parameters => ( is => 'rw', default => sub { +[] } );
 has subcommands => ( is => 'rw', default => sub { +{} } );
 has description => ( is => 'rw' );
+
+sub default_plugins {
+    qw/ Meta Help /
+}
 
 sub has_subcommands {
     my ($self) = @_;
@@ -60,10 +65,9 @@ sub read {
     my $spec = $class->load_data($file);
 
     my $has_subcommands = $spec->{subcommands} ? 1 : 0;
-
     my $default;
     {
-        $default = $class->_read_default_spec;
+        $default = App::Spec->_read_default_spec;
 
         for my $opt (@{ $default->{options} }) {
             my $name = $opt->{name};
@@ -76,33 +80,21 @@ sub read {
             }
         }
 
-        if ($has_subcommands) {
-            for my $key (keys %{ $default->{subcommands} } ) {
-                my $cmd = $default->{subcommands}->{ $key };
-                $spec->{subcommands}->{ $key } ||= $cmd;
-            }
-        }
     }
 
-    my $commands;
-    if ($has_subcommands) {
-        # add subcommands to help command
-        my $help_subcmds = $spec->{subcommands}->{help}->{subcommands} ||= {};
-        $class->_add_subcommands($help_subcmds, $spec->{subcommands}, { subcommand_required => 0 });
-
-        for my $name (keys %{ $spec->{subcommands} || [] }) {
-            my $cmd = $spec->{subcommands}->{ $name };
-            $commands->{ $name } = App::Spec::Subcommand->build(
-                name => $name,
-                %$cmd,
-            );
+    my @plugins = $class->default_plugins;
+    push @plugins, @{ $spec->{plugins} || [] };
+    for my $plugin (@plugins) {
+        unless ($plugin =~ s/^=//) {
+            $plugin = "App::Spec::Plugin::$plugin";
         }
     }
-
-    $spec->{subcommands} = $commands;
-
+    $spec->{plugins} = \@plugins;
 
     my $self = $class->build(%$spec);
+
+    $self->load_plugins;
+    $self->init_plugins;
 
     return $self;
 }
@@ -131,18 +123,30 @@ sub load_data {
     return $spec;
 }
 
-sub _add_subcommands {
-    my ($self, $commands1, $commands2, $ref) = @_;
-    for my $name (keys %{ $commands2 || {} }) {
-        next if $name eq "help";
-        my $cmd = $commands2->{ $name };
-        $commands1->{ $name } = {
-            name => $name,
-            subcommands => {},
-            %$ref,
-        };
-        my $subcmds = $cmd->{subcommands} || {};
-        $self->_add_subcommands($commands1->{ $name }->{subcommands}, $subcmds, $ref);
+sub load_plugins {
+    my ($self) = @_;
+    my $plugins = $self->plugins;
+    if (@$plugins) {
+        require Module::Runtime;
+        for my $plugin (@$plugins) {
+            my $loaded = Module::Runtime::require_module($plugin);
+        }
+    }
+}
+
+sub init_plugins {
+    my ($self) = @_;
+    my $plugins = $self->plugins;
+    if (@$plugins) {
+        my $subcommands = $self->subcommands;
+        for my $plugin (@$plugins) {
+            if ($plugin->does('App::Spec::Role::Plugin::Subcommand')) {
+                my $subc = $plugin->install_subcommands( spec => $self );
+                if ($subcommands) {
+                    $subcommands->{ $subc->name } ||= $subc;
+                }
+            }
+        }
     }
 }
 

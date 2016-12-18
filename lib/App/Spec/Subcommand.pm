@@ -14,4 +14,6 @@ with('App::Spec::Role::Command');
 has summary => ( is => 'ro' );
 has subcommand_required => ( is => 'ro' );
 
+sub default_plugins { }
+
 1;
