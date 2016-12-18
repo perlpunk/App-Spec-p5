@@ -4,6 +4,7 @@ package App::Spec::Role::Command;
 
 use List::Util qw/ any /;
 use App::Spec::Option;
+use Ref::Util qw/ is_arrayref /;
 
 use Moo::Role;
 
@@ -128,9 +129,12 @@ sub init_plugins {
         for my $plugin (@$plugins) {
             if ($plugin->does('App::Spec::Role::Plugin::Subcommand')) {
                 my $subc = $plugin->install_subcommands( spec => $self );
+                $subc = [ $subc ] unless is_arrayref($subc);
 
                 if ($subcommands) {
-                    $subcommands->{ $subc->name } ||= $subc;
+                    for my $cmd (@$subc) {
+                        $subcommands->{ $cmd->name } ||= $cmd;
+                    }
                 }
             }
 
