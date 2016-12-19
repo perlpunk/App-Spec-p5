@@ -61,10 +61,10 @@ sub process {
             param_specs => \%param_specs,
         });
         my %errs;
-        my ($ok) = $opt->process( \%errs, type => "parameters", app => $self );
-        $ok &&= $opt->process( \%errs, type => "options", app => $self );
-        $self->validation_errors(\%errs) if not $ok;
+        my $ok = $opt->process( $self, \%errs );
         unless ($ok) {
+            $self->validation_errors(\%errs);
+            # if we are in completion mode, some errors might be ok
             if (not $completion_parameter) {
                 $self->error_output;
             }

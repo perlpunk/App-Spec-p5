@@ -27,8 +27,15 @@ my %validate = (
 );
 
 sub process {
+    my ($self, $run, $errs) = @_;
+    my ($ok) = $self->_process( $errs, type => "parameters", app => $run );
+    $ok &&= $self->_process( $errs, type => "options", app => $run );
+    return $ok;
+}
+
+sub _process {
     my ($self, $errs, %args) = @_;
-    my $app = $args{app};
+    my $run = $args{app};
     my $type = $args{type};
     my ($items, $specs);
     if ($args{type} eq "parameters") {
@@ -147,7 +154,7 @@ sub process {
                     runmode => "validation",
                     parameter => $name,
                 };
-                $possible_values = $app->cmd->$op($app, $args) || [];
+                $possible_values = $run->cmd->$op($run, $args) || [];
             }
             elsif ($spec->mapping) {
                 $possible_values = $spec_values->{mapping};
