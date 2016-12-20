@@ -1,3 +1,4 @@
+# ABSTRACT: Plugins for subcommands should use this role
 use strict;
 use warnings;
 package App::Spec::Role::Plugin::Subcommand;
@@ -9,3 +10,26 @@ use Moo::Role;
 requires 'install_subcommands';
 
 1;
+
+__END__
+
+=pod
+
+=head1 NAME
+
+Plugins for subcommands should use this role
+
+=head1 DESCRIPTION
+
+See L<App::Spec::Plugin::Help> for an example.
+
+=head1 REQUIRED METHODS
+
+=over 4
+
+=item install_subcommands
+
+=back
+
+
+=cut

@@ -1,3 +1,4 @@
+# ASTRACT: Generates Pod from App::Spec objects
 use strict;
 use warnings;
 package App::Spec::Pod;
@@ -215,3 +216,69 @@ sub swim2pod {
 }
 
 1;
+
+__END__
+
+=pod
+
+=head1 NAME
+
+App::Spec::Pod - Generates Pod from App::Spec objects
+
+=item SYNOPSIS
+
+    my $generator = App::Spec::Pod->new(
+        spec => $appspec,
+    );
+    my $pod = $generator->generate;
+
+=head1 METHODS
+
+=over 4
+
+=item generate
+
+    my $pod = $generator->generate;
+
+=item markup
+
+    $pod->markup(text => \$abstract);
+
+Applies markup defined in the spec to the text argument.
+
+=item options2pod
+
+    my $option_string = "Options:\n\n" . $self->options2pod(
+        options => $options,
+    );
+
+=item params2pod
+
+    my $param_string = "Parameters:\n\n" . $self->params2pod(
+        parameters => $parameters,
+    );
+
+=item subcommand_pod
+
+Generates pod for subcommands recursively
+
+    my @pod = $self->subcommand_pod(
+        previous => [@previous_subcmds],
+        commands => $subcmds,
+    );
+
+=item swim2pod
+
+    my $pod = $self->swim2pod($swim);
+
+Converts Swim markup to Pod.
+See L<Swim>.
+
+=item spec
+
+Accessor for L<App::Spec> object
+
+=back
+
+=cut
+

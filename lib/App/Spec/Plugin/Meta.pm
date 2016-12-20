@@ -1,3 +1,4 @@
+# ABSTRACT: App::Spec Plugin for meta functions
 use strict;
 use warnings;
 package App::Spec::Plugin::Meta;
@@ -46,6 +47,41 @@ sub cmd_self_pod {
 }
 
 1;
+
+=pod
+
+=head1 NAME
+
+App::Spec::Plugin::Meta - App::Spec Plugin for help subcommand and options
+
+=head1 DESCRIPTION
+
+This plugin is enabled in L<App::Spec> by default.
+
+It adds the following commands to your app:
+
+    % app meta completion generate
+    % app meta pod generate
+
+=head1 METHODS
+
+=over 4
+
+=item cmd_self_completion
+
+This is called by C<app meta completion generate>
+
+=item cmd_self_pod
+
+This is called by C<app meta pod generate>
+
+=item install_subcommands
+
+See L<App::Spec::Role::Plugin::Subcommand#install_subcommands>
+
+=back
+
+=cut
 
 __DATA__
 ---

@@ -1,3 +1,4 @@
+# ABSTRACT: App::Spec Plugin for help subcommand and options
 use strict;
 use warnings;
 package App::Spec::Plugin::Help;
@@ -12,7 +13,7 @@ with 'App::Spec::Role::Plugin::GlobalOptions';
 my $yaml;
 my $cmd;
 my $options;
-sub read_data {
+sub _read_data {
     unless ($yaml) {
         $yaml = do { local $/; <DATA> };
         ($cmd, $options) = YAML::XS::Load($yaml);
@@ -22,7 +23,7 @@ sub read_data {
 sub install_subcommands {
     my ($class, %args) = @_;
     my $parent = $args{spec};
-    read_data();
+    _read_data();
     my $appspec = App::Spec::Subcommand->read($cmd);
 
     my $help_subcmds = $appspec->subcommands || {};
@@ -63,7 +64,7 @@ sub _add_subcommands {
 
 sub install_options {
     my ($class, %args) = @_;
-    read_data();
+    _read_data();
     return $options;
 }
 
@@ -90,6 +91,65 @@ sub event_globaloptions {
 
 
 1;
+
+=pod
+
+=head1 NAME
+
+App::Spec::Plugin::Help - App::Spec Plugin for help subcommand and options
+
+=head1 DESCRIPTION
+
+This plugin is enabled in L<App::Spec> by default.
+
+This is a plugin which adds C<-h|--help> options to your app.
+Also for apps with subcommands it adds a subcommand C<help>.
+
+The help command can then be called with all existing subcommands, like this:
+
+    % app cmd1
+    % app cmd2
+    % app cmd2 cmd2a
+    % app help
+    % app help cmd1
+    % app help cmd2
+    % app help cmd2 cmd2a
+
+=head1 METHODS
+
+=over 4
+
+=item cmd_help
+
+This is the code which is executed when using C<-h|--help> or the subcommand
+help.
+
+=item install_options
+
+This method is required by L<App::Spec::Role::Plugin::GlobalOptions>.
+
+See L<App::Spec::Role::Plugin::GlobalOptions#install_options>.
+
+=item install_subcommands
+
+This is required by L<App::Spec::Role::Plugin::Subcommand>.
+
+See L<App::Spec::Role::Plugin::Subcommand#install_subcommands>.
+
+=item event_globaloptions
+
+This method is called by L<App::Spec::Run> after global options have been read.
+
+For apps without subcommands it just sets the method to execute to
+L<App::Spec::Plugin::Help::cmd_help>.
+No further processing is done.
+
+For apps with subcommands it inserts C<help> at the beginning of the
+commandline arguments and continues processing.
+
+=back
+
+=cut
 
 __DATA__
 ---

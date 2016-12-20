@@ -161,3 +161,37 @@ sub init_plugins {
 
 
 1;
+
+__END__
+
+=pod
+
+=head1 NAME
+
+App::Spec::Role::Command - commands and subcommands both use this role
+
+=head1 METHODS
+
+=over 4
+
+=item read
+
+Calls load_data, build, load_plugins, init_plugins
+
+=item build
+
+This builds a tree of objects
+
+    my $self = App::Spec->build(%$hashref);
+    my $self = App::Spec::Subcommand->build(%$hashref);
+
+=item load_data
+
+    my $spec = App::Spec->load_data($file);
+
+Takes a filename as a string, a filehandle, a ref to a YAML string or
+a hashref.
+
+=back
+
+=cut
