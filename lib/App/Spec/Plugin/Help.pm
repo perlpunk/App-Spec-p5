@@ -1,6 +1,8 @@
 use strict;
 use warnings;
 package App::Spec::Plugin::Help;
+our $VERSION = '0.000'; # VERSION
+
 use YAML::XS ();
 
 use Moo;

@@ -1,6 +1,8 @@
 use strict;
 use warnings;
 package App::Spec::Plugin::Meta;
+our $VERSION = '0.000'; # VERSION
+
 use List::Util qw/ any /;
 
 use Moo;
