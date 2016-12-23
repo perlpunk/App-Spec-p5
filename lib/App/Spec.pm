@@ -193,18 +193,6 @@ sub _param_flags_string {
     return $flags;
 }
 
-sub generate_pod {
-    my ($self) = @_;
-
-    require App::Spec::Pod;
-    my $generator = App::Spec::Pod->new(
-        spec => $self,
-    );
-    my $pod = $generator->generate;
-    return $pod;
-
-}
-
 sub _colorize_lines {
     my ($self, $lines, $highlights, $colored) = @_;
     my $output = '';
@@ -408,10 +396,6 @@ Generates shell completion script for the spec.
     my $completion = $spec->generate_completion(
         shell => "zsh",
     );
-
-=item generate_pod
-
-    my $pod = $spec->generate_pod;
 
 =item make_getopt
 

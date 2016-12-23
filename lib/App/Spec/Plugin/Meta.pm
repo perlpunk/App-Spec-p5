@@ -41,8 +41,13 @@ sub cmd_self_completion {
 sub cmd_self_pod {
     my ($self, $run) = @_;
     my $spec = $run->spec;
-    my $pod = $spec->generate_pod(
+
+    require App::Spec::Pod;
+    my $generator = App::Spec::Pod->new(
+        spec => $self,
     );
+    my $pod = $generator->generate;
+
     $run->out($pod);
 }
 
