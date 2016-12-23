@@ -16,14 +16,14 @@ _myapp() {
     MYWORDS=("${COMP_WORDS[@]:1:$COMP_CWORD}")
 
     FLAGS=('--verbose' 'be verbose' '-v' 'be verbose' '--help' 'Show command help' '-h' 'Show command help')
-    OPTIONS=()
+    OPTIONS=('--format' 'Format output')
     __myapp_handle_options_flags
 
     case $INDEX in
 
     0)
         __comp_current_options || return
-        __myapp_dynamic_comp 'commands' 'config'$'\t''configuration'$'\n''convert'$'\t''Various unit conversions'$'\n''cook'$'\t''Cook something'$'\n''help'$'\t''Show command help'$'\n''palindrome'$'\t''Check if a string is a palindrome'$'\n''weather'$'\t''Weather'
+        __myapp_dynamic_comp 'commands' 'config'$'\t''configuration'$'\n''convert'$'\t''Various unit conversions'$'\n''cook'$'\t''Cook something'$'\n''data'$'\t''output some data'$'\n''help'$'\t''Show command help'$'\n''palindrome'$'\t''Check if a string is a palindrome'$'\n''weather'$'\t''Weather'
 
     ;;
     *)
@@ -65,6 +65,9 @@ _myapp() {
                   *)
                     __comp_current_options true || return # after parameters
                     case ${MYWORDS[$INDEX-1]} in
+                      --format)
+                        _myapp_compreply "'JSON'"$'\n'"'YAML'"$'\n'"'Table'"$'\n'"'Data__Dumper'"$'\n'"'Data__Dump'"
+                      ;;
                       --name)
                       ;;
 
@@ -115,6 +118,9 @@ _myapp() {
           *)
             __comp_current_options true || return # after parameters
             case ${MYWORDS[$INDEX-1]} in
+              --format)
+                _myapp_compreply "'JSON'"$'\n'"'YAML'"$'\n'"'Table'"$'\n'"'Data__Dumper'"$'\n'"'Data__Dump'"
+              ;;
               --set)
               ;;
 
@@ -145,6 +151,9 @@ _myapp() {
           *)
             __comp_current_options true || return # after parameters
             case ${MYWORDS[$INDEX-1]} in
+              --format)
+                _myapp_compreply "'JSON'"$'\n'"'YAML'"$'\n'"'Table'"$'\n'"'Data__Dumper'"$'\n'"'Data__Dump'"
+              ;;
 
             esac
             ;;
@@ -162,8 +171,30 @@ _myapp() {
           *)
             __comp_current_options true || return # after parameters
             case ${MYWORDS[$INDEX-1]} in
+              --format)
+                _myapp_compreply "'JSON'"$'\n'"'YAML'"$'\n'"'Table'"$'\n'"'Data__Dumper'"$'\n'"'Data__Dump'"
+              ;;
               --with)
                 _myapp_compreply "'almond\ milk'"$'\n'"'soy\ milk'"$'\n'"'oat\ milk'"$'\n'"'spelt\ milk'"$'\n'"'cow\ milk'"
+              ;;
+
+            esac
+            ;;
+        esac
+      ;;
+      data)
+        FLAGS+=()
+        OPTIONS+=('--item' '')
+        __myapp_handle_options_flags
+          case $INDEX in
+          *)
+            __comp_current_options true || return # after parameters
+            case ${MYWORDS[$INDEX-1]} in
+              --format)
+                _myapp_compreply "'JSON'"$'\n'"'YAML'"$'\n'"'Table'"$'\n'"'Data__Dumper'"$'\n'"'Data__Dump'"
+              ;;
+              --item)
+                _myapp_compreply "'hash'"$'\n'"'table'"
               ;;
 
             esac
@@ -178,7 +209,7 @@ _myapp() {
 
         1)
             __comp_current_options || return
-            __myapp_dynamic_comp 'commands' 'config'$'\n''convert'$'\n''cook'$'\n''palindrome'$'\n''weather'
+            __myapp_dynamic_comp 'commands' 'config'$'\n''convert'$'\n''cook'$'\n''data'$'\n''palindrome'$'\n''weather'
 
         ;;
         *)
@@ -271,6 +302,12 @@ _myapp() {
             __myapp_handle_options_flags
             __comp_current_options true || return # no subcmds, no params/opts
           ;;
+          data)
+            FLAGS+=()
+            OPTIONS+=()
+            __myapp_handle_options_flags
+            __comp_current_options true || return # no subcmds, no params/opts
+          ;;
           palindrome)
             FLAGS+=()
             OPTIONS+=()
@@ -331,6 +368,9 @@ _myapp() {
           *)
             __comp_current_options true || return # after parameters
             case ${MYWORDS[$INDEX-1]} in
+              --format)
+                _myapp_compreply "'JSON'"$'\n'"'YAML'"$'\n'"'Table'"$'\n'"'Data__Dumper'"$'\n'"'Data__Dump'"
+              ;;
 
             esac
             ;;
@@ -358,6 +398,9 @@ _myapp() {
               *)
                 __comp_current_options true || return # after parameters
                 case ${MYWORDS[$INDEX-1]} in
+                  --format)
+                    _myapp_compreply "'JSON'"$'\n'"'YAML'"$'\n'"'Table'"$'\n'"'Data__Dumper'"$'\n'"'Data__Dump'"
+                  ;;
                   --country|-c)
                     _myapp_weather_cities_option_country_completion
                   ;;
@@ -388,6 +431,9 @@ _myapp() {
               *)
                 __comp_current_options true || return # after parameters
                 case ${MYWORDS[$INDEX-1]} in
+                  --format)
+                    _myapp_compreply "'JSON'"$'\n'"'YAML'"$'\n'"'Table'"$'\n'"'Data__Dumper'"$'\n'"'Data__Dump'"
+                  ;;
 
                 esac
                 ;;

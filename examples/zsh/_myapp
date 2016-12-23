@@ -15,7 +15,7 @@ _myapp() {
 
         case $state in
         cmd1)
-            _alternative 'args:cmd2:((config\:"configuration" convert\:"Various unit conversions" cook\:"Cook something" help\:"Show command help" palindrome\:"Check if a string is a palindrome" weather\:"Weather"))'
+            _alternative 'args:cmd2:((config\:"configuration" convert\:"Various unit conversions" cook\:"Cook something" data\:"output some data" help\:"Show command help" palindrome\:"Check if a string is a palindrome" weather\:"Weather"))'
         ;;
 
         args)
@@ -66,6 +66,7 @@ _myapp() {
                                     '*-v[be verbose]' \
                                     '--help[Show command help]' \
                                     '-h[Show command help]' \
+                                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
                                     '--name[name of the program (optional, override name in spec)]:name' \
                                     '--zsh[for zsh]' \
                                     '--bash[for bash]' \
@@ -108,6 +109,7 @@ _myapp() {
                                     '*-v[be verbose]' \
                                     '--help[Show command help]' \
                                     '-h[Show command help]' \
+                                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
                                     && ret=0
 
 
@@ -133,6 +135,7 @@ _myapp() {
                     '*-v[be verbose]' \
                     '--help[Show command help]' \
                     '-h[Show command help]' \
+                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
                     '*--set[key=value pair(s)]:set' \
                     && ret=0
 
@@ -151,6 +154,7 @@ _myapp() {
                     '*-v[be verbose]' \
                     '--help[Show command help]' \
                     '-h[Show command help]' \
+                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
                     && ret=0
 
                 case $state in
@@ -179,6 +183,7 @@ _myapp_convert_param_target_completion
                     '*-v[be verbose]' \
                     '--help[Show command help]' \
                     '-h[Show command help]' \
+                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
                     '--with[Drink with ...]:with:("almond milk" "soy milk" "oat milk" "spelt milk" "cow milk")' \
                     '--sugar[add sugar]' \
                     '-s[add sugar]' \
@@ -189,6 +194,21 @@ _myapp_convert_param_target_completion
                         compadd -X 'drink:' 'tea' 'coffee'
                 ;;
                 esac
+
+            ;;
+            data)
+
+                # ---- Command: data
+                _arguments -s -C \
+                    '1: :->cmd1' \
+                    '*--verbose[be verbose]' \
+                    '*-v[be verbose]' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
+                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
+                    '--item[]:item:("hash" "table")' \
+                    && ret=0
+
 
             ;;
             help)
@@ -203,7 +223,7 @@ _myapp_convert_param_target_completion
 
                 case $state in
                 cmd2)
-                    _alternative 'args:cmd3:((config convert cook palindrome weather))'
+                    _alternative 'args:cmd3:((config convert cook data palindrome weather))'
                 ;;
 
                 args)
@@ -257,6 +277,7 @@ _myapp_convert_param_target_completion
                                             '*-v[be verbose]' \
                                             '--help[Show command help]' \
                                             '-h[Show command help]' \
+                                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
                                             '--all[]' \
                                             && ret=0
 
@@ -299,6 +320,7 @@ _myapp_convert_param_target_completion
                                             '*-v[be verbose]' \
                                             '--help[Show command help]' \
                                             '-h[Show command help]' \
+                                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
                                             '--all[]' \
                                             && ret=0
 
@@ -326,6 +348,7 @@ _myapp_convert_param_target_completion
                             '*-v[be verbose]' \
                             '--help[Show command help]' \
                             '-h[Show command help]' \
+                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
                             '--all[]' \
                             && ret=0
 
@@ -341,6 +364,7 @@ _myapp_convert_param_target_completion
                             '*-v[be verbose]' \
                             '--help[Show command help]' \
                             '-h[Show command help]' \
+                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
                             '--all[]' \
                             && ret=0
 
@@ -356,6 +380,23 @@ _myapp_convert_param_target_completion
                             '*-v[be verbose]' \
                             '--help[Show command help]' \
                             '-h[Show command help]' \
+                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
+                            '--all[]' \
+                            && ret=0
+
+
+                    ;;
+                    data)
+
+                        # ---- Command: help data
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '*--verbose[be verbose]' \
+                            '*-v[be verbose]' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
+                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
                             '--all[]' \
                             && ret=0
 
@@ -371,6 +412,7 @@ _myapp_convert_param_target_completion
                             '*-v[be verbose]' \
                             '--help[Show command help]' \
                             '-h[Show command help]' \
+                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
                             '--all[]' \
                             && ret=0
 
@@ -405,6 +447,7 @@ _myapp_convert_param_target_completion
                                     '*-v[be verbose]' \
                                     '--help[Show command help]' \
                                     '-h[Show command help]' \
+                                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
                                     '--all[]' \
                                     && ret=0
 
@@ -421,6 +464,7 @@ _myapp_convert_param_target_completion
                                     '*-v[be verbose]' \
                                     '--help[Show command help]' \
                                     '-h[Show command help]' \
+                                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
                                     '--all[]' \
                                     && ret=0
 
@@ -437,6 +481,7 @@ _myapp_convert_param_target_completion
                                     '*-v[be verbose]' \
                                     '--help[Show command help]' \
                                     '-h[Show command help]' \
+                                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
                                     '--all[]' \
                                     && ret=0
 
@@ -464,6 +509,7 @@ _myapp_convert_param_target_completion
                     '*-v[be verbose]' \
                     '--help[Show command help]' \
                     '-h[Show command help]' \
+                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
                     && ret=0
 
                 case $state in
@@ -500,6 +546,7 @@ _myapp_palindrome_param_string_completion
                             '*-v[be verbose]' \
                             '--help[Show command help]' \
                             '-h[Show command help]' \
+                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
                             '*--country[country name(s)]:country:_myapp_weather_cities_option_country_completion' \
                             '*-c[country name(s)]:country:_myapp_weather_cities_option_country_completion' \
                             && ret=0
@@ -516,6 +563,7 @@ _myapp_palindrome_param_string_completion
                             '*-v[be verbose]' \
                             '--help[Show command help]' \
                             '-h[Show command help]' \
+                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
                             && ret=0
 
 
@@ -532,6 +580,7 @@ _myapp_palindrome_param_string_completion
                             '*-v[be verbose]' \
                             '--help[Show command help]' \
                             '-h[Show command help]' \
+                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
                             '--temperature[show temperature]' \
                             '-T[show temperature]' \
                             '--celsius[show temperature in celsius]' \

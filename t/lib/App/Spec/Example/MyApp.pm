@@ -211,7 +211,6 @@ sub data {
     my $opt = $run->options;
     my $item = $opt->{item};
 
-
     my $ref;
     if ($item eq 'hash') {
         $ref = {
@@ -226,6 +225,8 @@ sub data {
         ];
     }
 
+# instead of print Data::Dumper->Dump($ref) or doing your own YAML or JSON
+# decoding simply pass it to App::Spec
     $run->response->add_output(
         App::Spec::Run::Output->new(
             content => $ref,

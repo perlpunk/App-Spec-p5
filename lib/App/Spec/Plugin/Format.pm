@@ -5,6 +5,7 @@ package App::Spec::Plugin::Format;
 our $VERSION = '0.000'; # VERSION
 
 use YAML::XS ();
+use Ref::Util qw/ is_arrayref /;
 
 use Moo;
 with 'App::Spec::Role::Plugin::GlobalOptions';
@@ -29,14 +30,12 @@ sub event_processed {
     my ($self, %args) = @_;
     my $run = $args{run};
     my $opt = $run->options;
-    warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\$opt], ['opt']);
-    my $format = $opt->{format};
+    my $format = $opt->{format} || '';
 
     my $res = $run->response;
     my $outputs = $res->outputs;
     for my $out (@$outputs) {
         next unless $out->type eq 'data';
-        warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\$out], ['out']);
         my $content = $out->content;
         if ($format eq 'YAML') {
             $content = YAML::XS::Dump($content);
@@ -46,12 +45,19 @@ sub event_processed {
             my $coder = JSON::XS->new->ascii->pretty->allow_nonref;
             $content = $coder->encode($content) . "\n";
         }
-        elsif ($format eq 'Table') {
+        elsif ($format eq 'Table' and is_arrayref($content)) {
             require Text::Table;
             my $header = shift @$content;
             my $tb = Text::Table->new( @$header );
             $tb->load(@$content);
             $content = "$tb";
+        }
+        elsif ($format eq 'Data__Dump') {
+            require Data::Dump;
+            $content = Data::Dump::dump($content) . "\n";
+        }
+        else {
+            $content = Data::Dumper->Dump([$content], ['output']);
         }
         $out->content( $content );
     }
@@ -93,4 +99,5 @@ __DATA__
 -   name: format
     summary: Format output
     type: string
+    enum: [JSON, YAML, Table, "Data__Dumper", "Data__Dump"]
 
