@@ -206,6 +206,34 @@ sub config {
     warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\$opt], ['opt']);
 }
 
+sub data {
+    my ($self, $run) = @_;
+    my $opt = $run->options;
+    my $item = $opt->{item};
+
+
+    my $ref;
+    if ($item eq 'hash') {
+        $ref = {
+            foo => 23,
+        };
+    }
+    elsif ($item eq 'table') {
+        $ref = [
+            [qw/ FOO BAR /],
+            [ qw/ a b /],
+            [ qw/ c d /],
+        ];
+    }
+
+    $run->response->add_output(
+        App::Spec::Run::Output->new(
+            content => $ref,
+            type => 'data',
+        ),
+    );
+}
+
 sub convert_complete {
     my ($self, $run, $args) = @_;
     my $errors = $run->validation_errors;

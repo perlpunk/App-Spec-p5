@@ -84,6 +84,7 @@ sub run {
 
     $self->process;
 
+    $self->event_processed;
     $self->finish;
 
 }
@@ -375,6 +376,16 @@ sub event_globaloptions {
     }
 }
 
+sub event_processed {
+    my ($self) = @_;
+    my $plugins = $self->spec->plugins_by_type->{GlobalOptions};
+    for my $plugin (@$plugins) {
+        next unless $plugin->can("event_processed");
+        $plugin->event_processed(
+            run => $self,
+        );
+    }
+}
 
 1;
 
@@ -537,6 +548,11 @@ Calls C<halt>
 =item event_globaloptions
 
 Calls any plugin that needs to know
+
+=item event_processed
+
+Cslls any plugin that needs to know that processing is done and we are
+about to print the output.
 
 =back
 
