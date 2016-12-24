@@ -90,6 +90,10 @@ See L<App::Spec::Role::Plugin::GlobalOptions#install_options>.
 
 This method is called by L<App::Spec::Run> after global options have been read.
 
+=item event_processed
+
+This method is called by L<App::Spec::Run> right before output.
+
 =back
 
 =cut
