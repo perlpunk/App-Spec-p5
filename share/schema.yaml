@@ -54,6 +54,7 @@ definitions:
       enum:
         type: array
         items: { type: string }
+      default: { type: string }
       aliases:
         type: array
         items: { type: string }
