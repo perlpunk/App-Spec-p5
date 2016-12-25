@@ -22,9 +22,26 @@ has validation_errors => ( is => 'rw' );
 has op => ( is => 'rw' );
 has cmd => ( is => 'rw' );
 has response => ( is => 'rw', default => sub { App::Spec::Run::Response->new } );
+has subscribers => ( is => 'rw', default => sub { +{} } );
 
 sub process {
     my ($self) = @_;
+
+    my $plugins = $self->spec->plugins || [];
+    for my $plugin (@$plugins) {
+        $plugin->init_run($self);
+    }
+    my @callbacks;
+    my $subscribers = $self->subscribers->{print_output};
+    for my $sub (@$subscribers) {
+        my $plugin = $sub->{plugin};
+        my $method = $sub->{method};
+        my $callback = sub {
+            $plugin->$method( run => $self, @_);
+        };
+        push @callbacks, $callback;
+    }
+    $self->response->add_callbacks(print_output => \@callbacks);
 
     my $argv = $self->argv;
     unless ($argv) {
@@ -84,7 +101,7 @@ sub run {
 
     $self->process;
 
-    $self->event_processed;
+#    $self->event_processed;
     $self->finish;
 
 }
@@ -96,16 +113,14 @@ sub run_op {
 
 sub out {
     my ($self, $text) = @_;
-    my $res = $self->response;
-    $text .= "\n" unless $text =~ m/\n\z/;
-    $res->add_output($text);
+    $text .= "\n" if (not ref $text and $text !~ m/\n\z/);
+    $self->response->add_output($text);
 }
 
 sub err {
     my ($self, $text) = @_;
-    my $res = $self->response;
-    $text .= "\n" unless $text =~ m/\n\z/;
-    $res->add_error($text);
+    $text .= "\n" if (not ref $text and $text !~ m/\n\z/);
+    $self->response->add_error($text);
 }
 
 sub halt {
@@ -364,6 +379,20 @@ sub colored {
     return $msg;
 }
 
+my %EVENTS = (
+    print_output => 1,
+);
+sub subscribe {
+    my ($self, %args) = @_;
+
+    for my $event (sort keys %args) {
+        next unless exists $EVENTS{ $event };
+        my $info = $args{ $event };
+        push @{ $self->subscribers->{ $event } }, $info;
+    }
+
+}
+
 sub event_globaloptions {
     my ($self) = @_;
 
@@ -376,16 +405,16 @@ sub event_globaloptions {
     }
 }
 
-sub event_processed {
-    my ($self) = @_;
-    my $plugins = $self->spec->plugins_by_type->{GlobalOptions};
-    for my $plugin (@$plugins) {
-        next unless $plugin->can("event_processed");
-        $plugin->event_processed(
-            run => $self,
-        );
-    }
-}
+#sub event_processed {
+#    my ($self) = @_;
+#    my $plugins = $self->spec->plugins_by_type->{GlobalOptions};
+#    for my $plugin (@$plugins) {
+#        next unless $plugin->can("event_processed");
+#        $plugin->event_processed(
+#            run => $self,
+#        );
+#    }
+#}
 
 1;
 
@@ -548,11 +577,6 @@ Calls C<halt>
 =item event_globaloptions
 
 Calls any plugin that needs to know
-
-=item event_processed
-
-Cslls any plugin that needs to know that processing is done and we are
-about to print the output.
 
 =back
 

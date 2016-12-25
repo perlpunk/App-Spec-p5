@@ -26,7 +26,17 @@ sub install_options {
     return $options;
 }
 
-sub event_processed {
+sub init_run {
+    my ($self, $run) = @_;
+    $run->subscribe(
+        print_output => {
+            plugin => $self,
+            method => "print_output",
+        },
+    );
+}
+
+sub print_output {
     my ($self, %args) = @_;
     my $run = $args{run};
     my $opt = $run->options;
@@ -60,6 +70,7 @@ sub event_processed {
             $content = Data::Dumper->Dump([$content], ['output']);
         }
         $out->content( $content );
+        $out->type( "plain" );
     }
 
 }
@@ -90,7 +101,7 @@ See L<App::Spec::Role::Plugin::GlobalOptions#install_options>.
 
 This method is called by L<App::Spec::Run> after global options have been read.
 
-=item event_processed
+=item print_output
 
 This method is called by L<App::Spec::Run> right before output.
 

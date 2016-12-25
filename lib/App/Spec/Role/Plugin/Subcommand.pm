@@ -9,6 +9,8 @@ use Moo::Role;
 
 requires 'install_subcommands';
 
+with 'App::Spec::Role::Plugin';
+
 1;
 
 __END__

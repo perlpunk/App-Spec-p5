@@ -15,6 +15,7 @@ has outputs => ( is => 'rw', default => sub { [] } );
 has finished => ( is => 'rw' );
 has halted => ( is => 'rw' );
 has buffered => ( is => 'rw', default => 0 );
+has callbacks => ( is => 'rw', default => sub { +{} } );
 
 sub add_output {
     my ($self, @out) = @_;
@@ -23,6 +24,7 @@ sub add_output {
         unless (blessed $out) {
             $out = App::Spec::Run::Output->new(
                 content => $out,
+                ref $out ? (type => 'data') : (),
             );
         }
     }
@@ -60,7 +62,14 @@ sub add_error {
 sub print_output {
     my ($self, @out) = @_;
     my $outputs = $self->outputs;
-    for my $out (@$outputs, @out) {
+    push @$outputs, @out;
+
+    my $callbacks = $self->callbacks->{print_output} || {};
+    for my $cb (@$callbacks) {
+        $cb->();
+    }
+
+    while (my $out = shift @$outputs) {
         my $content = $out->content;
         if (ref $content) {
             require Data::Dumper;
@@ -73,6 +82,13 @@ sub print_output {
             print $content;
         }
     }
+}
+
+sub add_callbacks {
+    my ($self, $event, $cb_add) = @_;
+    my $callbacks = $self->callbacks;
+    my $cb = $callbacks->{ $event } ||= [];
+    push @$cb, @$cb_add;
 }
 
 1;
