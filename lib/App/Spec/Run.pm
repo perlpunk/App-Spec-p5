@@ -5,7 +5,6 @@ package App::Spec::Run;
 use 5.010;
 our $VERSION = '0.000'; # VERSION
 
-use Data::Dumper;
 use App::Spec::Run::Validator;
 use App::Spec::Run::Response;
 use Getopt::Long qw/ :config pass_through bundling /;
@@ -22,7 +21,7 @@ has argv_orig => ( is => 'rw' );
 has validation_errors => ( is => 'rw' );
 has op => ( is => 'rw' );
 has cmd => ( is => 'rw' );
-has response => ( is => 'rw' );
+has response => ( is => 'rw', default => sub { App::Spec::Run::Response->new } );
 
 sub process {
     my ($self) = @_;
@@ -32,12 +31,6 @@ sub process {
         $argv = \@ARGV;
         $self->argv($argv);
         $self->argv_orig([ @$argv ]);
-    }
-
-    my $res = $self->response;
-    unless ($res) {
-        $res = App::Spec::Run::Response->new;
-        $self->response($res);
     }
 
     my $completion_parameter = $ENV{PERL5_APPSPECRUN_COMPLETION_PARAMETER};
@@ -192,6 +185,7 @@ sub error_output {
             }
         }
         else {
+            require Data::Dumper;
             my $err = Data::Dumper->Dump([$errs], ['errs']);
             push @error_output, $err;
         }
