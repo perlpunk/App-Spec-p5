@@ -15,6 +15,9 @@ properties:
   description: { type: string }
   markup: { type: string }
   class: { type: string }
+  plugins:
+    type: array
+    items: { type: string }
   options: { '$ref': '#/definitions/options' }
   parameters: { '$ref': '#/definitions/options' }
   subcommands:
