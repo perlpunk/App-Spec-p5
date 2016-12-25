@@ -8,3 +8,13 @@ use App::Spec::Run;
 use Moo;
 
 1;
+
+__END__
+
+=pod
+
+=head1 NAME
+
+App::Spec::Run::Cmd - The App::Spec command which is run
+
+=cut
