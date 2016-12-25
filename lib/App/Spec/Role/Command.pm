@@ -192,6 +192,41 @@ This builds a tree of objects
 Takes a filename as a string, a filehandle, a ref to a YAML string or
 a hashref.
 
+=item default_plugins
+
+Returns ('Meta', 'Help')
+
+=item has_subcommands
+
+Returns 1 if there are any subcommands defined.
+
+=item init_plugins
+
+Initialize plugins
+
+=item load_plugins
+
+Loads the specified plugin modules.
+
+=item plugins_by_type
+
+    my $p = $cmd->plugins_by_type->{Subcommand};
+
 =back
+
+=head1 ATTRIBUTES
+
+=over 4
+
+=item class
+
+Specifies the class which implements the app.
+
+=item op, description, markup, name, options, parameters, plugins, subcommands
+
+Accessors for specification items
+
+=back
+
 
 =cut
