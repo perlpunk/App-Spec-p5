@@ -578,6 +578,16 @@ Calls C<halt>
 
 Calls any plugin that needs to know
 
+=item subscribe
+
+A plugin can subscribe for an event:
+
+    $run->subscribe(
+        print_output => {
+            plugin => $self,
+            method => "print_output",
+        },
+
 =back
 
 =head1 ATTRIBUTES
@@ -634,6 +644,17 @@ This is an instance of your app class
 This contains the response of your command (exit code, output, ...)
 
 See L<App::Spec::Run::Response>
+
+=item subscribers
+
+Contains a hashref
+
+    {
+        print_output => {
+            module => $plugin,
+            mathod => 'print_output',
+        },
+    }
 
 =back
 

@@ -131,6 +131,12 @@ C<error> set to 1.
 
     $res->print_output(@out);
 
+=item add_callbacks
+
+    $response->add_callbacks(print_output => \@callbacks);
+
+Where C<@callbacks> are coderefs.
+
 =back
 
 =head1 ATTRIBUTES
@@ -156,6 +162,14 @@ Set to 1 after print_output has been called.
 =item halted
 
 If set to 1, no further processing should be done.
+
+=item callbacks
+
+Contains a hashref of callbacks
+
+    {
+        print_output => $coderef,
+    },
 
 =back
 
