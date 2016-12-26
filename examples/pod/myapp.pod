@@ -18,6 +18,7 @@ This is a very useful description for myapp.
 
     --verbose -v   [] be verbose (flag; multiple)
     --help -h         Show command help (flag)   
+    --format          Format output              
 
 
 =head2 SUBCOMMANDS
@@ -60,6 +61,17 @@ Options:
 Parameters:
 
     drink  *  What to drink
+
+=head3  data
+
+    myapp  data [options]
+
+output some data
+
+Options:
+
+    --item    
+
 
 =head3  palindrome
 
