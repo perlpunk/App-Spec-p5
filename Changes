@@ -1,5 +1,15 @@
 Revision history for Perl module App::Spec
 
+0.004_001 Mon Dec 26 19:27:37 CET 2016
+
+    - Support plugins (turn help and meta commands into plugins)
+    - Pass a data structure to $run->out and it will be formatted with
+      Data::Dumper
+    - Add a format plugin that formats data output as YAML, JSON, Text::Table,
+      Data::Dump
+    - And lots of refactoring for that
+    - Output via $run->out is not buffered anymore
+
 0.004 Mon Oct 31 18:56:05 CET 2016
 
     - Lots of refactoring

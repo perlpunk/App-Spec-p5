@@ -3,6 +3,8 @@ use strict;
 use warnings;
 package App::Spec::Role::Plugin;
 
+our $VERSION = '0.000'; # VERSION
+
 use Moo::Role;
 
 sub init_run {
