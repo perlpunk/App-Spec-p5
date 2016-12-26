@@ -57,7 +57,7 @@ sub cmd_self_pod {
 
 =head1 NAME
 
-App::Spec::Plugin::Meta - App::Spec Plugin for help subcommand and options
+App::Spec::Plugin::Meta - App::Spec Plugin for meta functions
 
 =head1 DESCRIPTION
 

@@ -1,4 +1,4 @@
-# ABSTRACT: App::Spec Plugin for help subcommand and options
+# ABSTRACT: App::Spec Plugin for formatting data structures
 use strict;
 use warnings;
 package App::Spec::Plugin::Format;
@@ -82,7 +82,7 @@ sub print_output {
 
 =head1 NAME
 
-App::Spec::Plugin::Format - App::Spec Plugin for help subcommand and options
+App::Spec::Plugin::Format - App::Spec Plugin for formatting data structures
 
 =head1 DESCRIPTION
 
