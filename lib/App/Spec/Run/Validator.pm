@@ -1,3 +1,4 @@
+# ABSTRACT: Processes and validates options and parameters
 use strict;
 use warnings;
 package App::Spec::Run::Validator;
@@ -224,3 +225,48 @@ sub _process {
 }
 
 1;
+
+__END__
+
+=pod
+
+=head1 NAME
+
+App::Spec::Run::Validator - Processes and validates options and parameters
+
+=head1 METHODS
+
+=over 4
+
+=item process
+
+    my %errs;
+    my $ok = $validator->process( $run, \%errs );
+
+Returns 1 or 0. In case of validation errors, it fills C<%errs>.
+
+=back
+
+=head1 ATTRIBUTES
+
+=over 4
+
+=item options
+
+Holds the read commandline options
+
+=item parameters
+
+Holds the read commandline parameters
+
+=item option_specs
+
+Holds the items from App::Spec for options
+
+=item param_specs
+
+Holds the items from App::Spec for parameters
+
+=back
+
+=cut

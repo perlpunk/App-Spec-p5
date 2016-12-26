@@ -1,5 +1,6 @@
 ---
 name: myapp
+plugins: [Format]
 appspec: { "version": 0.001 }
 class: App::Spec::Example::MyApp
 title: My Very Cool App
@@ -149,4 +150,12 @@ subcommands:
           name: null
           email: null
 
+  data:
+    summary: output some data
+    op: data
+    options:
+    - name: item
+      type: string
+      enum: [hash, table]
+      default: hash
 # vim:et:sts=2:sws=2:sw=2:foldmethod=indent

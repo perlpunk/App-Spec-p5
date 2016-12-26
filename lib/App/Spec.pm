@@ -9,40 +9,17 @@ our $VERSION = '0.000'; # VERSION
 use App::Spec::Subcommand;
 use App::Spec::Option;
 use App::Spec::Parameter;
-use List::Util qw/ any /;
 use YAML::XS ();
-use Storable qw/ dclone /;
 
 use Moo;
 
-has name => ( is => 'rw' );
-has appspec => ( is => 'rw' );
-has class => ( is => 'rw' );
+with('App::Spec::Role::Command');
+
 has title => ( is => 'rw' );
-has markup => ( is => 'rw', default => 'pod' );
-has options => ( is => 'rw' );
-has parameters => ( is => 'rw' );
-has subcommands => ( is => 'rw', default => sub { +{} } );
 has abstract => ( is => 'rw' );
-has description => ( is => 'rw' );
 
-my $DATA = do { local $/; <DATA> };
-my $default_spec;
 
-sub build {
-    my ($class, %spec) = @_;
-    for (@{ $spec{options} || [] }, @{ $spec{parameters} || [] }) {
-        $_ = { spec => $_ } unless ref $_;
-    }
-    $_ = App::Spec::Option->build(%$_) for @{ $spec{options} || [] };
-    $_ = App::Spec::Parameter->build(%$_) for @{ $spec{parameters} || [] };
-    my $self = $class->new(%spec);
-}
 
-sub _read_default_spec {
-    $default_spec ||= YAML::XS::Load($DATA);
-    return dclone $default_spec;
-}
 
 sub runner {
     my ($self, %args) = @_;
@@ -54,102 +31,6 @@ sub runner {
         %args,
     });
     return $run;
-}
-
-sub read {
-    my ($class, $file) = @_;
-    unless (defined $file) {
-        die "No filename given";
-    }
-
-    my $spec = $class->load_data($file);
-
-    my $has_subcommands = $spec->{subcommands} ? 1 : 0;
-    my $default;
-    {
-        $default = $class->_read_default_spec;
-
-        for my $opt (@{ $default->{options} }) {
-            my $name = $opt->{name};
-            # TODO
-            # this should be moved somewhere else since the name might not
-            # be parsed from dsl yet
-            no warnings 'uninitialized';
-            unless (any { (ref $_ ? $_->{name} : $_) eq $name } @{ $spec->{options} }) {
-                push @{ $spec->{options} }, $opt;
-            }
-        }
-
-        if ($has_subcommands) {
-            for my $key (keys %{ $default->{subcommands} } ) {
-                my $cmd = $default->{subcommands}->{ $key };
-                $spec->{subcommands}->{ $key } ||= $cmd;
-            }
-        }
-    }
-
-    my $commands;
-    if ($has_subcommands) {
-        # add subcommands to help command
-        my $help_subcmds = $spec->{subcommands}->{help}->{subcommands} ||= {};
-        $class->_add_subcommands($help_subcmds, $spec->{subcommands}, { subcommand_required => 0 });
-
-        for my $name (keys %{ $spec->{subcommands} || [] }) {
-            my $cmd = $spec->{subcommands}->{ $name };
-            $commands->{ $name } = App::Spec::Subcommand->build(
-                name => $name,
-                %$cmd,
-            );
-        }
-    }
-
-    $spec->{subcommands} = $commands;
-    my $self = $class->build(%$spec);
-    return $self;
-}
-
-sub load_data {
-    my ($class, $file) = @_;
-    my $spec;
-    if (ref $file eq 'GLOB') {
-        my $data = do { local $/; <$file> };
-        $spec = eval { YAML::XS::Load($data) };
-    }
-    elsif (not ref $file) {
-        $spec = eval { YAML::XS::LoadFile($file) };
-    }
-    elsif (ref $file eq 'SCALAR') {
-        my $data = $$file;
-        $spec = eval { YAML::XS::Load($data) };
-    }
-    elsif (ref $file eq 'HASH') {
-        $spec = $file;
-    }
-
-    unless ($spec) {
-        die "Error reading '$file': $@";
-    }
-    return $spec;
-}
-
-sub _add_subcommands {
-    my ($self, $commands1, $commands2, $ref) = @_;
-    for my $name (keys %{ $commands2 || {} }) {
-        next if $name eq "help";
-        my $cmd = $commands2->{ $name };
-        $commands1->{ $name } = {
-            name => $name,
-            subcommands => {},
-            %$ref,
-        };
-        my $subcmds = $cmd->{subcommands} || {};
-        $self->_add_subcommands($commands1->{ $name }->{subcommands}, $subcmds, $ref);
-    }
-}
-
-sub has_subcommands {
-    my ($self) = @_;
-    return $self->subcommands ? 1 : 0;
 }
 
 sub usage {
@@ -312,18 +193,6 @@ sub _param_flags_string {
     return $flags;
 }
 
-sub generate_pod {
-    my ($self) = @_;
-
-    require App::Spec::Pod;
-    my $generator = App::Spec::Pod->new(
-        spec => $self,
-    );
-    my $pod = $generator->generate;
-    return $pod;
-
-}
-
 sub _colorize_lines {
     my ($self, $lines, $highlights, $colored) = @_;
     my $output = '';
@@ -438,6 +307,8 @@ This module represents a specification of a command line tool.
 Currently it can read the spec from a YAML file or directly from a data
 structure in perl.
 
+It uses the role L<App::Spec::Role::Command>.
+
 The L<App::Spec::Run> module is the framework which will run the actual
 app.
 
@@ -526,10 +397,6 @@ Generates shell completion script for the spec.
         shell => "zsh",
     );
 
-=item generate_pod
-
-    my $pod = $spec->generate_pod;
-
 =item make_getopt
 
 Returns options for Getopt::Long
@@ -555,42 +422,3 @@ as perl itself.
 
 1;
 
-__DATA__
-options:
-    -   name: help
-        summary: Show command help
-        type: flag
-        aliases:
-        - h
-subcommands:
-    help:
-        op: cmd_help
-        summary: Show command help
-        subcommand_required: 0
-        options:
-        -   name: all
-            type: flag
-    _meta:
-        summary: Information and utilities for this app
-        subcommands:
-            completion:
-                summary: Shell completion functions
-                subcommands:
-                    generate:
-                        summary: Generate self completion
-                        op: cmd_self_completion
-                        options:
-                            -   name: name
-                                summary: name of the program (optional, override name in spec)
-                            -   name: zsh
-                                summary: for zsh
-                                type: flag
-                            -   name: bash
-                                summary: for bash
-                                type: flag
-            pod:
-                summary: Pod documentation
-                subcommands:
-                    generate:
-                        summary: Generate self pod
-                        op: cmd_self_pod

@@ -22,3 +22,10 @@ cover:
 
 process-pod:
 	./utils/process-pod.pl
+
+# https://leanpub.com/the-tao-of-tmux/read/
+watch-test:
+	(find t/ xt/ -name "*.t"; \
+	find lib/ -name "*.pm"; \
+	find examples/ share/ -name "*.yaml" \
+	) | entr -c prove -lr t xt

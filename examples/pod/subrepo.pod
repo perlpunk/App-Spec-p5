@@ -175,7 +175,7 @@ display version information about git-subrepo
 
 =head3  help
 
-    subrepo  help <subcommands>
+    subrepo  help
 
 Same as C<git help subrepo>
 

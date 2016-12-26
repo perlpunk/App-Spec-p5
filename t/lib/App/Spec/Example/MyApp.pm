@@ -206,6 +206,31 @@ sub config {
     warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\$opt], ['opt']);
 }
 
+sub data {
+    my ($self, $run) = @_;
+    my $opt = $run->options;
+    my $item = $opt->{item};
+
+    my $ref;
+    if ($item eq 'hash') {
+        $ref = {
+            foo => 23,
+        };
+    }
+    elsif ($item eq 'table') {
+        $ref = [
+            [qw/ FOO BAR /],
+            [ qw/ a b /],
+            [ qw/ c d /],
+        ];
+    }
+
+    # instead of print Data::Dumper->Dump($ref) or doing your own YAML or JSON
+    # encoding simply pass it to App::Spec
+    $run->out("Data '$item':");
+    $run->out($ref);
+}
+
 sub convert_complete {
     my ($self, $run, $args) = @_;
     my $errors = $run->validation_errors;

@@ -46,4 +46,9 @@
     - regex: 'Options: set=\(name=wall\)'
   exit: 0
 
+-
+  args: [ myapp, data, --item, hash, --format YAML]
+  stdout:
+    - regex: "Data 'hash':"
+  exit: 0
 # vim:et:sts=2:sws=2:sw=2:foldmethod=indent

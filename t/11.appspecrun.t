@@ -20,6 +20,7 @@ for my $test (@testdata) {
     my $app = shift @$args;
     my $spec = App::Spec->read("$Bin/../examples/$app-spec.yaml");
     my $runner = $spec->runner;
+    $runner->response->buffered(1);
     my $exit = $test->{exit} || 0;
     my $env = $test->{env};
     my $name = "$app args: (@$args)";
