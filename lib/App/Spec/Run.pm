@@ -24,6 +24,11 @@ has cmd => ( is => 'rw' );
 has response => ( is => 'rw', default => sub { App::Spec::Run::Response->new } );
 has subscribers => ( is => 'rw', default => sub { +{} } );
 
+my %EVENTS = (
+    print_output => 1,
+    global_options => 1,
+);
+
 sub process {
     my ($self) = @_;
 
@@ -32,16 +37,19 @@ sub process {
         $plugin->init_run($self);
     }
     my @callbacks;
-    my $subscribers = $self->subscribers->{print_output};
-    for my $sub (@$subscribers) {
-        my $plugin = $sub->{plugin};
-        my $method = $sub->{method};
-        my $callback = sub {
-            $plugin->$method( run => $self, @_);
-        };
-        push @callbacks, $callback;
+    my $subscriber_events = $self->subscribers;
+    for my $key (qw/ global_options print_output /) {
+        my $subscribers = $subscriber_events->{ $key };
+        for my $sub (@$subscribers) {
+            my $plugin = $sub->{plugin};
+            my $method = $sub->{method};
+            my $callback = sub {
+                $plugin->$method( run => $self, @_);
+            };
+            push @callbacks, $callback;
+        }
+        $self->response->add_callbacks($key => \@callbacks);
     }
-    $self->response->add_callbacks(print_output => \@callbacks);
 
     my $argv = $self->argv;
     unless ($argv) {
@@ -379,9 +387,6 @@ sub colored {
     return $msg;
 }
 
-my %EVENTS = (
-    print_output => 1,
-);
 sub subscribe {
     my ($self, %args) = @_;
 
@@ -396,12 +401,11 @@ sub subscribe {
 sub event_globaloptions {
     my ($self) = @_;
 
-    my $plugins = $self->spec->plugins_by_type->{GlobalOptions};
-    for my $plugin (@$plugins) {
-        next unless $plugin->can("event_globaloptions");
-        $plugin->event_globaloptions(
-            run => $self,
-        );
+    my $subscribers = $self->subscribers->{global_options};
+    for my $sub (@$subscribers) {
+        my $plugin = $sub->{plugin};
+        my $method = $sub->{method};
+        $plugin->$method( run => $self);
     }
 }
 

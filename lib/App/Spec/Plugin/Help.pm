@@ -68,7 +68,17 @@ sub install_options {
     return $options;
 }
 
-sub event_globaloptions {
+sub init_run {
+    my ($self, $run) = @_;
+    $run->subscribe(
+        global_options => {
+            plugin => $self,
+            method => "global_options",
+        },
+    );
+}
+
+sub global_options {
     my ($self, %args) = @_;
     my $run = $args{run};
     my $options = $run->options;
@@ -136,7 +146,7 @@ This is required by L<App::Spec::Role::Plugin::Subcommand>.
 
 See L<App::Spec::Role::Plugin::Subcommand#install_subcommands>.
 
-=item event_globaloptions
+=item global_options
 
 This method is called by L<App::Spec::Run> after global options have been read.
 
@@ -146,6 +156,10 @@ No further processing is done.
 
 For apps with subcommands it inserts C<help> at the beginning of the
 commandline arguments and continues processing.
+
+=item init_run
+
+See L<App::Spec::Plugin>
 
 =back
 
