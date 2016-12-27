@@ -48,6 +48,7 @@ sub _process {
         $specs = $self->option_specs;
     }
 
+    # TODO: iterate over parameters in original cmdline order
     for my $name (sort keys %$specs) {
         my $spec = $specs->{ $name };
         my $value = $items->{ $name };
