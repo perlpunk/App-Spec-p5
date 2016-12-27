@@ -26,7 +26,9 @@ sub validate_argument {
     my $spec = $args{spec};
     my $value = $args{value};
     if (defined $$value) {
-        if (is_arrayref($$value) and $$value->[0] eq '_' or $$value eq '_') {
+        if (
+            (is_arrayref($$value) and ($$value->[0] // '') eq '_')
+            or $$value eq '_') {
             require Term::Choose;
             my $possible_values = $args{possible_values};
             @$possible_values = map { ref $_ ? $_->{name} : $_ } @$possible_values;
