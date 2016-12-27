@@ -97,10 +97,6 @@ This method is required by L<App::Spec::Role::Plugin::GlobalOptions>.
 
 See L<App::Spec::Role::Plugin::GlobalOptions#install_options>.
 
-=item event_globaloptions
-
-This method is called by L<App::Spec::Run> after global options have been read.
-
 =item init_run
 
 See L<App::Spec::Role::Plugin>

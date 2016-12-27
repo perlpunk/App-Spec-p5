@@ -489,7 +489,14 @@ Does not print the output and does not exit.
 
     $run->out("Hello world!");
 
-Appends to response output. Adds a newline if not present
+Appends to response output. Adds a newline if not present. You can also
+pass a data structure:
+
+    $run->out($hashref);
+
+This will be formatted with L<Data::Dumper>.
+
+See also L<App::Spec::Plugin::Format>.
 
 =item err
 
@@ -656,7 +663,7 @@ Contains a hashref
     {
         print_output => {
             module => $plugin,
-            mathod => 'print_output',
+            method => 'print_output',
         },
     }
 

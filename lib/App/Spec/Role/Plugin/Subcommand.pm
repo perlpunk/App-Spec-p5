@@ -19,7 +19,7 @@ __END__
 
 =head1 NAME
 
-Plugins for subcommands should use this role
+App::Spec::Role::Plugin::Subcommand - Plugins for subcommands should use this role
 
 =head1 DESCRIPTION
 

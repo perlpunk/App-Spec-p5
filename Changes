@@ -16,7 +16,7 @@ Revision history for Perl module App::Spec
     - More documentation
     - Update schema
     - Integer validation fix
-    - Feture: allow 'mapping' options and parameters (Like Getopt::Long
+    - Feature: allow 'mapping' options and parameters (Like Getopt::Long
       supports via '%')
     - Feature: add DSL for defining options
 

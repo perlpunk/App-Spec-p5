@@ -115,6 +115,9 @@ If you pass it a string, it will create a L<App::Spec::Run::Output>.
     );
     $res->add_output($output);
 
+This will call C<print_output> if buffered is false, otherwise it will
+add the output to C<outputs>
+
 =item add_error
 
 Like C<add_output>, but the created Output object will have an attribute
@@ -131,6 +134,8 @@ C<error> set to 1.
 
     $res->print_output(@out);
 
+Prints the given output and all output in C<outputs>.
+
 =item add_callbacks
 
     $response->add_callbacks(print_output => \@callbacks);
@@ -146,6 +151,8 @@ Where C<@callbacks> are coderefs.
 =item buffered
 
 If true, output should be buffered until print_output is called.
+
+Default: false
 
 =item exit
 
