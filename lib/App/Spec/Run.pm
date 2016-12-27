@@ -27,6 +27,7 @@ has subscribers => ( is => 'rw', default => sub { +{} } );
 my %EVENTS = (
     print_output => 1,
     global_options => 1,
+    validate_argument => 1,
 );
 
 sub process {

@@ -1,6 +1,6 @@
 ---
 name: myapp
-plugins: [Format]
+plugins: [Format, TermChoose]
 appspec: { "version": 0.001 }
 class: App::Spec::Example::MyApp
 title: My Very Cool App

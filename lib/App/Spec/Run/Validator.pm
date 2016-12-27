@@ -47,6 +47,7 @@ sub _process {
         $items = $self->options;
         $specs = $self->option_specs;
     }
+    my $subscribers = $run->subscribers->{validate_argument} || [];
 
     # TODO: iterate over parameters in original cmdline order
     for my $name (sort keys %$specs) {
@@ -75,6 +76,19 @@ sub _process {
 
         my $param_type = $spec->type;
         my $enum = $spec->enum;
+
+        for my $sub (@$subscribers) {
+            my $plugin = $sub->{plugin};
+            my $method = $sub->{method};
+            $plugin->$method(
+                run => $run,
+                spec => $spec,
+                value => \$value,
+                possible_values => $possible_values,
+            );
+        }
+        $items->{ $name } = $value;
+
 
         if ($spec->type eq "flag") {
             if ($spec->multiple) {
@@ -162,6 +176,16 @@ sub _process {
 
             $values = [ $value ];
         }
+        if ($spec->multiple) {
+            $items->{ $name } = $values;
+        }
+        else {
+            $items->{ $name } = $values->[0];
+        }
+
+
+
+
 
         my $def;
         if (ref $param_type eq 'HASH') {
