@@ -98,7 +98,7 @@ sub cities {
 sub weather_complete {
     my ($self, $run, $args) = @_;
     my $runmode = $args->{runmode};
-    return if $runmode ne "completion";
+    return if not ($runmode eq "completion" or $runmode eq "validation");
     my $comp_param = $args->{parameter};
 
     my $param = $run->parameters;

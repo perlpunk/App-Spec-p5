@@ -54,6 +54,7 @@ sub _process {
         my $spec = $specs->{ $name };
         my $value = $items->{ $name };
 
+        my $enum = $spec->enum;
 
         my $possible_values = $spec->mapping ? {} : [];
         if (my $spec_values = $spec->values) {
@@ -71,11 +72,13 @@ sub _process {
                 $possible_values = $spec_values->{enum};
             }
         }
+        elsif ($enum) {
+            $possible_values = $enum;
+        }
 
 
 
         my $param_type = $spec->type;
-        my $enum = $spec->enum;
 
         for my $sub (@$subscribers) {
             my $plugin = $sub->{plugin};
