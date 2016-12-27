@@ -52,6 +52,27 @@ sub _process {
     for my $name (sort keys %$specs) {
         my $spec = $specs->{ $name };
         my $value = $items->{ $name };
+
+
+        my $possible_values = $spec->mapping ? {} : [];
+        if (my $spec_values = $spec->values) {
+            if (my $op = $spec_values->{op}) {
+                my $args = {
+                    runmode => "validation",
+                    parameter => $name,
+                };
+                $possible_values = $run->cmd->$op($run, $args) || [];
+            }
+            elsif ($spec->mapping) {
+                $possible_values = $spec_values->{mapping};
+            }
+            else {
+                $possible_values = $spec_values->{enum};
+            }
+        }
+
+
+
         my $param_type = $spec->type;
         my $enum = $spec->enum;
 
@@ -148,23 +169,6 @@ sub _process {
         }
         my $code = $validate{ $param_type }
             or die "Missing method for validation type $param_type";
-
-        my $possible_values = $spec->mapping ? {} : [];
-        if (my $spec_values = $spec->values) {
-            if (my $op = $spec_values->{op}) {
-                my $args = {
-                    runmode => "validation",
-                    parameter => $name,
-                };
-                $possible_values = $run->cmd->$op($run, $args) || [];
-            }
-            elsif ($spec->mapping) {
-                $possible_values = $spec_values->{mapping};
-            }
-            else {
-                $possible_values = $values->{enum};
-            }
-        }
 
         my @to_check = $spec->mapping
             ? map { [ $_ => $values->{ $_ } ] } keys %$values
