@@ -32,10 +32,20 @@ sub validate_argument {
             require Term::Choose;
             my $possible_values = $args{possible_values};
             @$possible_values = map { ref $_ ? $_->{name} : $_ } @$possible_values;
-            my $tc = Term::Choose->new();
-            my $list = [qw/ tea coffee /, 1..10];
-            my $choice = $tc->choose( $possible_values );
-            $$value = is_arrayref($$value) ? [$choice] : $choice;
+
+            my $choice;
+            my $prompt = "Value for " . $spec->name . "\n";
+            if (is_arrayref($$value)) {
+                $prompt .= "Select with space, confirm choice with Enter, abort with 'q':";
+                my $tc = Term::Choose->new( { prompt => $prompt } );
+                @$choice = $tc->choose( $possible_values );
+            }
+            else {
+                $prompt .= "Confirm choice with Enter, abort with 'q':";
+                my $tc = Term::Choose->new( { prompt => $prompt } );
+                $choice = $tc->choose( $possible_values );
+            }
+            $$value = $choice;
         }
     }
 }
