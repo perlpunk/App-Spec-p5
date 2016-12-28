@@ -268,9 +268,6 @@ sub convert_complete {
         my $value = $param->{value};
         my $units = $units{ $type };
         my @result;
-        if ($runmode eq "validation") {
-            return [sort keys %$units];
-        }
         for my $unit (sort keys %$units) {
             next if $unit eq $source;
             my $label = $units->{ $unit }->{label};
