@@ -29,23 +29,38 @@ sub validate_argument {
         if (
             (is_arrayref($$value) and ($$value->[0] // '') eq '_')
             or $$value eq '_') {
+
             require Term::Choose;
             my $possible_values = $args{possible_values};
-            @$possible_values = map { ref $_ ? $_->{name} : $_ } @$possible_values;
+            my @choices = map {
+                ref $_ ? $_->{name} .' - ' . $_->{description} : $_
+            } @$possible_values;
+            my @values = map {
+                ref $_ ? $_->{name} : $_
+            } @$possible_values;
 
-            my $choice;
-            my $prompt = "Value for " . $spec->name . "\n";
+            my $tc = Term::Choose->new();
+            my $prompt = "Select a value for '" . $spec->name . "'\n";
+
+            my @index;
+            my %options = (
+                layout => 2,
+                index => 1,
+            );
             if (is_arrayref($$value)) {
-                $prompt .= "Select with space, confirm choice with Enter, abort with 'q':";
-                my $tc = Term::Choose->new( { prompt => $prompt } );
-                @$choice = $tc->choose( $possible_values );
+                $prompt .= "Select with <Space>, confirm choice with <Enter>, abort with 'q':";
+                @index = $tc->choose(
+                    \@choices, { prompt => $prompt, %options },
+                );
+                $$value = [@values[ @index] ];
             }
             else {
-                $prompt .= "Confirm choice with Enter, abort with 'q':";
-                my $tc = Term::Choose->new( { prompt => $prompt } );
-                $choice = $tc->choose( $possible_values );
+                $prompt .= "Confirm choice with <Enter>, abort with 'q':";
+                $index[0] = $tc->choose(
+                    \@choices, { prompt => $prompt, %options },
+                );
+                $$value = $values[ $index[0] ];
             }
-            $$value = $choice;
         }
     }
 }
