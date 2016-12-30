@@ -9,10 +9,12 @@ use Type::Library -base,
                       RunOutputType
                       SpecArgumentCompletion CompletionItem SpecArgumentValues
                       ArgumentValue
-                      RunOutput ResponseCallbacks
+                      RunOutput RunResponse ResponseCallbacks
                       MarkupName
                       PluginType
+                      ValidationErrors
                       CommandOp
+                      EventSubscriber
               );
 use Type::Utils -all;
 use Types::Standard -types;
@@ -49,6 +51,7 @@ union SpecArgumentValues, [
 declare ResponseCallbacks, as Map[Str,CodeRef];
 
 class_type RunOutput, { class => 'App::Spec::Run::Output' };
+class_type RunResponse, { class => 'App::Spec::Run::Response' };
 
 enum MarkupName, [qw(pod swim)];
 
@@ -60,6 +63,16 @@ union ArgumentValue, [
     ArrayRef[Str],
     HashRef[Str],
     HashRef[ArrayRef[Str]],
+];
+
+declare ValidationErrors, as Dict[
+    parameters => Optional[Map[Str,Str]],
+    options => Optional[Map[Str,Str]],
+];
+
+declare EventSubscriber, as Dict[
+    plugin => ClassName|Object,
+    method => CommandOp,
 ];
 
 1;
