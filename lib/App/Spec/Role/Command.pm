@@ -6,7 +6,7 @@ our $VERSION = '0.000'; # VERSION
 
 use List::Util qw/ any /;
 use App::Spec::Option;
-use Ref::Util qw/ is_arrayref /;
+use Ref::Util qw/ is_arrayref is_blessed_ref /;
 
 use Moo::Role;
 use Types::Standard qw(Str CodeRef ArrayRef Map);
@@ -78,35 +78,44 @@ sub has_subcommands {
     return +($self->subcommands and %{$self->subcommands}) ? 1 : 0;
 }
 
-sub build {
-    my ($class, %spec) = @_;
-    $spec{options} ||= [];
-    $spec{parameters} ||= [];
-    for (@{ $spec{options} }, @{ $spec{parameters} }) {
+sub _it_or_new {
+    my ($class,$it) = @_;
+    return $it if is_blessed_ref($it);
+    return $class->new($it);
+}
+
+around BUILDARGS => sub {
+    my ($orig,$class,@etc) = @_;
+    my $spec = $class->$orig(@etc);
+
+    $spec->{options} ||= [];
+    $spec->{parameters} ||= [];
+    for (@{ $spec->{options} }, @{ $spec->{parameters} }) {
         $_ = { spec => $_ } unless ref $_;
     }
-    $_ = App::Spec::Option->build(%$_) for @{ $spec{options} || [] };
-    $_ = App::Spec::Parameter->build(%$_) for @{ $spec{parameters} || [] };
+
+    $_ = _it_or_new('App::Spec::Option',$_) for @{ $spec->{options} || [] };
+    $_ = _it_or_new('App::Spec::Parameter',$_) for @{ $spec->{parameters} || [] };
 
     my $commands = {};
-    for my $name (keys %{ $spec{subcommands} || {} }) {
-        my $cmd = $spec{subcommands}->{ $name };
-        $commands->{ $name } = App::Spec::Subcommand->build(
+    for my $name (keys %{ $spec->{subcommands} || {} }) {
+        my $cmd = $spec->{subcommands}->{ $name };
+        $commands->{ $name } = App::Spec::Subcommand->new(
             name => $name,
             %$cmd,
         );
     }
-    $spec{subcommands} = $commands;
+    $spec->{subcommands} = $commands;
 
-    if ( defined (my $op = $spec{op}) ) {
+    if ( defined (my $op = $spec->{op}) ) {
         die "Invalid op '$op'" unless $op =~ m/^\w+\z/;
     }
-    if ( defined (my $class = $spec{class}) ) {
+    if ( defined (my $class = $spec->{class}) ) {
         die "Invalid class '$class'" unless $class =~ m/^ \w+ (?: ::\w+)* \z/x;
     }
 
-    my $self = $class->new(%spec);
-}
+    return $spec;
+};
 
 sub read {
     my ($class, $file) = @_;
@@ -125,7 +134,7 @@ sub read {
     }
     $spec->{plugins} = \@plugins;
 
-    my $self = $class->build(%$spec);
+    my $self = $class->new($spec);
 
     $self->load_plugins;
     $self->init_plugins;
@@ -193,7 +202,7 @@ sub init_plugins {
                     $options ||= [];
 
                     for my $opt (@$new_opts) {
-                        $opt = App::Spec::Option->build(%$opt);
+                        $opt = _it_or_new('App::Spec::Option',$opt);
                         unless (any { $_->name eq $opt->name } @$options) {
                             push @$options, $opt;
                         }

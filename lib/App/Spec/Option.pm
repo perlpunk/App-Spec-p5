@@ -15,16 +15,6 @@ has aliases => (
     default => sub { [] },
 );
 
-sub build {
-    my ($class, %args) = @_;
-    my %hash = $class->common(%args);
-    my $self = $class->new({
-        aliases => $args{aliases} || [],
-        %hash,
-    });
-    return $self;
-}
-
 1;
 
 =pod

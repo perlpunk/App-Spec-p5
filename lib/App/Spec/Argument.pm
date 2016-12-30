@@ -49,35 +49,22 @@ has values => (
     isa => SpecArgumentValues,
 );
 
-sub common {
-    my ($class, %args) = @_;
+around BUILDARGS => sub {
+    my ($orig,$class,@etc) = @_;
+    my $args = $class->$orig(@etc);
+
     my %dsl;
-    if (defined $args{spec}) {
-        %dsl = $class->from_dsl(delete $args{spec});
+    if (defined $args->{spec}) {
+        %dsl = $class->from_dsl(delete $args->{spec});
     }
-    my $description = $args{description};
-    my $summary = $args{summary};
-    $summary //= '';
-    $description //= '';
-    my $type = $args{type} // 'string';
-    my %hash = (
-        name => $args{name},
-        summary => $summary,
-        description => $description,
-        type => $type,
-        multiple => $args{multiple} ? 1 : 0,
-        mapping => $args{mapping} ? 1 : 0,
-        required => $args{required} ? 1 : 0,
-        unique => $args{unique} ? 1 : 0,
-        default => $args{default},
-        completion => $args{completion},
-        enum => $args{enum},
-        values => $args{values},
-        %dsl,
-    );
-    not defined $hash{ $_ } and delete $hash{ $_ } for keys %hash;
-    return %hash;
-}
+    $args->{description} //= '';
+    $args->{summary} //= '';
+    $args->{type} //= 'string';
+    @{$args}{keys %dsl} = values %dsl;
+
+    not defined $args->{ $_ } and delete $args->{ $_ } for keys %{$args};
+    return $args;
+};
 
 my $name_re = qr{[\w-]+};
 

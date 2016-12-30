@@ -5,17 +5,8 @@ package App::Spec::Parameter;
 
 our $VERSION = '0.000'; # VERSION
 
-use base 'App::Spec::Argument';
 use Moo;
-
-sub build {
-    my ($class, %args) = @_;
-    my %hash = $class->common(%args);
-    my $self = $class->new({
-        %hash,
-    });
-    return $self;
-}
+extends 'App::Spec::Argument';
 
 sub to_usage_header {
     my ($self) = @_;
