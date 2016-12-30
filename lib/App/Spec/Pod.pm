@@ -8,8 +8,13 @@ our $VERSION = '0.000'; # VERSION
 use Text::Table;
 
 use Moo;
+use App::Spec::Types qw(AppSpec);
 
-has spec => ( is => 'ro' );
+has spec => (
+    is => 'ro',
+    isa => AppSpec,
+    required => 1,
+);
 
 sub generate {
     my ($self) = @_;
