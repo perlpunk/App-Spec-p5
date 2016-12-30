@@ -6,20 +6,68 @@ our $VERSION = '0.000'; # VERSION
 
 use List::Util qw/ any /;
 use App::Spec::Option;
-use Ref::Util qw/ is_arrayref /;
+use Ref::Util qw/ is_arrayref is_blessed_ref /;
 
 use Moo::Role;
+use Types::Standard qw(Str CodeRef ArrayRef Map);
+use App::Spec::Types qw(MarkupName PluginName PluginType SpecOption SpecParameter SpecSubcommand CommandOp);
 
-has name => ( is => 'rw' );
-has markup => ( is => 'rw', default => 'pod' );
-has class => ( is => 'rw' );
-has op => ( is => 'ro' );
-has plugins => ( is => 'ro' );
-has plugins_by_type => ( is => 'ro', default => sub { +{} } );
-has options => ( is => 'rw', default => sub { +[] } );
-has parameters => ( is => 'rw', default => sub { +[] } );
-has subcommands => ( is => 'rw', default => sub { +{} } );
-has description => ( is => 'rw' );
+has name => (
+    is => 'rw',
+    required => 1,
+    isa => Str,
+);
+
+has markup => (
+    is => 'rw',
+    isa => MarkupName,
+    default => 'pod',
+);
+
+has class => (
+    is => 'rw',
+    isa => Str,
+);
+
+has op => (
+    is => 'ro',
+    isa => CommandOp,
+);
+
+has plugins => (
+    is => 'ro',
+    isa => ArrayRef[PluginName],
+    default => sub { [] },
+);
+
+has plugins_by_type => (
+    is => 'ro',
+    isa => Map[PluginType,Str],
+    default => sub { +{} },
+);
+
+has options => (
+    is => 'rw',
+    isa => ArrayRef[SpecOption],
+    default => sub { +[] },
+);
+
+has parameters => (
+    is => 'rw',
+    isa => ArrayRef[SpecParameter],
+    default => sub { +[] },
+);
+
+has subcommands => (
+    is => 'rw',
+    isa => Map[Str,SpecSubcommand],
+    default => sub { +{} },
+);
+
+has description => (
+    is => 'rw',
+    isa => Str,
+);
 
 sub default_plugins {
     qw/ Meta Help /
@@ -27,37 +75,62 @@ sub default_plugins {
 
 sub has_subcommands {
     my ($self) = @_;
-    return $self->subcommands ? 1 : 0;
+    return +($self->subcommands and %{$self->subcommands}) ? 1 : 0;
 }
 
-sub build {
-    my ($class, %spec) = @_;
-    $spec{options} ||= [];
-    $spec{parameters} ||= [];
-    for (@{ $spec{options} }, @{ $spec{parameters} }) {
+sub _it_or_new {
+    my ($class,$it) = @_;
+    return $it if is_blessed_ref($it);
+    return $class->new($it);
+}
+
+around BUILDARGS => sub {
+    my ($orig,$class,@etc) = @_;
+    my $spec = $class->$orig(@etc);
+
+    $spec->{options} ||= [];
+    $spec->{parameters} ||= [];
+    for (@{ $spec->{options} }, @{ $spec->{parameters} }) {
         $_ = { spec => $_ } unless ref $_;
     }
-    $_ = App::Spec::Option->build(%$_) for @{ $spec{options} || [] };
-    $_ = App::Spec::Parameter->build(%$_) for @{ $spec{parameters} || [] };
 
-    my $commands;
-    for my $name (keys %{ $spec{subcommands} || {} }) {
-        my $cmd = $spec{subcommands}->{ $name };
-        $commands->{ $name } = App::Spec::Subcommand->build(
+    $_ = _it_or_new('App::Spec::Option',$_) for @{ $spec->{options} || [] };
+    $_ = _it_or_new('App::Spec::Parameter',$_) for @{ $spec->{parameters} || [] };
+
+    my $commands = {};
+    for my $name (keys %{ $spec->{subcommands} || {} }) {
+        my $cmd = $spec->{subcommands}->{ $name };
+        $commands->{ $name } = App::Spec::Subcommand->new(
             name => $name,
             %$cmd,
         );
     }
-    $spec{subcommands} = $commands;
+    $spec->{subcommands} = $commands;
 
-    if ( defined (my $op = $spec{op}) ) {
-        die "Invalid op '$op'" unless $op =~ m/^\w+\z/;
+    if ( defined (my $op = $spec->{op}) ) {
+        die "Invalid op '$op'" unless ref($op) or $op =~ m/^\w+\z/;
     }
-    if ( defined (my $class = $spec{class}) ) {
+    if ( defined (my $class = $spec->{class}) ) {
         die "Invalid class '$class'" unless $class =~ m/^ \w+ (?: ::\w+)* \z/x;
     }
 
-    my $self = $class->new(%spec);
+    unshift @{ $spec->{plugins} ||= [] }, $class->default_plugins;
+    for my $plugin (@{$spec->{plugins}}) {
+        unless ($plugin =~ s/^=//) {
+            $plugin = "App::Spec::Plugin::$plugin";
+        }
+    }
+
+    return $spec;
+};
+
+sub BUILD {
+    my ($self) = @_;
+
+    $self->load_plugins;
+    $self->init_plugins;
+
+    return;
 }
 
 sub read {
@@ -68,19 +141,7 @@ sub read {
 
     my $spec = $class->load_data($file);
 
-    my @plugins = $class->default_plugins;
-    push @plugins, @{ $spec->{plugins} || [] };
-    for my $plugin (@plugins) {
-        unless ($plugin =~ s/^=//) {
-            $plugin = "App::Spec::Plugin::$plugin";
-        }
-    }
-    $spec->{plugins} = \@plugins;
-
-    my $self = $class->build(%$spec);
-
-    $self->load_plugins;
-    $self->init_plugins;
+    my $self = $class->new($spec);
 
     return $self;
 }
@@ -124,7 +185,6 @@ sub init_plugins {
     my ($self) = @_;
     my $plugins = $self->plugins;
     if (@$plugins) {
-        my $subcommands = $self->subcommands;
         my $options = $self->options;
         for my $plugin (@$plugins) {
             if ($plugin->does('App::Spec::Role::Plugin::Subcommand')) {
@@ -132,9 +192,9 @@ sub init_plugins {
                 my $subc = $plugin->install_subcommands( spec => $self );
                 $subc = [ $subc ] unless is_arrayref($subc);
 
-                if ($subcommands) {
+                if ($self->has_subcommands) {
                     for my $cmd (@$subc) {
-                        $subcommands->{ $cmd->name } ||= $cmd;
+                        $self->subcommands->{ $cmd->name } ||= $cmd;
                     }
                 }
             }
@@ -146,7 +206,7 @@ sub init_plugins {
                     $options ||= [];
 
                     for my $opt (@$new_opts) {
-                        $opt = App::Spec::Option->build(%$opt);
+                        $opt = _it_or_new('App::Spec::Option',$opt);
                         unless (any { $_->name eq $opt->name } @$options) {
                             push @$options, $opt;
                         }

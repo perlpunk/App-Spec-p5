@@ -6,10 +6,22 @@ package App::Spec::Run::Output;
 our $VERSION = '0.000'; # VERSION
 
 use Moo;
+use App::Spec::Types qw(RunOutputType);
+use Types::Standard qw(Str Bool);
 
-has type => ( is => 'rw', default => 'plain' );
-has error => ( is => 'rw' );
-has content => ( is => 'rw' );
+has type => (
+    is => 'rw',
+    isa => RunOutputType,
+    default => 'plain',
+);
+has error => (
+    is => 'rw',
+    isa => Bool,
+    default => 0,
+);
+has content => (
+    is => 'rw',
+);
 
 1;
 
