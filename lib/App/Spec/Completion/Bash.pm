@@ -359,14 +359,14 @@ sub dynamic_completion {
 
     my $def = $p->completion;
     my ($op, $command, $command_string);
-    if (not ref $def and $def == 1) {
-        my $possible_values = $p->values or die "Error for '$name': completion: 1 but 'values' not defined";
-        $op = $possible_values->{op} or die "Error for '$name': 'values' needs an 'op'";
-    }
-    elsif (ref $def) {
+    if (ref $def) {
         $op = $def->{op};
         $command = $def->{command};
         $command_string = $def->{command_string};
+    }
+    elsif ($def) {
+        my $possible_values = $p->values or die "Error for '$name': completion: 1 but 'values' not defined";
+        $op = $possible_values->{op} or die "Error for '$name': 'values' needs an 'op'";
     }
     else {
         die "Error for '$name': invalid value for 'completion'";

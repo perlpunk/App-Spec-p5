@@ -6,19 +6,43 @@ package App::Spec::Argument;
 our $VERSION = '0.000'; # VERSION
 
 use Moo;
+use App::Spec::Types qw(ArgumentCompletion);
+use Types::Standard qw(Str Bool);
 
-has name => ( is => 'ro' );
+has name => (
+    is => 'ro',
+    required => 1,
+    isa => Str,
+);
+
 has type => ( is => 'ro' );
-has multiple => ( is => 'ro' );
-has mapping => ( is => 'ro' );
-has required => ( is => 'ro' );
-has unique => ( is => 'ro' );
-has summary => ( is => 'ro' );
-has description => ( is => 'ro' );
-has default => ( is => 'ro' );
-has completion => ( is => 'ro' );
-has enum => ( is => 'ro' );
-has values => ( is => 'ro' );
+
+has [qw(multiple mapping required unique)] => (
+    is => 'ro',
+    isa => Bool,
+    default => 0,
+);
+
+has [qw(summary description)] => (
+    is => 'ro',
+    isa => Str,
+);
+
+has completion => (
+    is => 'ro',
+    isa => ArgumentCompletion,
+    default => 0,
+);
+
+has enum => (
+    is => 'ro',
+    isa => ArrayRef[Str],
+);
+
+has values => (
+    is => 'ro',
+    isa => ArgumentValues,
+);
 
 sub common {
     my ($class, %args) = @_;

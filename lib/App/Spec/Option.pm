@@ -5,10 +5,15 @@ package App::Spec::Option;
 
 our $VERSION = '0.000'; # VERSION
 
-use base 'App::Spec::Argument';
 use Moo;
+extends 'App::Spec::Argument';
+use Types::Standard qw(Str ArrayRef);
 
-has aliases => ( is => 'ro' );
+has aliases => (
+    is => 'ro',
+    isa => ArrayRef[Str],
+    default => sub { [] },
+);
 
 sub build {
     my ($class, %args) = @_;
