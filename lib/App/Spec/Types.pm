@@ -11,7 +11,7 @@ use Type::Library -base,
                       ArgumentValue ArgumentType
                       RunOutput RunResponse ResponseCallbacks
                       MarkupName
-                      PluginType
+                      PluginName PluginType
                       ValidationErrors
                       CommandOp
                       EventSubscriber
@@ -54,6 +54,9 @@ class_type RunOutput, { class => 'App::Spec::Run::Output' };
 class_type RunResponse, { class => 'App::Spec::Run::Response' };
 
 enum MarkupName, [qw(pod swim)];
+
+declare PluginName, as Str,
+    where { /[A-Z_a-z][0-9A-Z_a-z]*(?:::[0-9A-Z_a-z]+)/ };
 
 enum PluginType, [qw(Subcommands GlobalOptions)];
 

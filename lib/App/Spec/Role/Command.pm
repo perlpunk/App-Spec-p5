@@ -10,7 +10,7 @@ use Ref::Util qw/ is_arrayref is_blessed_ref /;
 
 use Moo::Role;
 use Types::Standard qw(Str CodeRef ArrayRef Map);
-use App::Spec::Types qw(MarkupName PluginType SpecOption SpecParameter SpecSubcommand CommandOp);
+use App::Spec::Types qw(MarkupName PluginName PluginType SpecOption SpecParameter SpecSubcommand CommandOp);
 
 has name => (
     is => 'rw',
@@ -36,7 +36,7 @@ has op => (
 
 has plugins => (
     is => 'ro',
-    isa => ArrayRef[Str],
+    isa => ArrayRef[PluginName],
     default => sub { [] },
 );
 
@@ -114,8 +114,24 @@ around BUILDARGS => sub {
         die "Invalid class '$class'" unless $class =~ m/^ \w+ (?: ::\w+)* \z/x;
     }
 
+    unshift @{ $spec->{plugins} ||= [] }, $class->default_plugins;
+    for my $plugin (@{$spec->{plugins}}) {
+        unless ($plugin =~ s/^=//) {
+            $plugin = "App::Spec::Plugin::$plugin";
+        }
+    }
+
     return $spec;
 };
+
+sub BUILD {
+    my ($self) = @_;
+
+    $self->load_plugins;
+    $self->init_plugins;
+
+    return;
+}
 
 sub read {
     my ($class, $file) = @_;
@@ -125,19 +141,7 @@ sub read {
 
     my $spec = $class->load_data($file);
 
-    my @plugins = $class->default_plugins;
-    push @plugins, @{ $spec->{plugins} || [] };
-    for my $plugin (@plugins) {
-        unless ($plugin =~ s/^=//) {
-            $plugin = "App::Spec::Plugin::$plugin";
-        }
-    }
-    $spec->{plugins} = \@plugins;
-
     my $self = $class->new($spec);
-
-    $self->load_plugins;
-    $self->init_plugins;
 
     return $self;
 }
