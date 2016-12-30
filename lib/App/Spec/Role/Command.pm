@@ -10,7 +10,7 @@ use Ref::Util qw/ is_arrayref /;
 
 use Moo::Role;
 use Types::Standard qw(Str CodeRef ArrayRef Map);
-use App::Spec::Types qw(MarkupName PluginType SpecOption SpecParameter SpecSubcommand);
+use App::Spec::Types qw(MarkupName PluginType SpecOption SpecParameter SpecSubcommand CommandOp);
 
 has name => (
     is => 'rw',
@@ -31,7 +31,7 @@ has class => (
 
 has op => (
     is => 'ro',
-    isa => Str|CodeRef,
+    isa => CommandOp,
 );
 
 has plugins => (

@@ -12,6 +12,7 @@ use Type::Library -base,
                       RunOutput ResponseCallbacks
                       MarkupName
                       PluginType
+                      CommandOp
               );
 use Type::Utils -all;
 use Types::Standard -types;
@@ -31,15 +32,17 @@ union CompletionItem, [
     Dict[replace => ( Enum['SELF'] | Tuple[Enum['SHELL_WORDS'],Int] )],
 ];
 
+union CommandOp, [Str,CodeRef];
+
 union SpecArgumentCompletion, [
     Bool,
-    Dict[op => Str|CodeRef],
+    Dict[op => CommandOp],
     Dict[command => ArrayRef[CompletionItem]],
     Dict[command_string => Str],
 ];
 
 union SpecArgumentValues, [
-    Dict[op => Str|CodeRef],
+    Dict[op => CommandOp],
     Dict[mapping => HashRef[ArrayRef[Str]|Str|Undef]],
 ];
 
