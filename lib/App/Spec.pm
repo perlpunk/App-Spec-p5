@@ -12,14 +12,14 @@ use App::Spec::Parameter;
 use YAML::XS ();
 
 use Moo;
+use Types::Standard qw(Str);
 
 with('App::Spec::Role::Command');
 
-has title => ( is => 'rw' );
-has abstract => ( is => 'rw' );
-
-
-
+has [qw(title abstract)] => (
+    is => 'rw',
+    isa => Str,
+);
 
 sub runner {
     my ($self, %args) = @_;
