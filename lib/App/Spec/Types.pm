@@ -3,7 +3,12 @@ use strict;
 use warnings;
 package App::Spec::Types;
 use Type::Library -base,
-    -declare => qw( AppSpec RunOutputType ArgumentCompletion CompletionItem ArgumentValues);
+    -declare => qw(
+                      AppSpec
+                      RunOutputType
+                      ArgumentCompletion CompletionItem ArgumentValues
+                      RunOutput ResponseCallbacks
+              );
 use Type::Utils -all;
 use Types::Standard -types;
 use namespace::clean;
@@ -28,5 +33,9 @@ union ArgumentValues, [
     Dict[op => Str|CodeRef],
     Dict[mapping => HashRef[ArrayRef[Str]|Str|Undef]],
 ];
+
+declare ResponseCallbacks, as Map[Str,CodeRef];
+
+class_type RunOutput, { class => 'App::Spec::Run::Output' };
 
 1;

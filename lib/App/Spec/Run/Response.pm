@@ -9,13 +9,32 @@ use App::Spec::Run::Output;
 use Scalar::Util qw/ blessed /;
 
 use Moo;
+use App::Spec::Types qw(RunOutput ResponseCallbacks);
+use Types::Standard qw(Int Bool ArrayRef);
 
-has exit => ( is => 'rw', default => 0 );
-has outputs => ( is => 'rw', default => sub { [] } );
-has finished => ( is => 'rw' );
-has halted => ( is => 'rw' );
-has buffered => ( is => 'rw', default => 0 );
-has callbacks => ( is => 'rw', default => sub { +{} } );
+has exit => (
+    is => 'rw',
+    isa => Int,
+    default => 0,
+);
+
+has outputs => (
+    is => 'rw',
+    isa => ArrayRef[RunOutput],
+    default => sub { [] },
+);
+
+has [qw(finished halted buffered)] => (
+    is => 'rw',
+    isa => Bool,
+    default => 0,
+);
+
+has callbacks => (
+    is => 'rw',
+    isa => ResponseCallbacks,
+    default => sub { +{} },
+);
 
 sub add_output {
     my ($self, @out) = @_;
