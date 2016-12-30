@@ -9,17 +9,65 @@ use App::Spec::Option;
 use Ref::Util qw/ is_arrayref /;
 
 use Moo::Role;
+use Types::Standard qw(Str CodeRef ArrayRef Map);
+use App::Spec::Types qw(MarkupName PluginType SpecOption SpecParameter SpecSubcommand);
 
-has name => ( is => 'rw' );
-has markup => ( is => 'rw', default => 'pod' );
-has class => ( is => 'rw' );
-has op => ( is => 'ro' );
-has plugins => ( is => 'ro' );
-has plugins_by_type => ( is => 'ro', default => sub { +{} } );
-has options => ( is => 'rw', default => sub { +[] } );
-has parameters => ( is => 'rw', default => sub { +[] } );
-has subcommands => ( is => 'rw', default => sub { +{} } );
-has description => ( is => 'rw' );
+has name => (
+    is => 'rw',
+    required => 1,
+    isa => Str,
+);
+
+has markup => (
+    is => 'rw',
+    isa => MarkupName,
+    default => 'pod',
+);
+
+has class => (
+    is => 'rw',
+    isa => Str,
+);
+
+has op => (
+    is => 'ro',
+    isa => Str|CodeRef,
+);
+
+has plugins => (
+    is => 'ro',
+    isa => ArrayRef[Str],
+    default => sub { [] },
+);
+
+has plugins_by_type => (
+    is => 'ro',
+    isa => Map[PluginType,Str],
+    default => sub { +{} },
+);
+
+has options => (
+    is => 'rw',
+    isa => ArrayRef[SpecOption],
+    default => sub { +[] },
+);
+
+has parameters => (
+    is => 'rw',
+    isa => ArrayRef[SpecParameter],
+    default => sub { +[] },
+);
+
+has subcommands => (
+    is => 'rw',
+    isa => Map[Str,SpecSubcommand],
+    default => sub { +{} },
+);
+
+has description => (
+    is => 'rw',
+    isa => Str,
+);
 
 sub default_plugins {
     qw/ Meta Help /
@@ -27,7 +75,7 @@ sub default_plugins {
 
 sub has_subcommands {
     my ($self) = @_;
-    return $self->subcommands ? 1 : 0;
+    return +($self->subcommands and %{$self->subcommands}) ? 1 : 0;
 }
 
 sub build {
@@ -40,7 +88,7 @@ sub build {
     $_ = App::Spec::Option->build(%$_) for @{ $spec{options} || [] };
     $_ = App::Spec::Parameter->build(%$_) for @{ $spec{parameters} || [] };
 
-    my $commands;
+    my $commands = {};
     for my $name (keys %{ $spec{subcommands} || {} }) {
         my $cmd = $spec{subcommands}->{ $name };
         $commands->{ $name } = App::Spec::Subcommand->build(
@@ -124,7 +172,6 @@ sub init_plugins {
     my ($self) = @_;
     my $plugins = $self->plugins;
     if (@$plugins) {
-        my $subcommands = $self->subcommands;
         my $options = $self->options;
         for my $plugin (@$plugins) {
             if ($plugin->does('App::Spec::Role::Plugin::Subcommand')) {
@@ -132,9 +179,9 @@ sub init_plugins {
                 my $subc = $plugin->install_subcommands( spec => $self );
                 $subc = [ $subc ] unless is_arrayref($subc);
 
-                if ($subcommands) {
+                if ($self->has_subcommands) {
                     for my $cmd (@$subc) {
-                        $subcommands->{ $cmd->name } ||= $cmd;
+                        $self->subcommands->{ $cmd->name } ||= $cmd;
                     }
                 }
             }
