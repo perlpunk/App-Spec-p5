@@ -6,7 +6,7 @@ package App::Spec::Argument;
 our $VERSION = '0.000'; # VERSION
 
 use Moo;
-use App::Spec::Types qw(ArgumentCompletion ArgumentValues);
+use App::Spec::Types qw(SpecArgumentCompletion SpecArgumentValues);
 use Types::Standard qw(Str Bool ArrayRef);
 
 has name => (
@@ -30,7 +30,7 @@ has [qw(summary description)] => (
 
 has completion => (
     is => 'ro',
-    isa => ArgumentCompletion,
+    isa => SpecArgumentCompletion,
     default => 0,
 );
 
@@ -46,7 +46,7 @@ has default => (
 
 has values => (
     is => 'ro',
-    isa => ArgumentValues,
+    isa => SpecArgumentValues,
 );
 
 sub common {

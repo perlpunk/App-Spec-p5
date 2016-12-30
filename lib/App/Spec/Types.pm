@@ -7,7 +7,7 @@ use Type::Library -base,
                       AppSpec
                       SpecOption SpecParameter SpecSubcommand
                       RunOutputType
-                      ArgumentCompletion CompletionItem ArgumentValues
+                      SpecArgumentCompletion CompletionItem SpecArgumentValues
                       RunOutput ResponseCallbacks
                       MarkupName
                       PluginType
@@ -30,14 +30,14 @@ union CompletionItem, [
     Dict[replace => ( Enum['SELF'] | Tuple[Enum['SHELL_WORDS'],Int] )],
 ];
 
-union ArgumentCompletion, [
+union SpecArgumentCompletion, [
     Bool,
     Dict[op => Str|CodeRef],
     Dict[command => ArrayRef[CompletionItem]],
     Dict[command_string => Str],
 ];
 
-union ArgumentValues, [
+union SpecArgumentValues, [
     Dict[op => Str|CodeRef],
     Dict[mapping => HashRef[ArrayRef[Str]|Str|Undef]],
 ];
