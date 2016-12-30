@@ -83,7 +83,7 @@ sub print_output {
     my $outputs = $self->outputs;
     push @$outputs, @out;
 
-    my $callbacks = $self->callbacks->{print_output} || {};
+    my $callbacks = $self->callbacks->{print_output} || [];
     for my $cb (@$callbacks) {
         $cb->();
     }

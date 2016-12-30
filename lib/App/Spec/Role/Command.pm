@@ -108,7 +108,7 @@ around BUILDARGS => sub {
     $spec->{subcommands} = $commands;
 
     if ( defined (my $op = $spec->{op}) ) {
-        die "Invalid op '$op'" unless $op =~ m/^\w+\z/;
+        die "Invalid op '$op'" unless ref($op) or $op =~ m/^\w+\z/;
     }
     if ( defined (my $class = $spec->{class}) ) {
         die "Invalid class '$class'" unless $class =~ m/^ \w+ (?: ::\w+)* \z/x;
