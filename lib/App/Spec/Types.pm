@@ -8,6 +8,7 @@ use Type::Library -base,
                       SpecOption SpecParameter SpecSubcommand
                       RunOutputType
                       SpecArgumentCompletion CompletionItem SpecArgumentValues
+                      ArgumentValue
                       RunOutput ResponseCallbacks
                       MarkupName
                       PluginType
@@ -49,5 +50,13 @@ class_type RunOutput, { class => 'App::Spec::Run::Output' };
 enum MarkupName, [qw(pod swim)];
 
 enum PluginType, [qw(Subcommands GlobalOptions)];
+
+union ArgumentValue, [
+    Undef,
+    Str,
+    ArrayRef[Str],
+    HashRef[Str],
+    HashRef[ArrayRef[Str]],
+];
 
 1;
