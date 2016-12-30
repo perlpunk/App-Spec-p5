@@ -8,7 +8,7 @@ use Type::Library -base,
                       SpecOption SpecParameter SpecSubcommand
                       RunOutputType
                       SpecArgumentCompletion CompletionItem SpecArgumentValues
-                      ArgumentValue
+                      ArgumentValue ArgumentType
                       RunOutput RunResponse ResponseCallbacks
                       MarkupName
                       PluginType
@@ -56,6 +56,8 @@ class_type RunResponse, { class => 'App::Spec::Run::Response' };
 enum MarkupName, [qw(pod swim)];
 
 enum PluginType, [qw(Subcommands GlobalOptions)];
+
+enum ArgumentType, [qw(string file dir integer flag enum)];
 
 union ArgumentValue, [
     Undef,

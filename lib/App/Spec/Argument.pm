@@ -6,7 +6,7 @@ package App::Spec::Argument;
 our $VERSION = '0.000'; # VERSION
 
 use Moo;
-use App::Spec::Types qw(SpecArgumentCompletion SpecArgumentValues);
+use App::Spec::Types qw(SpecArgumentCompletion SpecArgumentValues ArgumentType);
 use Types::Standard qw(Str Bool ArrayRef);
 
 has name => (
@@ -15,7 +15,11 @@ has name => (
     isa => Str,
 );
 
-has type => ( is => 'ro' );
+has type => (
+    is => 'ro',
+    isa => ArgumentType,
+    default => 'string',
+);
 
 has [qw(multiple mapping required unique)] => (
     is => 'ro',
@@ -26,6 +30,7 @@ has [qw(multiple mapping required unique)] => (
 has [qw(summary description)] => (
     is => 'ro',
     isa => Str,
+    default => '',
 );
 
 has completion => (
@@ -57,9 +62,6 @@ around BUILDARGS => sub {
     if (defined $args->{spec}) {
         %dsl = $class->from_dsl(delete $args->{spec});
     }
-    $args->{description} //= '';
-    $args->{summary} //= '';
-    $args->{type} //= 'string';
     @{$args}{keys %dsl} = values %dsl;
 
     not defined $args->{ $_ } and delete $args->{ $_ } for keys %{$args};
