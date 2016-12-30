@@ -21,7 +21,6 @@ has error => (
 );
 has content => (
     is => 'rw',
-    isa => Str,
 );
 
 1;
