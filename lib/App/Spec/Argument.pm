@@ -6,8 +6,8 @@ package App::Spec::Argument;
 our $VERSION = '0.000'; # VERSION
 
 use Moo;
-use App::Spec::Types qw(ArgumentCompletion);
-use Types::Standard qw(Str Bool);
+use App::Spec::Types qw(ArgumentCompletion ArgumentValues);
+use Types::Standard qw(Str Bool ArrayRef);
 
 has name => (
     is => 'ro',
@@ -37,6 +37,11 @@ has completion => (
 has enum => (
     is => 'ro',
     isa => ArrayRef[Str],
+);
+
+has default => (
+    is => 'ro',
+    isa => Str,
 );
 
 has values => (
