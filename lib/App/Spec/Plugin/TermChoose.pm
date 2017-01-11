@@ -25,6 +25,7 @@ sub validate_argument {
     my $run = $args{run};
     my $spec = $args{spec};
     my $value = $args{value};
+    # TODO only trigger plugin in normal mode
     if (defined $$value) {
         if (
             (is_arrayref($$value) and ($$value->[0] // '') eq '_')
