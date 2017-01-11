@@ -158,4 +158,13 @@ subcommands:
       type: string
       enum: [hash, table]
       default: hash
+
+  choose:
+    summary: choose from a long list
+    op: choose
+    parameters:
+    - name: char
+      type: string
+      enum: [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z]
+      multiple: true
 # vim:et:sts=2:sws=2:sw=2:foldmethod=indent

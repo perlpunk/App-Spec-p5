@@ -231,6 +231,13 @@ sub data {
     $run->out($ref);
 }
 
+sub choose {
+    my ($self, $run) = @_;
+    my $param = $run->parameters;
+    $run->out("Chosen:");
+    $run->out($param);
+}
+
 sub convert_complete {
     my ($self, $run, $args) = @_;
     my $errors = $run->validation_errors;
