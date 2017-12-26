@@ -4,20 +4,17 @@ use warnings;
 package App::Spec::Option;
 
 our $VERSION = '0.000'; # VERSION
+use Types::Standard qw/Str ArrayRef/;
 
-use base 'App::Spec::Argument';
 use Moo;
+extends 'App::Spec::Argument';
 
-has aliases => ( is => 'ro' );
+has aliases => ( is => 'ro', isa => ArrayRef[Str], default => sub { [] } );
 
+# back-compat for old versions
 sub build {
-    my ($class, %args) = @_;
-    my %hash = $class->common(%args);
-    my $self = $class->new({
-        aliases => $args{aliases} || [],
-        %hash,
-    });
-    return $self;
+    my ($class, @args) = @_;
+    return $class->new(@args);
 }
 
 1;
@@ -36,9 +33,9 @@ This class inherits from L<App::Spec::Argument>
 
 =over 4
 
-=item build
+=item new
 
-    my $option = App::Spec::Option->build(
+    my $option = App::Spec::Option->new(
         name => 'verbose',
         summary => 'lala',
         aliases => ['v'],

@@ -7,15 +7,17 @@ our $VERSION = '0.000'; # VERSION
 
 use App::Spec::Run::Output;
 use Scalar::Util qw/ blessed /;
+use Types::Standard qw/ Int Bool ArrayRef /;
+use App::Spec::Types qw/ RunOutput ResponseCallbacks /;
 
 use Moo;
 
-has exit => ( is => 'rw', default => 0 );
-has outputs => ( is => 'rw', default => sub { [] } );
-has finished => ( is => 'rw' );
-has halted => ( is => 'rw' );
-has buffered => ( is => 'rw', default => 0 );
-has callbacks => ( is => 'rw', default => sub { +{} } );
+has exit => ( is => 'rw', isa => Int, default => 0 );
+has outputs => ( is => 'rw', isa => ArrayRef[RunOutput], default => sub { [] } );
+has finished => ( is => 'rw', isa => Bool, default => 0 );
+has halted => ( is => 'rw', isa => Bool, default => 0 );
+has buffered => ( is => 'rw', isa => Bool, default => 0 );
+has callbacks => ( is => 'rw', isa => ResponseCallbacks, default => sub { +{} } );
 
 sub add_output {
     my ($self, @out) = @_;
@@ -64,7 +66,7 @@ sub print_output {
     my $outputs = $self->outputs;
     push @$outputs, @out;
 
-    my $callbacks = $self->callbacks->{print_output} || {};
+    my $callbacks = $self->callbacks->{print_output} || [];
     for my $cb (@$callbacks) {
         $cb->();
     }

@@ -8,12 +8,14 @@ our $VERSION = '0.000'; # VERSION;
 use List::Util qw/ any /;
 use List::MoreUtils qw/ uniq /;
 use Ref::Util qw/ is_arrayref is_hashref /;
+use Types::Standard qw/ Map Str /;
+use App::Spec::Types qw/ SpecOption SpecParameter ArgumentValue /;
 use Moo;
 
-has options => ( is => 'ro' );
-has option_specs => ( is => 'ro' );
-has parameters => ( is => 'ro' );
-has param_specs => ( is => 'ro' );
+has options => ( is => 'ro', isa => Map[Str,ArgumentValue] );
+has option_specs => ( is => 'ro', isa => Map[Str,SpecOption] );
+has parameters => ( is => 'ro', isa => Map[Str,ArgumentValue] );
+has param_specs => ( is => 'ro', isa => Map[Str,SpecParameter], required => 1 );
 
 my %validate = (
     string => sub { length($_[0]) > 0 },

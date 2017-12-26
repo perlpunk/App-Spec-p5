@@ -10,13 +10,14 @@ use App::Spec::Subcommand;
 use App::Spec::Option;
 use App::Spec::Parameter;
 use YAML::XS ();
+use Types::Standard qw/Str/;
 
 use Moo;
 
 with('App::Spec::Role::Command');
 
-has title => ( is => 'rw' );
-has abstract => ( is => 'rw' );
+has title => ( is => 'rw', isa => Str, required => 1 );
+has abstract => ( is => 'rw', isa => Str, default => '' );
 
 
 
@@ -362,11 +363,11 @@ Takes a file, hashref or glob and returns generated appspec hashref
 
     my $hash = $class->load_data($file);
 
-=item build
+=item new
 
-Builds objects out of the hashref
+Constructor.
 
-    my $appspec = App::Spec->build(%hash);
+    my $appspec = App::Spec->new(%hash);
 
 =item runner
 
