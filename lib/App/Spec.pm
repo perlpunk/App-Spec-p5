@@ -15,8 +15,8 @@ use Moo;
 
 with('App::Spec::Role::Command');
 
-has title => ( is => 'rw' );
-has abstract => ( is => 'rw' );
+has title => ( is => 'rw', required => 1 );
+has abstract => ( is => 'rw', default => '' );
 
 
 
