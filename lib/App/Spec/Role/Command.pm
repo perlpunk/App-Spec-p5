@@ -74,6 +74,16 @@ around BUILDARGS => sub {
     return $spec;
 };
 
+# trick to make sure plugins are inited even when the consuming class
+# defines its own BUILD
+sub BUILD {}
+before BUILD => sub {
+    my ($self) = @_;
+    $self->load_plugins;
+    $self->init_plugins;
+    return;
+};
+
 # back-compat for old versions
 sub build {
     my ($class, @spec) = @_;
@@ -89,9 +99,6 @@ sub read {
     my $spec = $class->load_data($file);
 
     my $self = $class->new($spec);
-
-    $self->load_plugins;
-    $self->init_plugins;
 
     return $self;
 }
