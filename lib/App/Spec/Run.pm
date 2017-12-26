@@ -7,21 +7,21 @@ our $VERSION = '0.000'; # VERSION
 
 use App::Spec::Run::Validator;
 use App::Spec::Run::Response;
-use App::Spec::Types qw/ AppSpec ValidationErrors RunResponse EventSubscriber /;
+use App::Spec::Types qw/ AppSpec ArgumentValue ValidationErrors CommandOp RunResponse EventSubscriber /;
 use Getopt::Long qw/ :config pass_through bundling /;
 use Ref::Util qw/ is_arrayref /;
 use Types::Standard qw/ Map Str ArrayRef Object /;
 use Moo;
 
 has spec => ( is => 'ro', required => 1, isa => AppSpec );
-has options => ( is => 'rw' );
-has parameters => ( is => 'rw', default => sub { +{} } );
+has options => ( is => 'rw', isa => Map[Str,ArgumentValue] );
+has parameters => ( is => 'rw', isa => Map[Str,ArgumentValue], default => sub { +{} } );
 has commands => ( is => 'rw', isa => ArrayRef[Str] );
 has argv => ( is => 'rw', isa => ArrayRef[Str] );
 has argv_orig => ( is => 'rw', isa => ArrayRef[Str] );
 #has runmode => ( is => 'rw', default => 'normal' );
 has validation_errors => ( is => 'rw', isa => ValidationErrors );
-has op => ( is => 'rw' );
+has op => ( is => 'rw', isa => CommandOp );
 has cmd => ( is => 'rw', isa => Object );
 has response => ( is => 'rw', isa => RunResponse, default => sub { App::Spec::Run::Response->new } );
 has subscribers => ( is => 'rw', isa => Map[Str,EventSubscriber], default => sub { +{} } );

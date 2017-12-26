@@ -7,11 +7,13 @@ use Type::Library -base,
                       AppSpec
                       SpecOption SpecParameter SpecSubcommand
                       RunOutputType
-                      ArgumentType
+                      SpecArgumentCompletion CompletionItem SpecArgumentValues
+                      ArgumentValue ArgumentType
                       RunOutput RunResponse ResponseCallbacks
                       MarkupName
                       PluginName PluginType
                       ValidationErrors
+                      CommandOp
                       EventSubscriber
               );
 use Type::Utils -all;
@@ -25,6 +27,35 @@ class_type SpecParameter, { class => 'App::Spec::Parameter' };
 class_type SpecSubcommand, { class => 'App::Spec::Subcommand' };
 
 enum RunOutputType, [qw( plain data )];
+
+# Str | { replace => 'SELF' } | { replace => [ SHELL_WORDS => Int ] }
+union CompletionItem, [
+    Str,
+    Dict[replace => ( Enum['SELF'] | Tuple[Enum['SHELL_WORDS'],Int] )],
+];
+
+union CommandOp, [Str,CodeRef];
+
+union SpecArgumentCompletion, [
+    Bool,
+    Dict[op => CommandOp],
+    Dict[command => ArrayRef[CompletionItem]],
+    Dict[command_string => Str],
+];
+
+union SpecArgumentValues, [
+    Dict[op => CommandOp],
+    Dict[mapping => HashRef[ArrayRef[Str]|Str|Undef]],
+];
+
+union ArgumentValue, [
+    Undef,
+    Str,
+    ArrayRef[Str],
+    HashRef[Str],
+    HashRef[ArrayRef[Str]],
+];
+
 enum ArgumentType, [qw(string file dir integer flag enum)];
 
 class_type RunOutput, { class => 'App::Spec::Run::Output' };
@@ -44,7 +75,7 @@ declare ValidationErrors, as Dict[
 
 declare EventSubscriber, as Dict[
     plugin => ClassName|Object,
-    method => Defined,
+    method => CommandOp,
 ];
 
 1;

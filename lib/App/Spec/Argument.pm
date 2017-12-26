@@ -5,7 +5,7 @@ package App::Spec::Argument;
 
 our $VERSION = '0.000'; # VERSION
 use Types::Standard qw/Str Bool ArrayRef/;
-use App::Spec::Types qw/ ArgumentType /;
+use App::Spec::Types qw/ SpecArgumentCompletion SpecArgumentValues ArgumentType /;
 
 use Moo;
 
@@ -18,9 +18,9 @@ has unique => ( is => 'ro', isa => Bool, default => 0 );
 has summary => ( is => 'ro', isa => Str, default => '' );
 has description => ( is => 'ro', isa => Str, default => '' );
 has default => ( is => 'ro', isa => Str );
-has completion => ( is => 'ro' );
+has completion => ( is => 'ro', isa => SpecArgumentCompletion, default => 0 );
 has enum => ( is => 'ro', isa => ArrayRef[Str] );
-has values => ( is => 'ro' );
+has values => ( is => 'ro', isa => SpecArgumentValues );
 
 around BUILDARGS => sub {
     my ($orig, $class, @etc) = @_;

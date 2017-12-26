@@ -8,14 +8,14 @@ use List::Util qw/ any /;
 use App::Spec::Option;
 use Ref::Util qw/ is_arrayref is_blessed_ref /;
 use Types::Standard qw/ Map Str ArrayRef /;
-use App::Spec::Types qw/ MarkupName PluginName PluginType SpecOption SpecParameter SpecSubcommand /;
+use App::Spec::Types qw/ MarkupName PluginName PluginType SpecOption SpecParameter SpecSubcommand CommandOp /;
 
 use Moo::Role;
 
 has name => ( is => 'rw', required => 1, isa => Str );
 has markup => ( is => 'rw', isa => MarkupName, default => 'pod' );
 has class => ( is => 'rw', isa => Str );
-has op => ( is => 'ro' );
+has op => ( is => 'ro', isa => CommandOp );
 has plugins => ( is => 'ro', isa => ArrayRef[PluginName], default => sub { +[] } );
 has plugins_by_type => ( is => 'ro', isa => Map[PluginType,PluginName], default => sub { +{} } );
 has options => ( is => 'rw', isa => ArrayRef[SpecOption], default => sub { +[] } );
