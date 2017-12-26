@@ -30,34 +30,41 @@ sub has_subcommands {
     return $self->subcommands ? 1 : 0;
 }
 
-sub build {
-    my ($class, %spec) = @_;
-    $spec{options} ||= [];
-    $spec{parameters} ||= [];
-    for (@{ $spec{options} }, @{ $spec{parameters} }) {
+around BUILDARGS => sub {
+    my ($orig,$class,@etc) = @_;
+    my $spec = $class->$orig(@etc);
+
+    $spec->{options} ||= [];
+    $spec->{parameters} ||= [];
+    for (@{ $spec->{options} }, @{ $spec->{parameters} }) {
         $_ = { spec => $_ } unless ref $_;
     }
-    $_ = App::Spec::Option->build(%$_) for @{ $spec{options} || [] };
-    $_ = App::Spec::Parameter->build(%$_) for @{ $spec{parameters} || [] };
+    $_ = App::Spec::Option->build(%$_) for @{ $spec->{options} || [] };
+    $_ = App::Spec::Parameter->build(%$_) for @{ $spec->{parameters} || [] };
 
     my $commands;
-    for my $name (keys %{ $spec{subcommands} || {} }) {
-        my $cmd = $spec{subcommands}->{ $name };
+    for my $name (keys %{ $spec->{subcommands} || {} }) {
+        my $cmd = $spec->{subcommands}->{ $name };
         $commands->{ $name } = App::Spec::Subcommand->build(
             name => $name,
             %$cmd,
         );
     }
-    $spec{subcommands} = $commands;
+    $spec->{subcommands} = $commands;
 
-    if ( defined (my $op = $spec{op}) ) {
+    if ( defined (my $op = $spec->{op}) ) {
         die "Invalid op '$op'" unless $op =~ m/^\w+\z/;
     }
-    if ( defined (my $class = $spec{class}) ) {
+    if ( defined (my $class = $spec->{class}) ) {
         die "Invalid class '$class'" unless $class =~ m/^ \w+ (?: ::\w+)* \z/x;
     }
 
-    my $self = $class->new(%spec);
+    return $spec;
+};
+
+sub build {
+    my ($class, @spec) = @_;
+    my $self = $class->new(@spec);
 }
 
 sub read {
