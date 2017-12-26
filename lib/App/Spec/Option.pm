@@ -5,19 +5,14 @@ package App::Spec::Option;
 
 our $VERSION = '0.000'; # VERSION
 
-use base 'App::Spec::Argument';
 use Moo;
+extends 'App::Spec::Argument';
 
-has aliases => ( is => 'ro' );
+has aliases => ( is => 'ro', default => sub { [] } );
 
 sub build {
-    my ($class, %args) = @_;
-    my %hash = $class->common(%args);
-    my $self = $class->new({
-        aliases => $args{aliases} || [],
-        %hash,
-    });
-    return $self;
+    my ($class, @args) = @_;
+    return $class->new(@args);
 }
 
 1;

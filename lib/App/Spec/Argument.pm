@@ -20,35 +20,37 @@ has completion => ( is => 'ro' );
 has enum => ( is => 'ro' );
 has values => ( is => 'ro' );
 
-sub common {
-    my ($class, %args) = @_;
+around BUILDARGS => sub {
+    my ($orig, $class, @etc) = @_;
+    my $args = $class->$orig(@etc);
     my %dsl;
-    if (defined $args{spec}) {
-        %dsl = $class->from_dsl(delete $args{spec});
+    if (defined $args->{spec}) {
+        %dsl = $class->from_dsl(delete $args->{spec});
     }
-    my $description = $args{description};
-    my $summary = $args{summary};
+    my $description = $args->{description};
+    my $summary = $args->{summary};
     $summary //= '';
     $description //= '';
-    my $type = $args{type} // 'string';
+    my $type = $args->{type} // 'string';
     my %hash = (
-        name => $args{name},
+        %{$args},
+        name => $args->{name},
         summary => $summary,
         description => $description,
         type => $type,
-        multiple => $args{multiple} ? 1 : 0,
-        mapping => $args{mapping} ? 1 : 0,
-        required => $args{required} ? 1 : 0,
-        unique => $args{unique} ? 1 : 0,
-        default => $args{default},
-        completion => $args{completion},
-        enum => $args{enum},
-        values => $args{values},
+        multiple => $args->{multiple} ? 1 : 0,
+        mapping => $args->{mapping} ? 1 : 0,
+        required => $args->{required} ? 1 : 0,
+        unique => $args->{unique} ? 1 : 0,
+        default => $args->{default},
+        completion => $args->{completion},
+        enum => $args->{enum},
+        values => $args->{values},
         %dsl,
     );
     not defined $hash{ $_ } and delete $hash{ $_ } for keys %hash;
-    return %hash;
-}
+    return \%hash;
+};
 
 my $name_re = qr{[\w-]+};
 
@@ -235,11 +237,12 @@ STOP INLINE
 
 =over 4
 
-=item common
+=item BUILDARGS
 
-Builds a hash with the given hashref and fills in some defaults.
+Builds a hash with the given hashref and fills in some
+defaults. Invoked as part of the normal constructor.
 
-    my %hash = $class->common($args);
+    my $object = $class->new(\%args);
 
 =item from_dsl
 
