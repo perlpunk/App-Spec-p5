@@ -7,11 +7,12 @@ our $VERSION = '0.000'; # VERSION
 
 use App::Spec::Run::Validator;
 use App::Spec::Run::Response;
+use App::Spec::Types qw/AppSpec/;
 use Getopt::Long qw/ :config pass_through bundling /;
 use Ref::Util qw/ is_arrayref /;
 use Moo;
 
-has spec => ( is => 'ro' );
+has spec => ( is => 'ro', required => 1, isa => AppSpec );
 has options => ( is => 'rw' );
 has parameters => ( is => 'rw', default => sub { +{} } );
 has commands => ( is => 'rw' );
