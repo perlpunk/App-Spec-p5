@@ -31,10 +31,6 @@ around BUILDARGS => sub {
     }
     my %hash = (
         %{$args},
-        multiple => $args->{multiple} ? 1 : 0,
-        mapping => $args->{mapping} ? 1 : 0,
-        required => $args->{required} ? 1 : 0,
-        unique => $args->{unique} ? 1 : 0,
         %dsl,
     );
     not defined $hash{ $_ } and delete $hash{ $_ } for keys %hash;
