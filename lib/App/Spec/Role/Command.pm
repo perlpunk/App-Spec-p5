@@ -7,19 +7,20 @@ our $VERSION = '0.000'; # VERSION
 use List::Util qw/ any /;
 use App::Spec::Option;
 use Ref::Util qw/ is_arrayref is_blessed_ref /;
+use Types::Standard qw/ Str /;
 
 use Moo::Role;
 
-has name => ( is => 'rw' );
+has name => ( is => 'rw', required => 1, isa => Str );
 has markup => ( is => 'rw', default => 'pod' );
-has class => ( is => 'rw' );
+has class => ( is => 'rw', isa => Str );
 has op => ( is => 'ro' );
 has plugins => ( is => 'ro', default => sub { +[] } );
 has plugins_by_type => ( is => 'ro', default => sub { +{} } );
 has options => ( is => 'rw', default => sub { +[] } );
 has parameters => ( is => 'rw', default => sub { +[] } );
 has subcommands => ( is => 'rw', default => sub { +{} } );
-has description => ( is => 'rw' );
+has description => ( is => 'rw', isa => Str );
 
 sub default_plugins {
     qw/ Meta Help /
