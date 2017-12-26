@@ -27,7 +27,7 @@ $ENV{PERL5_APPSPECRUN_TEST} = 1;
     my $res1 = $runner1->response;
     my $res2 = $runner2->response;
     # we don't care about the callbacks here
-    $_->callbacks([]) for ($res1, $res2);
+    $_->callbacks({}) for ($res1, $res2);
     cmp_deeply(
         $res1,
         $res2,

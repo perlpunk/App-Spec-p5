@@ -8,9 +8,11 @@ use Type::Library -base,
                       SpecOption SpecParameter SpecSubcommand
                       RunOutputType
                       ArgumentType
-                      RunOutput RunResponse
+                      RunOutput RunResponse ResponseCallbacks
                       MarkupName
                       PluginName PluginType
+                      ValidationErrors
+                      EventSubscriber
               );
 use Type::Utils -all;
 use Types::Standard -types;
@@ -27,11 +29,22 @@ enum ArgumentType, [qw(string file dir integer flag enum)];
 
 class_type RunOutput, { class => 'App::Spec::Run::Output' };
 class_type RunResponse, { class => 'App::Spec::Run::Response' };
+declare ResponseCallbacks, as Map[Str,CodeRef];
 
 enum MarkupName, [qw(pod swim)];
 
 declare PluginName, as Str,
     where { /[A-Z_a-z][0-9A-Z_a-z]*(?:::[0-9A-Z_a-z]+)/ };
 enum PluginType, [qw(Subcommands GlobalOptions)];
+
+declare ValidationErrors, as Dict[
+    parameters => Optional[Map[Str,Str]],
+    options => Optional[Map[Str,Str]],
+];
+
+declare EventSubscriber, as Dict[
+    plugin => ClassName|Object,
+    method => Defined,
+];
 
 1;

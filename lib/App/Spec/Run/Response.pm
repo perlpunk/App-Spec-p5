@@ -8,7 +8,7 @@ our $VERSION = '0.000'; # VERSION
 use App::Spec::Run::Output;
 use Scalar::Util qw/ blessed /;
 use Types::Standard qw/ Int Bool ArrayRef /;
-use App::Spec::Types qw/ RunOutput /;
+use App::Spec::Types qw/ RunOutput ResponseCallbacks /;
 
 use Moo;
 
@@ -17,7 +17,7 @@ has outputs => ( is => 'rw', isa => ArrayRef[RunOutput], default => sub { [] } )
 has finished => ( is => 'rw', isa => Bool, default => 0 );
 has halted => ( is => 'rw', isa => Bool, default => 0 );
 has buffered => ( is => 'rw', isa => Bool, default => 0 );
-has callbacks => ( is => 'rw', default => sub { +{} } );
+has callbacks => ( is => 'rw', isa => ResponseCallbacks, default => sub { +{} } );
 
 sub add_output {
     my ($self, @out) = @_;
