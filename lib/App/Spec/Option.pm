@@ -4,11 +4,12 @@ use warnings;
 package App::Spec::Option;
 
 our $VERSION = '0.000'; # VERSION
+use Types::Standard qw/Str ArrayRef/;
 
 use Moo;
 extends 'App::Spec::Argument';
 
-has aliases => ( is => 'ro', default => sub { [] } );
+has aliases => ( is => 'ro', isa => ArrayRef[Str], default => sub { [] } );
 
 # back-compat for old versions
 sub build {
