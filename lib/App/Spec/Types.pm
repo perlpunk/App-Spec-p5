@@ -8,6 +8,7 @@ use Type::Library -base,
                       SpecOption SpecParameter SpecSubcommand
                       RunOutputType
                       ArgumentType
+                      RunOutput RunResponse
                       MarkupName
                       PluginName PluginType
               );
@@ -23,6 +24,10 @@ class_type SpecSubcommand, { class => 'App::Spec::Subcommand' };
 
 enum RunOutputType, [qw( plain data )];
 enum ArgumentType, [qw(string file dir integer flag enum)];
+
+class_type RunOutput, { class => 'App::Spec::Run::Output' };
+class_type RunResponse, { class => 'App::Spec::Run::Response' };
+
 enum MarkupName, [qw(pod swim)];
 
 declare PluginName, as Str,

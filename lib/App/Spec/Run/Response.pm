@@ -8,11 +8,12 @@ our $VERSION = '0.000'; # VERSION
 use App::Spec::Run::Output;
 use Scalar::Util qw/ blessed /;
 use Types::Standard qw/ Int Bool ArrayRef /;
+use App::Spec::Types qw/ RunOutput /;
 
 use Moo;
 
 has exit => ( is => 'rw', isa => Int, default => 0 );
-has outputs => ( is => 'rw', default => sub { [] } );
+has outputs => ( is => 'rw', isa => ArrayRef[RunOutput], default => sub { [] } );
 has finished => ( is => 'rw', isa => Bool, default => 0 );
 has halted => ( is => 'rw', isa => Bool, default => 0 );
 has buffered => ( is => 'rw', isa => Bool, default => 0 );

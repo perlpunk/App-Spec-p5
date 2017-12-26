@@ -7,7 +7,7 @@ our $VERSION = '0.000'; # VERSION
 
 use App::Spec::Run::Validator;
 use App::Spec::Run::Response;
-use App::Spec::Types qw/AppSpec/;
+use App::Spec::Types qw/ AppSpec RunResponse /;
 use Getopt::Long qw/ :config pass_through bundling /;
 use Ref::Util qw/ is_arrayref /;
 use Types::Standard qw/ Str ArrayRef Object /;
@@ -23,7 +23,7 @@ has argv_orig => ( is => 'rw', isa => ArrayRef[Str] );
 has validation_errors => ( is => 'rw' );
 has op => ( is => 'rw' );
 has cmd => ( is => 'rw', isa => Object );
-has response => ( is => 'rw', default => sub { App::Spec::Run::Response->new } );
+has response => ( is => 'rw', isa => RunResponse, default => sub { App::Spec::Run::Response->new } );
 has subscribers => ( is => 'rw', default => sub { +{} } );
 
 my %EVENTS = (
