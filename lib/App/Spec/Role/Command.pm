@@ -14,7 +14,7 @@ has name => ( is => 'rw' );
 has markup => ( is => 'rw', default => 'pod' );
 has class => ( is => 'rw' );
 has op => ( is => 'ro' );
-has plugins => ( is => 'ro' );
+has plugins => ( is => 'ro', default => sub { +[] } );
 has plugins_by_type => ( is => 'ro', default => sub { +{} } );
 has options => ( is => 'rw', default => sub { +[] } );
 has parameters => ( is => 'rw', default => sub { +[] } );
@@ -34,8 +34,6 @@ around BUILDARGS => sub {
     my ($orig,$class,@etc) = @_;
     my $spec = $class->$orig(@etc);
 
-    $spec->{options} ||= [];
-    $spec->{parameters} ||= [];
     for (@{ $spec->{options} }, @{ $spec->{parameters} }) {
         $_ = { spec => $_ } unless ref $_;
     }
