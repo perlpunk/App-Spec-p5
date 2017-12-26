@@ -62,6 +62,15 @@ around BUILDARGS => sub {
         die "Invalid class '$class'" unless $class =~ m/^ \w+ (?: ::\w+)* \z/x;
     }
 
+    my @plugins = $class->default_plugins;
+    push @plugins, @{ $spec->{plugins} || [] };
+    for my $plugin (@plugins) {
+        unless ($plugin =~ s/^=//) {
+            $plugin = "App::Spec::Plugin::$plugin";
+        }
+    }
+    $spec->{plugins} = \@plugins;
+
     return $spec;
 };
 
@@ -78,15 +87,6 @@ sub read {
     }
 
     my $spec = $class->load_data($file);
-
-    my @plugins = $class->default_plugins;
-    push @plugins, @{ $spec->{plugins} || [] };
-    for my $plugin (@plugins) {
-        unless ($plugin =~ s/^=//) {
-            $plugin = "App::Spec::Plugin::$plugin";
-        }
-    }
-    $spec->{plugins} = \@plugins;
 
     my $self = $class->new($spec);
 
