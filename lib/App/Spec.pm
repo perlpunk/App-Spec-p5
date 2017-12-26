@@ -10,13 +10,14 @@ use App::Spec::Subcommand;
 use App::Spec::Option;
 use App::Spec::Parameter;
 use YAML::XS ();
+use Types::Standard qw/Str/;
 
 use Moo;
 
 with('App::Spec::Role::Command');
 
-has title => ( is => 'rw', required => 1 );
-has abstract => ( is => 'rw', default => '' );
+has title => ( is => 'rw', isa => Str, required => 1 );
+has abstract => ( is => 'rw', isa => Str, default => '' );
 
 
 
