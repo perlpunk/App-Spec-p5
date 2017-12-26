@@ -4,20 +4,21 @@ use warnings;
 package App::Spec::Argument;
 
 our $VERSION = '0.000'; # VERSION
+use Types::Standard qw/Str Bool ArrayRef/;
 
 use Moo;
 
-has name => ( is => 'ro' );
+has name => ( is => 'ro', isa => Str, required => 1 );
 has type => ( is => 'ro', default => 'string' );
-has multiple => ( is => 'ro', default => 0 );
-has mapping => ( is => 'ro', default => 0 );
-has required => ( is => 'ro', default => 0 );
-has unique => ( is => 'ro', default => 0 );
-has summary => ( is => 'ro', default => '' );
-has description => ( is => 'ro', default => '' );
-has default => ( is => 'ro' );
+has multiple => ( is => 'ro', isa => Bool, default => 0 );
+has mapping => ( is => 'ro', isa => Bool, default => 0 );
+has required => ( is => 'ro', isa => Bool, default => 0 );
+has unique => ( is => 'ro', isa => Bool, default => 0 );
+has summary => ( is => 'ro', isa => Str, default => '' );
+has description => ( is => 'ro', isa => Str, default => '' );
+has default => ( is => 'ro', isa => Str );
 has completion => ( is => 'ro' );
-has enum => ( is => 'ro' );
+has enum => ( is => 'ro', isa => ArrayRef[Str] );
 has values => ( is => 'ro' );
 
 around BUILDARGS => sub {
