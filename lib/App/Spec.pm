@@ -362,11 +362,11 @@ Takes a file, hashref or glob and returns generated appspec hashref
 
     my $hash = $class->load_data($file);
 
-=item build
+=item new
 
-Builds objects out of the hashref
+Constructor.
 
-    my $appspec = App::Spec->build(%hash);
+    my $appspec = App::Spec->new(%hash);
 
 =item runner
 

@@ -8,6 +8,7 @@ our $VERSION = '0.000'; # VERSION
 use Moo;
 extends 'App::Spec::Argument';
 
+# back-compat for old versions
 sub build {
     my ($class, @args) = @_;
     return $class->new(@args);
@@ -47,9 +48,9 @@ This class inherits from L<App::Spec::Argument>
 
 =over 4
 
-=item build
+=item new
 
-    my $param = App::Spec::Parameter->build(
+    my $param = App::Spec::Parameter->new(
         name => 'verbose',
         summary => 'lala',
     );

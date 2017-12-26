@@ -6,7 +6,7 @@ our $VERSION = '0.000'; # VERSION
 
 use List::Util qw/ any /;
 use App::Spec::Option;
-use Ref::Util qw/ is_arrayref /;
+use Ref::Util qw/ is_arrayref is_blessed_ref /;
 
 use Moo::Role;
 
@@ -39,13 +39,13 @@ around BUILDARGS => sub {
     for (@{ $spec->{options} }, @{ $spec->{parameters} }) {
         $_ = { spec => $_ } unless ref $_;
     }
-    $_ = App::Spec::Option->build(%$_) for @{ $spec->{options} || [] };
-    $_ = App::Spec::Parameter->build(%$_) for @{ $spec->{parameters} || [] };
+    $_ = App::Spec::Option->new($_) for grep { !is_blessed_ref($_) } @{ $spec->{options} || [] };
+    $_ = App::Spec::Parameter->new($_) for grep { !is_blessed_ref($_) } @{ $spec->{parameters} || [] };
 
     my $commands;
     for my $name (keys %{ $spec->{subcommands} || {} }) {
         my $cmd = $spec->{subcommands}->{ $name };
-        $commands->{ $name } = App::Spec::Subcommand->build(
+        $commands->{ $name } = App::Spec::Subcommand->new(
             name => $name,
             %$cmd,
         );
@@ -62,6 +62,7 @@ around BUILDARGS => sub {
     return $spec;
 };
 
+# back-compat for old versions
 sub build {
     my ($class, @spec) = @_;
     my $self = $class->new(@spec);
@@ -84,7 +85,7 @@ sub read {
     }
     $spec->{plugins} = \@plugins;
 
-    my $self = $class->build(%$spec);
+    my $self = $class->new($spec);
 
     $self->load_plugins;
     $self->init_plugins;
@@ -153,7 +154,8 @@ sub init_plugins {
                     $options ||= [];
 
                     for my $opt (@$new_opts) {
-                        $opt = App::Spec::Option->build(%$opt);
+                        $opt = App::Spec::Option->new($opt)
+                            unless is_blessed_ref($opt);
                         unless (any { $_->name eq $opt->name } @$options) {
                             push @$options, $opt;
                         }
@@ -183,14 +185,14 @@ App::Spec::Role::Command - commands and subcommands both use this role
 
 =item read
 
-Calls load_data, build, load_plugins, init_plugins
+Calls load_data, new, load_plugins, init_plugins
 
-=item build
+=item new
 
 This builds a tree of objects
 
-    my $self = App::Spec->build(%$hashref);
-    my $self = App::Spec::Subcommand->build(%$hashref);
+    my $self = App::Spec->new(%$hashref);
+    my $self = App::Spec::Subcommand->new(%$hashref);
 
 =item load_data
 
