@@ -8,13 +8,13 @@ our $VERSION = '0.000'; # VERSION
 use Moo;
 
 has name => ( is => 'ro' );
-has type => ( is => 'ro' );
-has multiple => ( is => 'ro' );
-has mapping => ( is => 'ro' );
-has required => ( is => 'ro' );
-has unique => ( is => 'ro' );
-has summary => ( is => 'ro' );
-has description => ( is => 'ro' );
+has type => ( is => 'ro', default => 'string' );
+has multiple => ( is => 'ro', default => 0 );
+has mapping => ( is => 'ro', default => 0 );
+has required => ( is => 'ro', default => 0 );
+has unique => ( is => 'ro', default => 0 );
+has summary => ( is => 'ro', default => '' );
+has description => ( is => 'ro', default => '' );
 has default => ( is => 'ro' );
 has completion => ( is => 'ro' );
 has enum => ( is => 'ro' );
@@ -27,25 +27,12 @@ around BUILDARGS => sub {
     if (defined $args->{spec}) {
         %dsl = $class->from_dsl(delete $args->{spec});
     }
-    my $description = $args->{description};
-    my $summary = $args->{summary};
-    $summary //= '';
-    $description //= '';
-    my $type = $args->{type} // 'string';
     my %hash = (
         %{$args},
-        name => $args->{name},
-        summary => $summary,
-        description => $description,
-        type => $type,
         multiple => $args->{multiple} ? 1 : 0,
         mapping => $args->{mapping} ? 1 : 0,
         required => $args->{required} ? 1 : 0,
         unique => $args->{unique} ? 1 : 0,
-        default => $args->{default},
-        completion => $args->{completion},
-        enum => $args->{enum},
-        values => $args->{values},
         %dsl,
     );
     not defined $hash{ $_ } and delete $hash{ $_ } for keys %hash;
