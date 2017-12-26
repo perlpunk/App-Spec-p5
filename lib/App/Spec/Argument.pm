@@ -5,11 +5,12 @@ package App::Spec::Argument;
 
 our $VERSION = '0.000'; # VERSION
 use Types::Standard qw/Str Bool ArrayRef/;
+use App::Spec::Types qw/ ArgumentType /;
 
 use Moo;
 
 has name => ( is => 'ro', isa => Str, required => 1 );
-has type => ( is => 'ro', default => 'string' );
+has type => ( is => 'ro', isa => ArgumentType, default => 'string' );
 has multiple => ( is => 'ro', isa => Bool, default => 0 );
 has mapping => ( is => 'ro', isa => Bool, default => 0 );
 has required => ( is => 'ro', isa => Bool, default => 0 );
