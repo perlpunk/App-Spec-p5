@@ -10,18 +10,19 @@ use App::Spec::Run::Response;
 use App::Spec::Types qw/AppSpec/;
 use Getopt::Long qw/ :config pass_through bundling /;
 use Ref::Util qw/ is_arrayref /;
+use Types::Standard qw/ Str ArrayRef Object /;
 use Moo;
 
 has spec => ( is => 'ro', required => 1, isa => AppSpec );
 has options => ( is => 'rw' );
 has parameters => ( is => 'rw', default => sub { +{} } );
-has commands => ( is => 'rw' );
-has argv => ( is => 'rw' );
-has argv_orig => ( is => 'rw' );
+has commands => ( is => 'rw', isa => ArrayRef[Str] );
+has argv => ( is => 'rw', isa => ArrayRef[Str] );
+has argv_orig => ( is => 'rw', isa => ArrayRef[Str] );
 #has runmode => ( is => 'rw', default => 'normal' );
 has validation_errors => ( is => 'rw' );
 has op => ( is => 'rw' );
-has cmd => ( is => 'rw' );
+has cmd => ( is => 'rw', isa => Object );
 has response => ( is => 'rw', default => sub { App::Spec::Run::Response->new } );
 has subscribers => ( is => 'rw', default => sub { +{} } );
 
