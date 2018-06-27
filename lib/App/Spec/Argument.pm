@@ -87,11 +87,13 @@ sub from_dsl {
     if ($dsl =~ s/^=//) {
         # not a flag, default string
         $type = "string";
-        # TODO support all of Getopt::Long types
-        if ($dsl =~ s/^([is])//) {
+        if ($dsl =~ s/^([isf])//) {
             $getopt_type = $1;
             if ($getopt_type eq "i") {
                 $type = "integer";
+            }
+            elsif ($getopt_type eq "f") {
+                $type = "float";
             }
             elsif ($getopt_type eq "s") {
             }
@@ -182,6 +184,8 @@ START INLINE t/data/12.dsl.yaml
       - spec: +req                --Some required flag
       - spec: number=i            --integer option
       - spec: number2|n= +integer --integer option
+      - spec: fnumber=f           --float option
+      - spec: fnumber2|f= +float  --float option
       - spec: date|d=s =today
       - spec: items=s@            --multi option
       - spec: set=s%              --multiple key=value pairs
@@ -212,6 +216,13 @@ START INLINE t/data/12.dsl.yaml
         summary: integer option
         type: integer
         aliases: ["n"]
+      - name: fnumber
+        summary: float option
+        type: float
+      - name: fnumber2
+        summary: float option
+        type: float
+        aliases: ["f"]
       - name: date
         type: string
         default: today

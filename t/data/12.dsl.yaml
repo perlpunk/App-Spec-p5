@@ -10,6 +10,8 @@ options:
   - spec: +req                --Some required flag
   - spec: number=i            --integer option
   - spec: number2|n= +integer --integer option
+  - spec: fnumber=f           --float option
+  - spec: fnumber2|f= +float  --float option
   - spec: date|d=s =today
   - spec: items=s@            --multi option
   - spec: set=s%              --multiple key=value pairs
@@ -40,6 +42,13 @@ options:
     summary: integer option
     type: integer
     aliases: ["n"]
+  - name: fnumber
+    summary: float option
+    type: float
+  - name: fnumber2
+    summary: float option
+    type: float
+    aliases: ["f"]
   - name: date
     type: string
     default: today
