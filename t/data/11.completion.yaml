@@ -37,7 +37,7 @@
   env:
     PERL5_APPSPECRUN_COMPLETION_PARAMETER: target
     PERL5_APPSPECRUN_SHELL: zsh
-  args: [ myapp, convert, distance, meter, 23, foot ]
+  args: [ myapp, convert, distance, meter, 23, foot, '' ]
   stdout:
     - regex: '^inch$'
   exit: 0

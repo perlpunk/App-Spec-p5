@@ -264,7 +264,7 @@ sub dynamic_completion {
         $function = <<"EOM";
 $function_name() \{
     local __dynamic_completion
-    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='$name' \$words`
+    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='$name' "\${words[@]}"`
     __${appname}_dynamic_comp '$name' "\$__dynamic_completion"
 \}
 EOM

@@ -175,6 +175,12 @@ sub completion_output {
         my $params = $self->parameters;
         my $value = $params->{ $completion_parameter };
         $value = [$value] unless is_arrayref $value;
+        # cmd param1 param2<TAB> results in
+        # @ARGV = ["param1", "param2"]
+        # cmd param1 param2 <TAB> results in
+        # @ARGV = ["param1", "param2", ""]
+        # so we know that there is a new value to be completed
+        my $last = pop @$value;
         @seen{ @$value } = (1) x @$value;
     }
     for my $item (@$result) {
