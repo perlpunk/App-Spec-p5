@@ -16,8 +16,17 @@ options:
 - name: lc
   summary: line count
   type: flag
+- name: with
+  summary: with ...
+  type: string
+  enum: [ab, cd, ef]
 parameters:
-- name: file
-  summary: filename
-  type: file
+- name: foo
+  summary: foo
+  type: string
+  enum: [dist.ini, Makefile.PL, Changes]
+- name: bar
+  summary: bar
+  type: string
+  enum: [a,b,c]
 # vim:et:sts=2:sws=2:sw=2:foldmethod=indent

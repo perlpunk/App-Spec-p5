@@ -5,8 +5,6 @@ use 5.010;
 
 use base 'App::Spec::Run::Cmd';
 
-use App::Spec::Example::MyApp;
-
 sub execute {
     my ($self, $run) = @_;
     my $opt = $run->options;

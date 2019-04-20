@@ -16,6 +16,7 @@ sub generate_completion {
     my $completion_outer = $self->completion_commands(
         commands => $spec->subcommands,
         options => $spec->options,
+        parameters => $spec->parameters,
         level => 1,
         functions => $functions,
     );

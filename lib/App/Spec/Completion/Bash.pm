@@ -18,6 +18,7 @@ sub generate_completion {
     my $completion_outer = $self->completion_commands(
         commands => $spec->subcommands,
         options => $spec->options,
+        parameters => $spec->parameters,
         level => 1,
         functions => $functions,
     );
@@ -42,8 +43,8 @@ _$appname() \{
     local INDEX=`expr \$COMP_CWORD - 1`
     MYWORDS=("\$\{COMP_WORDS[@]:1:\$COMP_CWORD\}")
 
-    FLAGS=$flags_string
-    OPTIONS=$options_string
+    FLAGS=($flags_string)
+    OPTIONS=($options_string)
     __${appname}_handle_options_flags
 
 $completion_outer
@@ -94,7 +95,7 @@ sub flags_options {
             push @opt, @items;
         }
     }
-    return ("(@flags)", "(@opt)");
+    return ("@flags", "@opt");
 }
 
 sub escape_singlequote {
@@ -116,6 +117,7 @@ sub completion_commands {
     my $previous = $args{previous} || [];
     my $commands = $args{commands};
     my $options = $args{options};
+    my $parameters = $args{parameters};
     my $level = $args{level};
     my $indent = "    " x $level;
 
@@ -132,41 +134,38 @@ sub completion_commands {
     my $cmds = join q{$'\\n'}, @commands;
 
     my $index = $level - 1;
-    my $subc = <<"EOM";
+    my $subc = '';
+    if (keys %$commands) {
+        $subc = <<"EOM";
 $indent# subcmds
 ${indent}case \$\{MYWORDS\[$index\]\} in
 EOM
+    }
 
     for my $name (sort keys %$commands) {
         my $cmd_spec = $commands->{ $name };
         my ($flags_string, $options_string) = $self->flags_options($cmd_spec->options);
         $subc .= <<"EOM";
 ${indent}  $name)
-${indent}    FLAGS+=$flags_string
-${indent}    OPTIONS+=$options_string
+EOM
+        $subc .= $indent . "    FLAGS+=($flags_string)\n" if $flags_string;
+        $subc .= $indent . "    OPTIONS+=($options_string)\n" if $options_string;
+        $subc .= <<"EOM";
 ${indent}    __${appname}_handle_options_flags
 EOM
         my $subcommands = $cmd_spec->subcommands;
         my $parameters = $cmd_spec->parameters;
         my $cmd_options = $cmd_spec->options;
-        if (keys %$subcommands) {
+        if (keys %$subcommands or @$cmd_options or @$parameters) {
             my $comp = $self->completion_commands(
                 commands => $subcommands,
                 options => [ @$options, @$cmd_options ],
+                parameters => $parameters,
                 level => $level + 1,
                 previous => [@$previous, $name],
                 functions => $functions,
             );
             $subc .= $comp;
-        }
-        elsif (@$parameters or @$cmd_options) {
-            $subc .= $self->completion_parameters(
-                parameters => $parameters,
-                options => [ @$options, @$cmd_options ],
-                level => $level + 1,
-                previous => [@$previous, $name],
-                functions => $functions,
-            );
         }
         else {
             $subc .= $indent . "    __comp_current_options true || return # no subcmds, no params/opts\n";
@@ -176,23 +175,34 @@ ${indent}  ;;
 EOM
     }
 
-    my ($comp_values, $comp_options) = $self->completion_options(
-        level => $level,
-        options => $options,
-        functions => $args{functions},
-        previous => $args{previous},
-        parameters => [],
-    );
-    chomp $comp_options;
+    my $option_comp;
+    my $param_comp = '';
+    my $subc_comp = '';
+    if (@$options) {
+        ($option_comp) = $self->completion_options(
+            options => $options,
+            level => $level,
+            functions => $args{functions},
+            previous => $args{previous},
+        );
+    }
+    if (@$parameters) {
+        $param_comp = $self->completion_parameters(
+            parameters => $parameters,
+            level => $level,
+            previous => $previous,
+            functions => $functions,
+        );
+        $param_comp = <<"EOM";
+$param_comp
+EOM
+    }
 
-
-
-
-    $subc .= <<"EOM";
+    if (keys %$commands) {
+        $subc .= <<"EOM";
 ${indent}esac
 EOM
-
-    my $completion = <<"EOM";
+        $subc_comp = <<"EOM";
 ${indent}case \$INDEX in
 
 ${indent}$index)
@@ -205,6 +215,20 @@ $subc
 ${indent};;
 ${indent}esac
 EOM
+        return $subc_comp;
+    }
+
+    my $completion = <<"EOM";
+${indent}case \$\{MYWORDS[\$INDEX-1]\} in
+$option_comp
+${indent}esac
+${indent}case \$INDEX in
+$param_comp
+${indent}*)
+${indent}    __comp_current_options || return
+${indent};;
+${indent}esac
+EOM
     return $completion;
 }
 
@@ -213,13 +237,10 @@ sub completion_parameters {
     my $spec = $self->spec;
     my $appname = $spec->name;
     my $parameters = $args{parameters};
-    my $options = $args{options};
     my $level = $args{level};
     my $indent = "    " x $level;
 
-    my $comp = <<"EOM";
-${indent}  case \$INDEX in
-EOM
+    my $comp = '';
 
     for my $i (0 .. $#$parameters) {
         my $param = $parameters->[ $i ];
@@ -236,28 +257,7 @@ EOM
         $comp .= $indent . "  ;;\n";
     }
 
-    if (@$options) {
-        my ($comp_values, $comp_options) = $self->completion_options(
-            level => $level + 1,
-            options => $options,
-            functions => $args{functions},
-            previous => $args{previous},
-            parameters => $parameters,
-        );
-#        warn __PACKAGE__.':'.__LINE__.": !!!!\n$comp_options\n";
-        chomp $comp_options;
-        $comp .= <<"EOM";
-$indent  *)
-${indent}    __comp_current_options true || return # after parameters
-${indent}    case \$\{MYWORDS[\$INDEX-1]\} in
-$comp_values
-${indent}    esac
-${indent}    ;;
-EOM
-
-    }
-
-    $comp .= $indent . "esac\n";
+    return $comp;
 }
 
 sub completion_options  {
@@ -266,16 +266,11 @@ sub completion_options  {
     my $appname = $self->spec->name;
     my $options = $args{options};
     my $level = $args{level};
-    my $parameters = $args{parameters};
     my $indent = "    " x $level;
-
-    my $comp = '';
-    my $num = $level + @$parameters;
 
     my @comp_options;
     my @comp_values;
-    my $comp_value = <<"EOM";
-EOM
+    my $comp_value = '';
     my $maxlength = 0;
     for my $opt (@$options) {
         my $name = $opt->name;
@@ -324,6 +319,7 @@ EOM
             }
             $comp_value .= <<"EOM";
 ${indent}    _${appname}_compreply "@list"
+${indent}    return
 EOM
         }
         elsif ($type eq "file" or $type eq "dir") {
@@ -342,7 +338,7 @@ EOM
         $comp_value .= $indent . "  ;;\n";
     }
 
-    return ($comp_value, $comp);
+    return ($comp_value);
 }
 
 sub dynamic_completion {
