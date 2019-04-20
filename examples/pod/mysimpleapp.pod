@@ -15,6 +15,7 @@ Just a very simple example app to document some features
     --verbose -v   [] be verbose (flag; multiple)
     --wc              word count (flag)          
     --lc              line count (flag)          
+    --with            with ...                   
     --help -h         Show command help (flag)   
 
 

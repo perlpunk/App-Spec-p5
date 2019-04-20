@@ -30,8 +30,6 @@ _pcorelist() {
     # subcmds
     case ${MYWORDS[0]} in
       _meta)
-        FLAGS+=()
-        OPTIONS+=()
         __pcorelist_handle_options_flags
         case $INDEX in
 
@@ -44,8 +42,6 @@ _pcorelist() {
         # subcmds
         case ${MYWORDS[1]} in
           completion)
-            FLAGS+=()
-            OPTIONS+=()
             __pcorelist_handle_options_flags
             case $INDEX in
 
@@ -61,15 +57,16 @@ _pcorelist() {
                 FLAGS+=('--zsh' 'for zsh' '--bash' 'for bash')
                 OPTIONS+=('--name' 'name of the program (optional, override name in spec)')
                 __pcorelist_handle_options_flags
-                  case $INDEX in
-                  *)
-                    __comp_current_options true || return # after parameters
-                    case ${MYWORDS[$INDEX-1]} in
-                      --name)
-                      ;;
+                case ${MYWORDS[$INDEX-1]} in
+                  --name)
+                  ;;
 
-                    esac
-                    ;;
+                esac
+                case $INDEX in
+
+                *)
+                    __comp_current_options || return
+                ;;
                 esac
               ;;
             esac
@@ -78,8 +75,6 @@ _pcorelist() {
             esac
           ;;
           pod)
-            FLAGS+=()
-            OPTIONS+=()
             __pcorelist_handle_options_flags
             case $INDEX in
 
@@ -92,8 +87,6 @@ _pcorelist() {
             # subcmds
             case ${MYWORDS[2]} in
               generate)
-                FLAGS+=()
-                OPTIONS+=()
                 __pcorelist_handle_options_flags
                 __comp_current_options true || return # no subcmds, no params/opts
               ;;
@@ -109,9 +102,11 @@ _pcorelist() {
       ;;
       diff)
         FLAGS+=('--added' 'Show only added modules' '--removed' 'Show only removed modules')
-        OPTIONS+=()
         __pcorelist_handle_options_flags
-          case $INDEX in
+        case ${MYWORDS[$INDEX-1]} in
+
+        esac
+        case $INDEX in
           1)
               __comp_current_options || return
                 _pcorelist_diff_param_perl1_completion
@@ -120,34 +115,33 @@ _pcorelist() {
               __comp_current_options || return
                 _pcorelist_diff_param_perl2_completion
           ;;
-          *)
-            __comp_current_options true || return # after parameters
-            case ${MYWORDS[$INDEX-1]} in
 
-            esac
-            ;;
+
+        *)
+            __comp_current_options || return
+        ;;
         esac
       ;;
       features)
         FLAGS+=('--raw' 'List only feature names')
-        OPTIONS+=()
         __pcorelist_handle_options_flags
-          case $INDEX in
+        case ${MYWORDS[$INDEX-1]} in
+
+        esac
+        case $INDEX in
           1)
               __comp_current_options || return
                 _pcorelist_features_param_feature_completion
           ;;
-          *)
-            __comp_current_options true || return # after parameters
-            case ${MYWORDS[$INDEX-1]} in
 
-            esac
-            ;;
+
+        *)
+            __comp_current_options || return
+        ;;
         esac
       ;;
       help)
         FLAGS+=('--all' '')
-        OPTIONS+=()
         __pcorelist_handle_options_flags
         case $INDEX in
 
@@ -160,8 +154,6 @@ _pcorelist() {
         # subcmds
         case ${MYWORDS[1]} in
           _meta)
-            FLAGS+=()
-            OPTIONS+=()
             __pcorelist_handle_options_flags
             case $INDEX in
 
@@ -174,8 +166,6 @@ _pcorelist() {
             # subcmds
             case ${MYWORDS[2]} in
               completion)
-                FLAGS+=()
-                OPTIONS+=()
                 __pcorelist_handle_options_flags
                 case $INDEX in
 
@@ -188,8 +178,6 @@ _pcorelist() {
                 # subcmds
                 case ${MYWORDS[3]} in
                   generate)
-                    FLAGS+=()
-                    OPTIONS+=()
                     __pcorelist_handle_options_flags
                     __comp_current_options true || return # no subcmds, no params/opts
                   ;;
@@ -199,8 +187,6 @@ _pcorelist() {
                 esac
               ;;
               pod)
-                FLAGS+=()
-                OPTIONS+=()
                 __pcorelist_handle_options_flags
                 case $INDEX in
 
@@ -213,8 +199,6 @@ _pcorelist() {
                 # subcmds
                 case ${MYWORDS[3]} in
                   generate)
-                    FLAGS+=()
-                    OPTIONS+=()
                     __pcorelist_handle_options_flags
                     __comp_current_options true || return # no subcmds, no params/opts
                   ;;
@@ -229,32 +213,22 @@ _pcorelist() {
             esac
           ;;
           diff)
-            FLAGS+=()
-            OPTIONS+=()
             __pcorelist_handle_options_flags
             __comp_current_options true || return # no subcmds, no params/opts
           ;;
           features)
-            FLAGS+=()
-            OPTIONS+=()
             __pcorelist_handle_options_flags
             __comp_current_options true || return # no subcmds, no params/opts
           ;;
           module)
-            FLAGS+=()
-            OPTIONS+=()
             __pcorelist_handle_options_flags
             __comp_current_options true || return # no subcmds, no params/opts
           ;;
           modules)
-            FLAGS+=()
-            OPTIONS+=()
             __pcorelist_handle_options_flags
             __comp_current_options true || return # no subcmds, no params/opts
           ;;
           perl)
-            FLAGS+=()
-            OPTIONS+=()
             __pcorelist_handle_options_flags
             __comp_current_options true || return # no subcmds, no params/opts
           ;;
@@ -267,39 +241,39 @@ _pcorelist() {
         FLAGS+=('--all' 'Show all perl and module versions' '-a' 'Show all perl and module versions' '--date' 'Show by date' '-d' 'Show by date')
         OPTIONS+=('--perl' 'Show by Perl Version' '-p' 'Show by Perl Version')
         __pcorelist_handle_options_flags
-          case $INDEX in
+        case ${MYWORDS[$INDEX-1]} in
+          --perl|-p)
+            _pcorelist_module_option_perl_completion
+          ;;
+
+        esac
+        case $INDEX in
           1)
               __comp_current_options || return
                 _pcorelist_module_param_module_completion
           ;;
-          *)
-            __comp_current_options true || return # after parameters
-            case ${MYWORDS[$INDEX-1]} in
-              --perl|-p)
-                _pcorelist_module_option_perl_completion
-              ;;
 
-            esac
-            ;;
+
+        *)
+            __comp_current_options || return
+        ;;
         esac
       ;;
       modules)
-        FLAGS+=()
-        OPTIONS+=()
         __pcorelist_handle_options_flags
         __comp_current_options true || return # no subcmds, no params/opts
       ;;
       perl)
         FLAGS+=('--raw' 'Show raw output without header' '-r' 'Show raw output without header' '--release' 'Show perl releases with dates')
-        OPTIONS+=()
         __pcorelist_handle_options_flags
-          case $INDEX in
-          *)
-            __comp_current_options true || return # after parameters
-            case ${MYWORDS[$INDEX-1]} in
+        case ${MYWORDS[$INDEX-1]} in
 
-            esac
-            ;;
+        esac
+        case $INDEX in
+
+        *)
+            __comp_current_options || return
+        ;;
         esac
       ;;
     esac
@@ -329,13 +303,13 @@ _pcorelist_features_param_feature_completion() {
     local param_feature=`$program 'features' '--raw'`
     _pcorelist_compreply "$param_feature"
 }
-_pcorelist_module_param_module_completion() {
-    local param_module=`$program 'modules'`
-    _pcorelist_compreply "$param_module"
-}
 _pcorelist_module_option_perl_completion() {
     local param_perl=`$program 'perl' '--raw'`
     _pcorelist_compreply "$param_perl"
+}
+_pcorelist_module_param_module_completion() {
+    local param_module=`$program 'modules'`
+    _pcorelist_compreply "$param_module"
 }
 
 __pcorelist_dynamic_comp() {

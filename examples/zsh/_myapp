@@ -615,17 +615,17 @@ _myapp_weather_show_param_city_completion
 
 _myapp_convert_param_type_completion() {
     local __dynamic_completion
-    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='type' $words`
+    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='type' "${words[@]}"`
     __myapp_dynamic_comp 'type' "$__dynamic_completion"
 }
 _myapp_convert_param_source_completion() {
     local __dynamic_completion
-    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='source' $words`
+    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='source' "${words[@]}"`
     __myapp_dynamic_comp 'source' "$__dynamic_completion"
 }
 _myapp_convert_param_target_completion() {
     local __dynamic_completion
-    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='target' $words`
+    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='target' "${words[@]}"`
     __myapp_dynamic_comp 'target' "$__dynamic_completion"
 }
 _myapp_palindrome_param_string_completion() {
@@ -641,12 +641,12 @@ _myapp_weather_cities_option_country_completion() {
 }
 _myapp_weather_show_param_country_completion() {
     local __dynamic_completion
-    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='country' $words`
+    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='country' "${words[@]}"`
     __myapp_dynamic_comp 'country' "$__dynamic_completion"
 }
 _myapp_weather_show_param_city_completion() {
     local __dynamic_completion
-    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='city' $words`
+    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='city' "${words[@]}"`
     __myapp_dynamic_comp 'city' "$__dynamic_completion"
 }
 
