@@ -4,26 +4,33 @@ use warnings;
 package App::Spec::Plugin::Help;
 our $VERSION = '0.000'; # VERSION
 
-use YAML::PP;
-
 use Moo;
 with 'App::Spec::Role::Plugin::Subcommand';
 with 'App::Spec::Role::Plugin::GlobalOptions';
 
 my $yaml;
-my $cmd;
-my $options;
-sub _read_data {
-    unless ($yaml) {
-        $yaml = do { local $/; <DATA> };
-        ($cmd, $options) = YAML::PP::Load($yaml);
-    }
-}
+my $cmd = {
+    name => 'help',
+    summary => 'Show command help',
+    class => 'App::Spec::Plugin::Help',
+    op => 'cmd_help',
+    subcommand_required => 0,
+    options => [
+        { spec => 'all' },
+    ],
+};
+my $options  = [
+    {
+        name => 'help',
+        summary => 'Show command help',
+        type => 'flag',
+        aliases => ['h'],
+    },
+];
 
 sub install_subcommands {
     my ($class, %args) = @_;
     my $parent = $args{spec};
-    _read_data();
     my $appspec = App::Spec::Subcommand->read($cmd);
 
     my $help_subcmds = $appspec->subcommands || {};
@@ -64,7 +71,6 @@ sub _add_subcommands {
 
 sub install_options {
     my ($class, %args) = @_;
-    _read_data();
     return $options;
 }
 
@@ -164,20 +170,4 @@ See L<App::Spec::Plugin>
 =back
 
 =cut
-
-__DATA__
----
-name: help
-summary: Show command help
-class: App::Spec::Plugin::Help
-op: cmd_help
-subcommand_required: 0
-options:
-    - spec: all
----
--   name: help
-    summary: Show command help
-    type: flag
-    aliases:
-      - h
 
