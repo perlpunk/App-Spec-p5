@@ -6,14 +6,14 @@ use lib "$Bin/lib";
 use App::Spec::Example::MyApp;
 use App::Spec::Example::MySimpleApp;
 use App::Spec;
-use YAML::XS ();
+use YAML::PP;
 $ENV{PERL5_APPSPECRUN_COLOR} = 'never';
 $ENV{PERL5_APPSPECRUN_TEST} = 1;
 
 my @datafiles = map {
     "$Bin/data/$_"
 } qw/ 11.completion.yaml 11.invalid.yaml 11.valid.yaml /;
-my @testdata = map { my $d = YAML::XS::LoadFile($_); @$d } @datafiles;
+my @testdata = map { my $d = YAML::PP::LoadFile($_); @$d } @datafiles;
 
 for my $test (@testdata) {
     my $args = $test->{args};

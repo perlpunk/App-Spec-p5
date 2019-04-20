@@ -4,6 +4,7 @@ package App::Spec::Role::Command;
 
 our $VERSION = '0.000'; # VERSION
 
+use YAML::PP;
 use List::Util qw/ any /;
 use App::Spec::Option;
 use Ref::Util qw/ is_arrayref /;
@@ -90,14 +91,14 @@ sub load_data {
     my $spec;
     if (ref $file eq 'GLOB') {
         my $data = do { local $/; <$file> };
-        $spec = eval { YAML::XS::Load($data) };
+        $spec = eval { YAML::PP::Load($data) };
     }
     elsif (not ref $file) {
-        $spec = eval { YAML::XS::LoadFile($file) };
+        $spec = eval { YAML::PP::LoadFile($file) };
     }
     elsif (ref $file eq 'SCALAR') {
         my $data = $$file;
-        $spec = eval { YAML::XS::Load($data) };
+        $spec = eval { YAML::PP::Load($data) };
     }
     elsif (ref $file eq 'HASH') {
         $spec = $file;

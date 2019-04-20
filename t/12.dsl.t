@@ -5,7 +5,7 @@ use constant TESTS => 8;
 use Test::More tests => TESTS;
 
 use FindBin '$Bin';
-use YAML::XS qw/ LoadFile /;
+use YAML::PP qw/ LoadFile /;
 use App::Spec;
 use Test::Deep;
 use Data::Dumper;

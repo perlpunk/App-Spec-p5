@@ -4,7 +4,7 @@ use warnings;
 package App::Spec::Plugin::Help;
 our $VERSION = '0.000'; # VERSION
 
-use YAML::XS ();
+use YAML::PP;
 
 use Moo;
 with 'App::Spec::Role::Plugin::Subcommand';
@@ -16,7 +16,7 @@ my $options;
 sub _read_data {
     unless ($yaml) {
         $yaml = do { local $/; <DATA> };
-        ($cmd, $options) = YAML::XS::Load($yaml);
+        ($cmd, $options) = YAML::PP::Load($yaml);
     }
 }
 

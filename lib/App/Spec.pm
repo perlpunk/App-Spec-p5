@@ -9,7 +9,6 @@ our $VERSION = '0.000'; # VERSION
 use App::Spec::Subcommand;
 use App::Spec::Option;
 use App::Spec::Parameter;
-use YAML::XS ();
 
 use Moo;
 

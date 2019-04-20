@@ -4,7 +4,7 @@ use warnings;
 package App::Spec::Plugin::Format;
 our $VERSION = '0.000'; # VERSION
 
-use YAML::XS ();
+use YAML::PP;
 use Ref::Util qw/ is_arrayref /;
 
 use Moo;
@@ -15,7 +15,7 @@ my $options;
 sub _read_data {
     unless ($yaml) {
         $yaml = do { local $/; <DATA> };
-        ($options) = YAML::XS::Load($yaml);
+        ($options) = YAML::PP::Load($yaml);
     }
 }
 
@@ -48,7 +48,7 @@ sub print_output {
         next unless $out->type eq 'data';
         my $content = $out->content;
         if ($format eq 'YAML') {
-            $content = YAML::XS::Dump($content);
+            $content = YAML::PP::Dump($content);
         }
         elsif ($format eq 'JSON') {
             require JSON::XS;
