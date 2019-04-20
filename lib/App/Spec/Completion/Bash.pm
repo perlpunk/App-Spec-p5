@@ -103,7 +103,7 @@ sub escape_singlequote {
     my @result;
     for my $string (@strings) {
         no warnings 'uninitialized';
-        $string =~ s/[']/'"'"'/g;
+        $string =~ s/[']/'"\\\\'"'/g;
         push @result, $string;
     }
     return wantarray ? @result : $result[0];
