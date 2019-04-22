@@ -1,12 +1,8 @@
 Revision history for Perl module App::Spec
 
-0.004_002 2019-04-20 21:55:41+02:00
+0.005 2019-04-22 12:40:14+02:00
 
     - Support completion for apps without subcommands
-    - Fix completion of last parameter
-
-0.004_001 Mon Dec 26 19:27:37 CET 2016
-
     - Support plugins (turn help and meta commands into plugins)
     - And lots of refactoring for that
     - Pass a data structure to $run->out and it will be formatted with
