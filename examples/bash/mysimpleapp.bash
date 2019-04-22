@@ -1,7 +1,5 @@
 #!bash
 
-# http://stackoverflow.com/questions/7267185/bash-autocompletion-add-description-for-possible-completions
-
 _mysimpleapp() {
 
     COMPREPLY=()
@@ -46,9 +44,11 @@ _mysimpleapp() {
 
 _mysimpleapp_compreply() {
     IFS=$'\n' COMPREPLY=($(compgen -W "$1" -- ${COMP_WORDS[COMP_CWORD]}))
+
+    # http://stackoverflow.com/questions/7267185/bash-autocompletion-add-description-for-possible-completions
     if [[ ${#COMPREPLY[*]} -eq 1 ]]; then # Only one completion
         COMPREPLY=( ${COMPREPLY[0]%% -- *} ) # Remove ' -- ' and everything after
-        COMPREPLY="$(echo -e "$COMPREPLY" | sed -e 's/[[:space:]]*$//')"
+        COMPREPLY=( ${COMPREPLY[0]%% *} ) # Remove trailing spaces
     fi
 }
 
@@ -78,7 +78,7 @@ __mysimpleapp_dynamic_comp() {
             cols=`tput cols`
             [[ -z $cols ]] && cols=80
             desclength=`expr $cols - 4 - $max`
-            formatted=`printf "'%-*s -- %-*s'" "$max" "$name" "$desclength" "$desc"`
+            formatted=`printf "%-*s -- %-*s" "$max" "$name" "$desclength" "$desc"`
             comp="$comp$formatted"$'\n'
         else
             comp="$comp'$name'"$'\n'
