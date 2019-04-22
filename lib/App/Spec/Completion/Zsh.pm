@@ -87,7 +87,7 @@ sub completion_commands {
         level => $level,
         count => $level,
         functions => $functions,
-        previous => $args{previous},
+        previous => $previous,
     );
 
     if ($param_args) {
@@ -102,7 +102,7 @@ sub completion_commands {
             options => $options,
             level => $level,
             functions => $functions,
-            previous => $args{previous},
+            previous => $previous,
         );
         $arguments .= "$opt \\\n";
     }
