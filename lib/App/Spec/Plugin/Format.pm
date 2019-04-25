@@ -6,6 +6,7 @@ our $VERSION = '0.000'; # VERSION
 
 use YAML::PP;
 use Ref::Util qw/ is_arrayref /;
+use Encode;
 
 use Moo;
 with 'App::Spec::Role::Plugin::GlobalOptions';
@@ -48,19 +49,19 @@ sub print_output {
         next unless $out->type eq 'data';
         my $content = $out->content;
         if ($format eq 'YAML') {
-            $content = YAML::PP::Dump($content);
+            $content = encode_utf8 YAML::PP::Dump($content);
         }
         elsif ($format eq 'JSON') {
             require JSON::XS;
             my $coder = JSON::XS->new->ascii->pretty->allow_nonref;
-            $content = $coder->encode($content) . "\n";
+            $content = encode_utf8 $coder->encode($content) . "\n";
         }
         elsif ($format eq 'Table' and is_arrayref($content)) {
             require Text::Table;
             my $header = shift @$content;
             my $tb = Text::Table->new( @$header );
             $tb->load(@$content);
-            $content = "$tb";
+            $content = encode_utf8 "$tb";
         }
         elsif ($format eq 'Data__Dump') {
             require Data::Dump;
