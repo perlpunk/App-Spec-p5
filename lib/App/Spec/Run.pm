@@ -94,6 +94,7 @@ sub process {
         if ($completion_parameter) {
             $self->completion_output(
                 param_specs => \%param_specs,
+                option_specs => \%option_specs,
                 completion_parameter => $completion_parameter,
             );
         }
@@ -151,8 +152,10 @@ sub completion_output {
     my ($self, %args) = @_;
     my $completion_parameter = $args{completion_parameter};
     my $param_specs = $args{param_specs};
+    my $option_specs = $args{option_specs};
     my $shell = $ENV{PERL5_APPSPECRUN_SHELL} or return;
     my $param = $param_specs->{ $completion_parameter };
+    $param ||= $option_specs->{ $completion_parameter };
     my $unique = $param->{unique};
     my $completion = $param->completion or return;
     my $op;
