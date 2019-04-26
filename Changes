@@ -1,5 +1,12 @@
 Revision history for Perl module App::Spec
 
+0.005_001 2019-04-26 19:18:04+02:00
+
+    - Fix bug (undefined reference) in zsh completion
+    - Fix bug (wrong type of default) in App::Spec::Run::Response
+    - Format plugin: encode output
+    - Allow dynamic completion also for options
+
 0.005 2019-04-22 12:40:14+02:00
 
     - Support completion for apps without subcommands
