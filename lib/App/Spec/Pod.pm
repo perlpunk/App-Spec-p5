@@ -225,7 +225,7 @@ __END__
 
 App::Spec::Pod - Generates Pod from App::Spec objects
 
-=item SYNOPSIS
+=head1 SYNOPSIS
 
     my $generator = App::Spec::Pod->new(
         spec => $appspec,
