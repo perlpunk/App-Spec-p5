@@ -1,7 +1,10 @@
 Revision history for Perl module App::Spec
 
-0.005_001 2019-04-26 19:18:04+02:00
+0.006 2019-05-05 13:21:09+02:00
 
+    - Autogenerate META.json using dzil plugin (PR#16 @manwar)
+    - Fix pod error (PR##21 @manwar)
+    - Add support for float argument type (PR#18 @s-nez)
     - Fix bug (undefined reference) in zsh completion
     - Fix bug (wrong type of default) in App::Spec::Run::Response
     - Format plugin: encode output
