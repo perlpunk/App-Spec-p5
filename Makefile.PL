@@ -36,7 +36,7 @@ my %WriteMakefileArgs = (
     "Scalar::Util" => 0,
     "Term::ANSIColor" => 0,
     "Text::Table" => 0,
-    "YAML::PP" => "0.012",
+    "YAML::PP" => "0.015",
     "base" => 0,
     "strict" => 0,
     "warnings" => 0
@@ -52,7 +52,7 @@ my %WriteMakefileArgs = (
     "constant" => 0,
     "lib" => 0
   },
-  "VERSION" => "0.007",
+  "VERSION" => "0.008",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -78,7 +78,7 @@ my %FallbackPrereqs = (
   "Test::Deep" => 0,
   "Test::More" => 0,
   "Text::Table" => 0,
-  "YAML::PP" => "0.012",
+  "YAML::PP" => "0.015",
   "base" => 0,
   "blib" => "1.01",
   "constant" => 0,
