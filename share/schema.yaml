@@ -38,7 +38,7 @@ definitions:
       '$ref': '#/definitions/option'
 
   option:
-    type: object
+    type: [object, string]
     additionalProperties: false
     anyOf:
     - required: [name]
