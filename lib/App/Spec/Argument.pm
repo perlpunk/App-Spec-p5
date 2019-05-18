@@ -58,13 +58,12 @@ sub from_dsl {
 
     my $name;
     my $type = "flag";
-    my $multiple = 0;
-    my $mapping = 0;
-    my $required = 0;
+    my $multiple;
     $dsl =~ s/^\s+//;
 
     if ($dsl =~ s/^\+//) {
-        $required = 1;
+        my $required = 1;
+        $hash{required} = $required;
     }
 
     if ($dsl =~ s/^ ($name_re) //x) {
@@ -106,13 +105,14 @@ sub from_dsl {
     if ($type eq 'flag' and $dsl =~ s/^\+//) {
         # incremental flag
         $multiple = 1;
+        $hash{multiple} = 1;
     }
     elsif ($type eq 'string' and $dsl =~ s/^\@//) {
-        $multiple = 1;
+        $hash{multiple} = 1;
     }
     elsif ($type eq 'string' and $dsl =~ s/^\%//) {
-        $multiple = 1;
-        $mapping = 1;
+        $hash{multiple} = 1;
+        $hash{mapping} = 1;
     }
 
     $dsl =~ s/^\s+//;
@@ -139,9 +139,6 @@ sub from_dsl {
     }
 
     $hash{type} = $type;
-    $hash{multiple} = $multiple;
-    $hash{mapping} = $mapping;
-    $hash{required} = $required;
     return %hash;
 }
 
