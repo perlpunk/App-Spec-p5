@@ -1,5 +1,9 @@
 Revision history for Perl module App::Spec
 
+0.007 2019-05-18 16:01:59+02:00
+
+    - dsl values should not override other values
+
 0.006 2019-05-05 13:21:09+02:00
 
     - Autogenerate META.json using dzil plugin (PR#16 @manwar)
