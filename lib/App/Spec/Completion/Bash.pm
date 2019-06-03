@@ -32,14 +32,14 @@ _$appname() \{
 
     COMPREPLY=()
     local program=$appname
-    local cur=\$\{COMP_WORDS[\$COMP_CWORD]\}
-#    echo "COMP_CWORD:\$COMP_CWORD cur:\$cur" >>/tmp/comp
+    local cur prev words cword
+    _init_completion -n : || return
     declare -a FLAGS
     declare -a OPTIONS
     declare -a MYWORDS
 
-    local INDEX=`expr \$COMP_CWORD - 1`
-    MYWORDS=("\$\{COMP_WORDS[@]:1:\$COMP_CWORD\}")
+    local INDEX=`expr \$cword - 1`
+    MYWORDS=("\$\{words[@]:1:\$cword\}")
 
     FLAGS=($flags_string)
     OPTIONS=($options_string)
@@ -49,7 +49,9 @@ $completion_outer
 \}
 
 _${appname}_compreply() \{
-    IFS=\$'\\n' COMPREPLY=(\$(compgen -W "\$1" -- \$\{COMP_WORDS\[COMP_CWORD\]\}))
+    local prefix=""
+    IFS=\$'\\n' COMPREPLY=(\$(compgen -P "\$prefix" -W "\$1" -- "\$cur"))
+    __ltrim_colon_completions "\$prefix\$cur"
 
     # http://stackoverflow.com/questions/7267185/bash-autocompletion-add-description-for-possible-completions
     if [[ \$\{#COMPREPLY[*]\} -eq 1 ]]; then # Only one completion
@@ -379,8 +381,8 @@ sub dynamic_completion {
         $function = <<"EOM";
 $function_name() \{
     local __dynamic_completion
-    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='$name' \${COMP_WORDS[@]}`
-    __${appname}_dynamic_comp '$name' "\$__dynamic_completion"
+    __dynamic_completion=\$(PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='$name' \${words[@]})
+    __${appname}_dynamic_comp '$name' \$__dynamic_completion
 \}
 EOM
     }
@@ -400,7 +402,7 @@ EOM
                         my @repl = @$replace;
                         if ($replace->[0] eq 'SHELL_WORDS') {
                             my $num = $replace->[1];
-                            my $index = "\$COMP_CWORD";
+                            my $index = "\$cword";
                             if ($num ne 'CURRENT') {
                                 if ($num =~ m/^-/) {
                                     $index .= $num;
@@ -409,7 +411,7 @@ EOM
                                     $index = $num - 1;
                                 }
                             }
-                            my $string = qq{"\$\{COMP_WORDS\[$index\]\}"};
+                            my $string = qq{"\$\{words\[$index\]\}"};
                             push @args, $string;
                         }
                     }
@@ -430,7 +432,8 @@ EOM
         chomp $string;
         $function = <<"EOM";
 $function_name() \{
-    local param_$shell_name=`$string`
+    local CURRENT_WORD="\${words\[\$cword\]\}"
+    local param_$shell_name="\$($string)"
     _${appname}_compreply "\$param_$shell_name"
 \}
 EOM
