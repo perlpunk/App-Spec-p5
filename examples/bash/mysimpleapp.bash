@@ -4,14 +4,14 @@ _mysimpleapp() {
 
     COMPREPLY=()
     local program=mysimpleapp
-    local cur=${COMP_WORDS[$COMP_CWORD]}
-#    echo "COMP_CWORD:$COMP_CWORD cur:$cur" >>/tmp/comp
+    local cur prev words cword
+    _init_completion -n : || return
     declare -a FLAGS
     declare -a OPTIONS
     declare -a MYWORDS
 
-    local INDEX=`expr $COMP_CWORD - 1`
-    MYWORDS=("${COMP_WORDS[@]:1:$COMP_CWORD}")
+    local INDEX=`expr $cword - 1`
+    MYWORDS=("${words[@]:1:$cword}")
 
     FLAGS=('--verbose' 'be verbose' '-v' 'be verbose' '--wc' 'word count' '--lc' 'line count' '--help' 'Show command help' '-h' 'Show command help')
     OPTIONS=('--with' 'with ...')
@@ -43,7 +43,9 @@ _mysimpleapp() {
 }
 
 _mysimpleapp_compreply() {
-    IFS=$'\n' COMPREPLY=($(compgen -W "$1" -- ${COMP_WORDS[COMP_CWORD]}))
+    local prefix=""
+    IFS=$'\n' COMPREPLY=($(compgen -P "$prefix" -W "$1" -- "$cur"))
+    __ltrim_colon_completions "$prefix$cur"
 
     # http://stackoverflow.com/questions/7267185/bash-autocompletion-add-description-for-possible-completions
     if [[ ${#COMPREPLY[*]} -eq 1 ]]; then # Only one completion

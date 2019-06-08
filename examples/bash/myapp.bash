@@ -4,14 +4,14 @@ _myapp() {
 
     COMPREPLY=()
     local program=myapp
-    local cur=${COMP_WORDS[$COMP_CWORD]}
-#    echo "COMP_CWORD:$COMP_CWORD cur:$cur" >>/tmp/comp
+    local cur prev words cword
+    _init_completion -n : || return
     declare -a FLAGS
     declare -a OPTIONS
     declare -a MYWORDS
 
-    local INDEX=`expr $COMP_CWORD - 1`
-    MYWORDS=("${COMP_WORDS[@]:1:$COMP_CWORD}")
+    local INDEX=`expr $cword - 1`
+    MYWORDS=("${words[@]:1:$cword}")
 
     FLAGS=('--verbose' 'be verbose' '-v' 'be verbose' '--help' 'Show command help' '-h' 'Show command help')
     OPTIONS=('--format' 'Format output')
@@ -423,7 +423,9 @@ _myapp() {
 }
 
 _myapp_compreply() {
-    IFS=$'\n' COMPREPLY=($(compgen -W "$1" -- ${COMP_WORDS[COMP_CWORD]}))
+    local prefix=""
+    IFS=$'\n' COMPREPLY=($(compgen -P "$prefix" -W "$1" -- "$cur"))
+    __ltrim_colon_completions "$prefix$cur"
 
     # http://stackoverflow.com/questions/7267185/bash-autocompletion-add-description-for-possible-completions
     if [[ ${#COMPREPLY[*]} -eq 1 ]]; then # Only one completion
@@ -434,36 +436,38 @@ _myapp_compreply() {
 
 _myapp_convert_param_type_completion() {
     local __dynamic_completion
-    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='type' ${COMP_WORDS[@]}`
-    __myapp_dynamic_comp 'type' "$__dynamic_completion"
+    __dynamic_completion=$(PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='type' ${words[@]})
+    __myapp_dynamic_comp 'type' $__dynamic_completion
 }
 _myapp_convert_param_source_completion() {
     local __dynamic_completion
-    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='source' ${COMP_WORDS[@]}`
-    __myapp_dynamic_comp 'source' "$__dynamic_completion"
+    __dynamic_completion=$(PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='source' ${words[@]})
+    __myapp_dynamic_comp 'source' $__dynamic_completion
 }
 _myapp_convert_param_target_completion() {
     local __dynamic_completion
-    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='target' ${COMP_WORDS[@]}`
-    __myapp_dynamic_comp 'target' "$__dynamic_completion"
+    __dynamic_completion=$(PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='target' ${words[@]})
+    __myapp_dynamic_comp 'target' $__dynamic_completion
 }
 _myapp_palindrome_param_string_completion() {
-    local param_string=`cat /usr/share/dict/words | perl -nle'print if $_ eq reverse $_'`
+    local CURRENT_WORD="${words[$cword]}"
+    local param_string="$(cat /usr/share/dict/words | perl -nle'print if $_ eq reverse $_')"
     _myapp_compreply "$param_string"
 }
 _myapp_weather_cities_option_country_completion() {
-    local param_country=`$program 'weather' 'countries'`
+    local CURRENT_WORD="${words[$cword]}"
+    local param_country="$($program 'weather' 'countries')"
     _myapp_compreply "$param_country"
 }
 _myapp_weather_show_param_country_completion() {
     local __dynamic_completion
-    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='country' ${COMP_WORDS[@]}`
-    __myapp_dynamic_comp 'country' "$__dynamic_completion"
+    __dynamic_completion=$(PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='country' ${words[@]})
+    __myapp_dynamic_comp 'country' $__dynamic_completion
 }
 _myapp_weather_show_param_city_completion() {
     local __dynamic_completion
-    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='city' ${COMP_WORDS[@]}`
-    __myapp_dynamic_comp 'city' "$__dynamic_completion"
+    __dynamic_completion=$(PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='city' ${words[@]})
+    __myapp_dynamic_comp 'city' $__dynamic_completion
 }
 
 __myapp_dynamic_comp() {

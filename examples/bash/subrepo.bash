@@ -4,14 +4,14 @@ _subrepo() {
 
     COMPREPLY=()
     local program=subrepo
-    local cur=${COMP_WORDS[$COMP_CWORD]}
-#    echo "COMP_CWORD:$COMP_CWORD cur:$cur" >>/tmp/comp
+    local cur prev words cword
+    _init_completion -n : || return
     declare -a FLAGS
     declare -a OPTIONS
     declare -a MYWORDS
 
-    local INDEX=`expr $COMP_CWORD - 1`
-    MYWORDS=("${COMP_WORDS[@]:1:$COMP_CWORD}")
+    local INDEX=`expr $cword - 1`
+    MYWORDS=("${words[@]:1:$cword}")
 
     FLAGS=('--help' 'Show command help' '-h' 'Show command help')
     OPTIONS=()
@@ -302,7 +302,9 @@ _subrepo() {
 }
 
 _subrepo_compreply() {
-    IFS=$'\n' COMPREPLY=($(compgen -W "$1" -- ${COMP_WORDS[COMP_CWORD]}))
+    local prefix=""
+    IFS=$'\n' COMPREPLY=($(compgen -P "$prefix" -W "$1" -- "$cur"))
+    __ltrim_colon_completions "$prefix$cur"
 
     # http://stackoverflow.com/questions/7267185/bash-autocompletion-add-description-for-possible-completions
     if [[ ${#COMPREPLY[*]} -eq 1 ]]; then # Only one completion
@@ -312,31 +314,38 @@ _subrepo_compreply() {
 }
 
 _subrepo_branch_param_subrepo_completion() {
-    local param_subrepo=`$program 'status' '--quiet'`
+    local CURRENT_WORD="${words[$cword]}"
+    local param_subrepo="$($program 'status' '--quiet')"
     _subrepo_compreply "$param_subrepo"
 }
 _subrepo_clean_param_subrepo_completion() {
-    local param_subrepo=`$program 'status' '--quiet'`
+    local CURRENT_WORD="${words[$cword]}"
+    local param_subrepo="$($program 'status' '--quiet')"
     _subrepo_compreply "$param_subrepo"
 }
 _subrepo_commit_param_subrepo_completion() {
-    local param_subrepo=`$program 'status' '--quiet'`
+    local CURRENT_WORD="${words[$cword]}"
+    local param_subrepo="$($program 'status' '--quiet')"
     _subrepo_compreply "$param_subrepo"
 }
 _subrepo_fetch_param_subrepo_completion() {
-    local param_subrepo=`$program 'status' '--quiet'`
+    local CURRENT_WORD="${words[$cword]}"
+    local param_subrepo="$($program 'status' '--quiet')"
     _subrepo_compreply "$param_subrepo"
 }
 _subrepo_pull_param_subrepo_completion() {
-    local param_subrepo=`$program 'status' '--quiet'`
+    local CURRENT_WORD="${words[$cword]}"
+    local param_subrepo="$($program 'status' '--quiet')"
     _subrepo_compreply "$param_subrepo"
 }
 _subrepo_push_param_subrepo_completion() {
-    local param_subrepo=`$program 'status' '--quiet'`
+    local CURRENT_WORD="${words[$cword]}"
+    local param_subrepo="$($program 'status' '--quiet')"
     _subrepo_compreply "$param_subrepo"
 }
 _subrepo_status_param_subrepo_completion() {
-    local param_subrepo=`$program 'status' '--quiet'`
+    local CURRENT_WORD="${words[$cword]}"
+    local param_subrepo="$($program 'status' '--quiet')"
     _subrepo_compreply "$param_subrepo"
 }
 
