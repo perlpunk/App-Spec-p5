@@ -4,14 +4,14 @@ _pcorelist() {
 
     COMPREPLY=()
     local program=pcorelist
-    local cur=${COMP_WORDS[$COMP_CWORD]}
-#    echo "COMP_CWORD:$COMP_CWORD cur:$cur" >>/tmp/comp
+    local cur prev words cword
+    _init_completion -n : || return
     declare -a FLAGS
     declare -a OPTIONS
     declare -a MYWORDS
 
-    local INDEX=`expr $COMP_CWORD - 1`
-    MYWORDS=("${COMP_WORDS[@]:1:$COMP_CWORD}")
+    local INDEX=`expr $cword - 1`
+    MYWORDS=("${words[@]:1:$cword}")
 
     FLAGS=('--help' 'Show command help' '-h' 'Show command help')
     OPTIONS=()
@@ -282,40 +282,49 @@ _pcorelist() {
 }
 
 _pcorelist_compreply() {
-    IFS=$'\n' COMPREPLY=($(compgen -W "$1" -- ${COMP_WORDS[COMP_CWORD]}))
+    local prefix=""
+    cur="$(printf '%q' "$cur")"
+    IFS=$'\n' COMPREPLY=($(compgen -P "$prefix" -W "$*" -- "$cur"))
+    __ltrim_colon_completions "$prefix$cur"
 
     # http://stackoverflow.com/questions/7267185/bash-autocompletion-add-description-for-possible-completions
     if [[ ${#COMPREPLY[*]} -eq 1 ]]; then # Only one completion
-        COMPREPLY=( ${COMPREPLY[0]%% -- *} ) # Remove ' -- ' and everything after
-        COMPREPLY=( ${COMPREPLY[0]%% *} ) # Remove trailing spaces
+        COMPREPLY=( "${COMPREPLY[0]%% -- *}" ) # Remove ' -- ' and everything after
+        COMPREPLY=( "${COMPREPLY[0]%%+( )}" ) # Remove trailing spaces
     fi
 }
 
 _pcorelist_diff_param_perl1_completion() {
-    local param_perl1=`$program 'perl' '--raw'`
+    local CURRENT_WORD="${words[$cword]}"
+    local param_perl1="$($program 'perl' '--raw')"
     _pcorelist_compreply "$param_perl1"
 }
 _pcorelist_diff_param_perl2_completion() {
-    local param_perl2=`$program 'perl' '--raw'`
+    local CURRENT_WORD="${words[$cword]}"
+    local param_perl2="$($program 'perl' '--raw')"
     _pcorelist_compreply "$param_perl2"
 }
 _pcorelist_features_param_feature_completion() {
-    local param_feature=`$program 'features' '--raw'`
+    local CURRENT_WORD="${words[$cword]}"
+    local param_feature="$($program 'features' '--raw')"
     _pcorelist_compreply "$param_feature"
 }
 _pcorelist_module_option_perl_completion() {
-    local param_perl=`$program 'perl' '--raw'`
+    local CURRENT_WORD="${words[$cword]}"
+    local param_perl="$($program 'perl' '--raw')"
     _pcorelist_compreply "$param_perl"
 }
 _pcorelist_module_param_module_completion() {
-    local param_module=`$program 'modules'`
+    local CURRENT_WORD="${words[$cword]}"
+    local param_module="$($program 'modules')"
     _pcorelist_compreply "$param_module"
 }
 
 __pcorelist_dynamic_comp() {
     local argname="$1"
     local arg="$2"
-    local comp name desc cols desclength formatted
+    local name desc cols desclength formatted
+    local comp=()
     local max=0
 
     while read -r line; do
@@ -338,12 +347,12 @@ __pcorelist_dynamic_comp() {
             [[ -z $cols ]] && cols=80
             desclength=`expr $cols - 4 - $max`
             formatted=`printf "%-*s -- %-*s" "$max" "$name" "$desclength" "$desc"`
-            comp="$comp$formatted"$'\n'
+            comp+=("$formatted")
         else
-            comp="$comp'$name'"$'\n'
+            comp+=("'$name'")
         fi
     done <<< "$arg"
-    _pcorelist_compreply "$comp"
+    _pcorelist_compreply ${comp[@]}
 }
 
 function __pcorelist_handle_options() {

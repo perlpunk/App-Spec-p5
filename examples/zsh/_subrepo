@@ -340,37 +340,44 @@ _subrepo_status_param_subrepo_completion
 
 _subrepo_branch_param_subrepo_completion() {
     local __dynamic_completion
-    IFS=$'\n' set -A __dynamic_completion `$program 'status' '--quiet'`
+    local CURRENT_WORD="$words[CURRENT]"
+    IFS=$'\n' set -A __dynamic_completion $( $program 'status' '--quiet' )
     compadd -X "subrepo:" $__dynamic_completion
 }
 _subrepo_clean_param_subrepo_completion() {
     local __dynamic_completion
-    IFS=$'\n' set -A __dynamic_completion `$program 'status' '--quiet'`
+    local CURRENT_WORD="$words[CURRENT]"
+    IFS=$'\n' set -A __dynamic_completion $( $program 'status' '--quiet' )
     compadd -X "subrepo:" $__dynamic_completion
 }
 _subrepo_commit_param_subrepo_completion() {
     local __dynamic_completion
-    IFS=$'\n' set -A __dynamic_completion `$program 'status' '--quiet'`
+    local CURRENT_WORD="$words[CURRENT]"
+    IFS=$'\n' set -A __dynamic_completion $( $program 'status' '--quiet' )
     compadd -X "subrepo:" $__dynamic_completion
 }
 _subrepo_fetch_param_subrepo_completion() {
     local __dynamic_completion
-    IFS=$'\n' set -A __dynamic_completion `$program 'status' '--quiet'`
+    local CURRENT_WORD="$words[CURRENT]"
+    IFS=$'\n' set -A __dynamic_completion $( $program 'status' '--quiet' )
     compadd -X "subrepo:" $__dynamic_completion
 }
 _subrepo_pull_param_subrepo_completion() {
     local __dynamic_completion
-    IFS=$'\n' set -A __dynamic_completion `$program 'status' '--quiet'`
+    local CURRENT_WORD="$words[CURRENT]"
+    IFS=$'\n' set -A __dynamic_completion $( $program 'status' '--quiet' )
     compadd -X "subrepo:" $__dynamic_completion
 }
 _subrepo_push_param_subrepo_completion() {
     local __dynamic_completion
-    IFS=$'\n' set -A __dynamic_completion `$program 'status' '--quiet'`
+    local CURRENT_WORD="$words[CURRENT]"
+    IFS=$'\n' set -A __dynamic_completion $( $program 'status' '--quiet' )
     compadd -X "subrepo:" $__dynamic_completion
 }
 _subrepo_status_param_subrepo_completion() {
     local __dynamic_completion
-    IFS=$'\n' set -A __dynamic_completion `$program 'status' '--quiet'`
+    local CURRENT_WORD="$words[CURRENT]"
+    IFS=$'\n' set -A __dynamic_completion $( $program 'status' '--quiet' )
     compadd -X "subrepo:" $__dynamic_completion
 }
 

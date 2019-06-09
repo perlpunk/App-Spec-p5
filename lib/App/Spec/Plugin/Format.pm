@@ -63,7 +63,7 @@ sub print_output {
             $tb->load(@$content);
             $content = encode_utf8 "$tb";
         }
-        elsif ($format eq 'Data__Dump') {
+        elsif ($format eq 'Data::Dump') {
             require Data::Dump;
             $content = Data::Dump::dump($content) . "\n";
         }
@@ -115,5 +115,5 @@ __DATA__
 -   name: format
     summary: Format output
     type: string
-    enum: [JSON, YAML, Table, "Data__Dumper", "Data__Dump"]
+    enum: [JSON, YAML, Table, "Data::Dumper", "Data::Dump"]
 

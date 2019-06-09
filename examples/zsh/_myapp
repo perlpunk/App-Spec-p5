@@ -66,7 +66,7 @@ _myapp() {
                                     '*-v[be verbose]' \
                                     '--help[Show command help]' \
                                     '-h[Show command help]' \
-                                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
+                                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data\:\:Dumper" "Data\:\:Dump")' \
                                     '--name[name of the program (optional, override name in spec)]:name' \
                                     '--zsh[for zsh]' \
                                     '--bash[for bash]' \
@@ -109,7 +109,7 @@ _myapp() {
                                     '*-v[be verbose]' \
                                     '--help[Show command help]' \
                                     '-h[Show command help]' \
-                                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
+                                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data\:\:Dumper" "Data\:\:Dump")' \
                                     && ret=0
 
 
@@ -135,7 +135,7 @@ _myapp() {
                     '*-v[be verbose]' \
                     '--help[Show command help]' \
                     '-h[Show command help]' \
-                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
+                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data\:\:Dumper" "Data\:\:Dump")' \
                     '*--set[key=value pair(s)]:set' \
                     && ret=0
 
@@ -154,7 +154,7 @@ _myapp() {
                     '*-v[be verbose]' \
                     '--help[Show command help]' \
                     '-h[Show command help]' \
-                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
+                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data\:\:Dumper" "Data\:\:Dump")' \
                     && ret=0
 
                 case $state in
@@ -183,7 +183,7 @@ _myapp_convert_param_target_completion
                     '*-v[be verbose]' \
                     '--help[Show command help]' \
                     '-h[Show command help]' \
-                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
+                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data\:\:Dumper" "Data\:\:Dump")' \
                     '--with[Drink with ...]:with:("almond milk" "soy milk" "oat milk" "spelt milk" "cow milk")' \
                     '--sugar[add sugar]' \
                     '-s[add sugar]' \
@@ -205,7 +205,7 @@ _myapp_convert_param_target_completion
                     '*-v[be verbose]' \
                     '--help[Show command help]' \
                     '-h[Show command help]' \
-                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
+                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data\:\:Dumper" "Data\:\:Dump")' \
                     '--item[]:item:("hash" "table")' \
                     && ret=0
 
@@ -277,7 +277,7 @@ _myapp_convert_param_target_completion
                                             '*-v[be verbose]' \
                                             '--help[Show command help]' \
                                             '-h[Show command help]' \
-                                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
+                                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data\:\:Dumper" "Data\:\:Dump")' \
                                             '--all[]' \
                                             && ret=0
 
@@ -320,7 +320,7 @@ _myapp_convert_param_target_completion
                                             '*-v[be verbose]' \
                                             '--help[Show command help]' \
                                             '-h[Show command help]' \
-                                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
+                                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data\:\:Dumper" "Data\:\:Dump")' \
                                             '--all[]' \
                                             && ret=0
 
@@ -348,7 +348,7 @@ _myapp_convert_param_target_completion
                             '*-v[be verbose]' \
                             '--help[Show command help]' \
                             '-h[Show command help]' \
-                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
+                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data\:\:Dumper" "Data\:\:Dump")' \
                             '--all[]' \
                             && ret=0
 
@@ -364,7 +364,7 @@ _myapp_convert_param_target_completion
                             '*-v[be verbose]' \
                             '--help[Show command help]' \
                             '-h[Show command help]' \
-                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
+                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data\:\:Dumper" "Data\:\:Dump")' \
                             '--all[]' \
                             && ret=0
 
@@ -380,7 +380,7 @@ _myapp_convert_param_target_completion
                             '*-v[be verbose]' \
                             '--help[Show command help]' \
                             '-h[Show command help]' \
-                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
+                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data\:\:Dumper" "Data\:\:Dump")' \
                             '--all[]' \
                             && ret=0
 
@@ -396,7 +396,7 @@ _myapp_convert_param_target_completion
                             '*-v[be verbose]' \
                             '--help[Show command help]' \
                             '-h[Show command help]' \
-                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
+                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data\:\:Dumper" "Data\:\:Dump")' \
                             '--all[]' \
                             && ret=0
 
@@ -412,7 +412,7 @@ _myapp_convert_param_target_completion
                             '*-v[be verbose]' \
                             '--help[Show command help]' \
                             '-h[Show command help]' \
-                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
+                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data\:\:Dumper" "Data\:\:Dump")' \
                             '--all[]' \
                             && ret=0
 
@@ -447,7 +447,7 @@ _myapp_convert_param_target_completion
                                     '*-v[be verbose]' \
                                     '--help[Show command help]' \
                                     '-h[Show command help]' \
-                                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
+                                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data\:\:Dumper" "Data\:\:Dump")' \
                                     '--all[]' \
                                     && ret=0
 
@@ -464,7 +464,7 @@ _myapp_convert_param_target_completion
                                     '*-v[be verbose]' \
                                     '--help[Show command help]' \
                                     '-h[Show command help]' \
-                                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
+                                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data\:\:Dumper" "Data\:\:Dump")' \
                                     '--all[]' \
                                     && ret=0
 
@@ -481,7 +481,7 @@ _myapp_convert_param_target_completion
                                     '*-v[be verbose]' \
                                     '--help[Show command help]' \
                                     '-h[Show command help]' \
-                                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
+                                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data\:\:Dumper" "Data\:\:Dump")' \
                                     '--all[]' \
                                     && ret=0
 
@@ -509,7 +509,7 @@ _myapp_convert_param_target_completion
                     '*-v[be verbose]' \
                     '--help[Show command help]' \
                     '-h[Show command help]' \
-                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
+                    '--format[Format output]:format:("JSON" "YAML" "Table" "Data\:\:Dumper" "Data\:\:Dump")' \
                     && ret=0
 
                 case $state in
@@ -546,7 +546,7 @@ _myapp_palindrome_param_string_completion
                             '*-v[be verbose]' \
                             '--help[Show command help]' \
                             '-h[Show command help]' \
-                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
+                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data\:\:Dumper" "Data\:\:Dump")' \
                             '*--country[country name(s)]:country:_myapp_weather_cities_option_country_completion' \
                             '*-c[country name(s)]:country:_myapp_weather_cities_option_country_completion' \
                             && ret=0
@@ -563,7 +563,7 @@ _myapp_palindrome_param_string_completion
                             '*-v[be verbose]' \
                             '--help[Show command help]' \
                             '-h[Show command help]' \
-                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
+                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data\:\:Dumper" "Data\:\:Dump")' \
                             && ret=0
 
 
@@ -580,7 +580,7 @@ _myapp_palindrome_param_string_completion
                             '*-v[be verbose]' \
                             '--help[Show command help]' \
                             '-h[Show command help]' \
-                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data__Dumper" "Data__Dump")' \
+                            '--format[Format output]:format:("JSON" "YAML" "Table" "Data\:\:Dumper" "Data\:\:Dump")' \
                             '--temperature[show temperature]' \
                             '-T[show temperature]' \
                             '--celsius[show temperature in celsius]' \
@@ -615,39 +615,41 @@ _myapp_weather_show_param_city_completion
 
 _myapp_convert_param_type_completion() {
     local __dynamic_completion
-    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='type' "${words[@]}"`
-    __myapp_dynamic_comp 'type' "$__dynamic_completion"
+    __dynamic_completion=$(PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='type' "${words[@]}")
+    __myapp_dynamic_comp 'type' $__dynamic_completion
 }
 _myapp_convert_param_source_completion() {
     local __dynamic_completion
-    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='source' "${words[@]}"`
-    __myapp_dynamic_comp 'source' "$__dynamic_completion"
+    __dynamic_completion=$(PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='source' "${words[@]}")
+    __myapp_dynamic_comp 'source' $__dynamic_completion
 }
 _myapp_convert_param_target_completion() {
     local __dynamic_completion
-    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='target' "${words[@]}"`
-    __myapp_dynamic_comp 'target' "$__dynamic_completion"
+    __dynamic_completion=$(PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='target' "${words[@]}")
+    __myapp_dynamic_comp 'target' $__dynamic_completion
 }
 _myapp_palindrome_param_string_completion() {
     local __dynamic_completion
-    IFS=$'\n' set -A __dynamic_completion `cat /usr/share/dict/words | perl -nle'print if $_ eq reverse $_'
-`
+    local CURRENT_WORD="$words[CURRENT]"
+    IFS=$'\n' set -A __dynamic_completion $( cat /usr/share/dict/words | perl -nle'print if $_ eq reverse $_'
+ )
     compadd -X "string:" $__dynamic_completion
 }
 _myapp_weather_cities_option_country_completion() {
     local __dynamic_completion
-    IFS=$'\n' set -A __dynamic_completion `$program 'weather' 'countries'`
+    local CURRENT_WORD="$words[CURRENT]"
+    IFS=$'\n' set -A __dynamic_completion $( $program 'weather' 'countries' )
     compadd -X "country:" $__dynamic_completion
 }
 _myapp_weather_show_param_country_completion() {
     local __dynamic_completion
-    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='country' "${words[@]}"`
-    __myapp_dynamic_comp 'country' "$__dynamic_completion"
+    __dynamic_completion=$(PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='country' "${words[@]}")
+    __myapp_dynamic_comp 'country' $__dynamic_completion
 }
 _myapp_weather_show_param_city_completion() {
     local __dynamic_completion
-    __dynamic_completion=`PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='city' "${words[@]}"`
-    __myapp_dynamic_comp 'city' "$__dynamic_completion"
+    __dynamic_completion=$(PERL5_APPSPECRUN_SHELL=zsh PERL5_APPSPECRUN_COMPLETION_PARAMETER='city' "${words[@]}")
+    __myapp_dynamic_comp 'city' $__dynamic_completion
 }
 
 __myapp_dynamic_comp() {
