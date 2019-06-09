@@ -13,6 +13,7 @@ sub generate_completion {
     my $spec = $self->spec;
     my $appname = $spec->name;
 
+    my $appspec_version = App::Spec->VERSION;
 
     my $functions = [];
     my $completion_outer = $self->completion_commands(
@@ -27,6 +28,8 @@ sub generate_completion {
     my ($flags_string, $options_string) = $self->flags_options($global_options);
     my $body = <<"EOM";
 #!bash
+
+# Generated with perl module App::Spec v$appspec_version
 
 _$appname() \{
 

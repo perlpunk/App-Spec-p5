@@ -1,5 +1,7 @@
 #compdef myapp
 
+# Generated with perl module App::Spec v0.000
+
 _myapp() {
     local program=myapp
     typeset -A opt_args

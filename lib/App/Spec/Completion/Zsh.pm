@@ -13,6 +13,7 @@ sub generate_completion {
     my $spec = $self->spec;
     my $appname = $spec->name;
     my $functions = [];
+    my $appspec_version = App::Spec->VERSION;
     my $completion_outer = $self->completion_commands(
         commands => $spec->subcommands,
         options => $spec->options,
@@ -24,6 +25,8 @@ sub generate_completion {
 
 my $body = <<"EOM";
 #compdef $appname
+
+# Generated with perl module App::Spec v$appspec_version
 
 _$appname() {
     local program=$appname

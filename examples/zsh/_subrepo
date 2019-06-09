@@ -1,5 +1,7 @@
 #compdef subrepo
 
+# Generated with perl module App::Spec v0.000
+
 _subrepo() {
     local program=subrepo
     typeset -A opt_args

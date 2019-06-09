@@ -1,5 +1,7 @@
 #compdef pcorelist
 
+# Generated with perl module App::Spec v0.000
+
 _pcorelist() {
     local program=pcorelist
     typeset -A opt_args

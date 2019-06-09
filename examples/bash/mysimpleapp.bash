@@ -1,5 +1,7 @@
 #!bash
 
+# Generated with perl module App::Spec v0.000
+
 _mysimpleapp() {
 
     COMPREPLY=()
