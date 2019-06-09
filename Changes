@@ -1,5 +1,10 @@
 Revision history for Perl module App::Spec
 
+0.008_001 2019-06-09 13:34:48+02:00
+
+    - Several completion fixes regarding colons and spaces
+    - Provide a variable for the last word for both shells
+
 0.008 2019-05-18 19:22:11+02:00
 
     - Fix schema: Option/Parameter spec can be a string also
