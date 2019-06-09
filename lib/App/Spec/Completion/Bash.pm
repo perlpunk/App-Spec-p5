@@ -50,13 +50,14 @@ $completion_outer
 
 _${appname}_compreply() \{
     local prefix=""
-    IFS=\$'\\n' COMPREPLY=(\$(compgen -P "\$prefix" -W "\$1" -- "\$cur"))
+    cur="\$(printf '%q' "\$cur")"
+    IFS=\$'\\n' COMPREPLY=(\$(compgen -P "\$prefix" -W "\$*" -- "\$cur"))
     __ltrim_colon_completions "\$prefix\$cur"
 
     # http://stackoverflow.com/questions/7267185/bash-autocompletion-add-description-for-possible-completions
     if [[ \$\{#COMPREPLY[*]\} -eq 1 ]]; then # Only one completion
-        COMPREPLY=( \$\{COMPREPLY[0]%% -- *\} ) # Remove ' -- ' and everything after
-        COMPREPLY=( \$\{COMPREPLY[0]%% *\} ) # Remove trailing spaces
+        COMPREPLY=( "\$\{COMPREPLY[0]%% -- *\}" ) # Remove ' -- ' and everything after
+        COMPREPLY=( "\$\{COMPREPLY[0]%%+( )\}" ) # Remove trailing spaces
     fi
 \}
 
@@ -312,15 +313,16 @@ sub completion_options  {
 ${indent}  @{[ join '|', @option_strings ]})
 EOM
         if ($enum) {
-            my @list = map { s/ /\\ /g; $_ } @$enum;
-            local $" = q{"$'\\n'"};
+            my @list = @$enum;
             for (@list) {
                 s/['`]/'"'"'/g;
+                s/\\/\\\\/g;
+                s/ /\\\\\\\\ /g;
                 s/\$/\\\$/g;
-                $_ = "'$_'";
+                $_ = qq{"$_"};
             }
             $comp_value .= <<"EOM";
-${indent}    _${appname}_compreply "@list"
+${indent}    _${appname}_compreply @list
 ${indent}    return
 EOM
         }
@@ -382,7 +384,7 @@ sub dynamic_completion {
 $function_name() \{
     local __dynamic_completion
     __dynamic_completion=\$(PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='$name' \${words[@]})
-    __${appname}_dynamic_comp '$name' \$__dynamic_completion
+    __${appname}_dynamic_comp '$name' "\$__dynamic_completion"
 \}
 EOM
     }
@@ -486,13 +488,15 @@ sub completion_parameter {
     my $enum = $param->enum;
     if ($enum) {
         my @list = @$enum;
-        local $" = q{"$'\\n'"};
         for (@list) {
             s/['`]/'"'"'/g;
+            s/\\/\\\\/g;
+            s/ /\\\\ /g;
             s/\$/\\\$/g;
+            $_ = qq{"$_"};
         }
         $comp = <<"EOM";
-${indent}    _${appname}_compreply "@list"
+${indent}    _${appname}_compreply @list
 EOM
     }
     elsif ($type eq "file" or $type eq "dir") {
@@ -517,7 +521,8 @@ sub _functions {
 __APPNAME_dynamic_comp() {
     local argname="$1"
     local arg="$2"
-    local comp name desc cols desclength formatted
+    local name desc cols desclength formatted
+    local comp=()
     local max=0
 
     while read -r line; do
@@ -540,12 +545,12 @@ __APPNAME_dynamic_comp() {
             [[ -z $cols ]] && cols=80
             desclength=`expr $cols - 4 - $max`
             formatted=`printf "%-*s -- %-*s" "$max" "$name" "$desclength" "$desc"`
-            comp="$comp$formatted"$'\n'
+            comp+=("$formatted")
         else
-            comp="$comp'$name'"$'\n'
+            comp+=("'$name'")
         fi
     done <<< "$arg"
-    _APPNAME_compreply "$comp"
+    _APPNAME_compreply ${comp[@]}
 }
 
 function __APPNAME_handle_options() {

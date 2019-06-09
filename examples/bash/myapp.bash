@@ -57,7 +57,7 @@ _myapp() {
                 __myapp_handle_options_flags
                 case ${MYWORDS[$INDEX-1]} in
                   --format)
-                    _myapp_compreply "'JSON'"$'\n'"'YAML'"$'\n'"'Table'"$'\n'"'Data__Dumper'"$'\n'"'Data__Dump'"
+                    _myapp_compreply "JSON" "YAML" "Table" "Data::Dumper" "Data::Dump"
                     return
                   ;;
                   --name)
@@ -107,7 +107,7 @@ _myapp() {
         __myapp_handle_options_flags
         case ${MYWORDS[$INDEX-1]} in
           --format)
-            _myapp_compreply "'JSON'"$'\n'"'YAML'"$'\n'"'Table'"$'\n'"'Data__Dumper'"$'\n'"'Data__Dump'"
+            _myapp_compreply "JSON" "YAML" "Table" "Data::Dumper" "Data::Dump"
             return
           ;;
           --set)
@@ -125,7 +125,7 @@ _myapp() {
         __myapp_handle_options_flags
         case ${MYWORDS[$INDEX-1]} in
           --format)
-            _myapp_compreply "'JSON'"$'\n'"'YAML'"$'\n'"'Table'"$'\n'"'Data__Dumper'"$'\n'"'Data__Dump'"
+            _myapp_compreply "JSON" "YAML" "Table" "Data::Dumper" "Data::Dump"
             return
           ;;
 
@@ -159,11 +159,11 @@ _myapp() {
         __myapp_handle_options_flags
         case ${MYWORDS[$INDEX-1]} in
           --format)
-            _myapp_compreply "'JSON'"$'\n'"'YAML'"$'\n'"'Table'"$'\n'"'Data__Dumper'"$'\n'"'Data__Dump'"
+            _myapp_compreply "JSON" "YAML" "Table" "Data::Dumper" "Data::Dump"
             return
           ;;
           --with)
-            _myapp_compreply "'almond\ milk'"$'\n'"'soy\ milk'"$'\n'"'oat\ milk'"$'\n'"'spelt\ milk'"$'\n'"'cow\ milk'"
+            _myapp_compreply "almond\\\\ milk" "soy\\\\ milk" "oat\\\\ milk" "spelt\\\\ milk" "cow\\\\ milk"
             return
           ;;
 
@@ -171,7 +171,7 @@ _myapp() {
         case $INDEX in
           1)
               __comp_current_options || return
-                _myapp_compreply "tea"$'\n'"coffee"
+                _myapp_compreply "tea" "coffee"
           ;;
 
 
@@ -185,11 +185,11 @@ _myapp() {
         __myapp_handle_options_flags
         case ${MYWORDS[$INDEX-1]} in
           --format)
-            _myapp_compreply "'JSON'"$'\n'"'YAML'"$'\n'"'Table'"$'\n'"'Data__Dumper'"$'\n'"'Data__Dump'"
+            _myapp_compreply "JSON" "YAML" "Table" "Data::Dumper" "Data::Dump"
             return
           ;;
           --item)
-            _myapp_compreply "'hash'"$'\n'"'table'"
+            _myapp_compreply "hash" "table"
             return
           ;;
 
@@ -331,7 +331,7 @@ _myapp() {
         __myapp_handle_options_flags
         case ${MYWORDS[$INDEX-1]} in
           --format)
-            _myapp_compreply "'JSON'"$'\n'"'YAML'"$'\n'"'Table'"$'\n'"'Data__Dumper'"$'\n'"'Data__Dump'"
+            _myapp_compreply "JSON" "YAML" "Table" "Data::Dumper" "Data::Dump"
             return
           ;;
 
@@ -365,7 +365,7 @@ _myapp() {
             __myapp_handle_options_flags
             case ${MYWORDS[$INDEX-1]} in
               --format)
-                _myapp_compreply "'JSON'"$'\n'"'YAML'"$'\n'"'Table'"$'\n'"'Data__Dumper'"$'\n'"'Data__Dump'"
+                _myapp_compreply "JSON" "YAML" "Table" "Data::Dumper" "Data::Dump"
                 return
               ;;
               --country|-c)
@@ -389,7 +389,7 @@ _myapp() {
             __myapp_handle_options_flags
             case ${MYWORDS[$INDEX-1]} in
               --format)
-                _myapp_compreply "'JSON'"$'\n'"'YAML'"$'\n'"'Table'"$'\n'"'Data__Dumper'"$'\n'"'Data__Dump'"
+                _myapp_compreply "JSON" "YAML" "Table" "Data::Dumper" "Data::Dump"
                 return
               ;;
 
@@ -424,30 +424,31 @@ _myapp() {
 
 _myapp_compreply() {
     local prefix=""
-    IFS=$'\n' COMPREPLY=($(compgen -P "$prefix" -W "$1" -- "$cur"))
+    cur="$(printf '%q' "$cur")"
+    IFS=$'\n' COMPREPLY=($(compgen -P "$prefix" -W "$*" -- "$cur"))
     __ltrim_colon_completions "$prefix$cur"
 
     # http://stackoverflow.com/questions/7267185/bash-autocompletion-add-description-for-possible-completions
     if [[ ${#COMPREPLY[*]} -eq 1 ]]; then # Only one completion
-        COMPREPLY=( ${COMPREPLY[0]%% -- *} ) # Remove ' -- ' and everything after
-        COMPREPLY=( ${COMPREPLY[0]%% *} ) # Remove trailing spaces
+        COMPREPLY=( "${COMPREPLY[0]%% -- *}" ) # Remove ' -- ' and everything after
+        COMPREPLY=( "${COMPREPLY[0]%%+( )}" ) # Remove trailing spaces
     fi
 }
 
 _myapp_convert_param_type_completion() {
     local __dynamic_completion
     __dynamic_completion=$(PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='type' ${words[@]})
-    __myapp_dynamic_comp 'type' $__dynamic_completion
+    __myapp_dynamic_comp 'type' "$__dynamic_completion"
 }
 _myapp_convert_param_source_completion() {
     local __dynamic_completion
     __dynamic_completion=$(PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='source' ${words[@]})
-    __myapp_dynamic_comp 'source' $__dynamic_completion
+    __myapp_dynamic_comp 'source' "$__dynamic_completion"
 }
 _myapp_convert_param_target_completion() {
     local __dynamic_completion
     __dynamic_completion=$(PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='target' ${words[@]})
-    __myapp_dynamic_comp 'target' $__dynamic_completion
+    __myapp_dynamic_comp 'target' "$__dynamic_completion"
 }
 _myapp_palindrome_param_string_completion() {
     local CURRENT_WORD="${words[$cword]}"
@@ -462,18 +463,19 @@ _myapp_weather_cities_option_country_completion() {
 _myapp_weather_show_param_country_completion() {
     local __dynamic_completion
     __dynamic_completion=$(PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='country' ${words[@]})
-    __myapp_dynamic_comp 'country' $__dynamic_completion
+    __myapp_dynamic_comp 'country' "$__dynamic_completion"
 }
 _myapp_weather_show_param_city_completion() {
     local __dynamic_completion
     __dynamic_completion=$(PERL5_APPSPECRUN_SHELL=bash PERL5_APPSPECRUN_COMPLETION_PARAMETER='city' ${words[@]})
-    __myapp_dynamic_comp 'city' $__dynamic_completion
+    __myapp_dynamic_comp 'city' "$__dynamic_completion"
 }
 
 __myapp_dynamic_comp() {
     local argname="$1"
     local arg="$2"
-    local comp name desc cols desclength formatted
+    local name desc cols desclength formatted
+    local comp=()
     local max=0
 
     while read -r line; do
@@ -496,12 +498,12 @@ __myapp_dynamic_comp() {
             [[ -z $cols ]] && cols=80
             desclength=`expr $cols - 4 - $max`
             formatted=`printf "%-*s -- %-*s" "$max" "$name" "$desclength" "$desc"`
-            comp="$comp$formatted"$'\n'
+            comp+=("$formatted")
         else
-            comp="$comp'$name'"$'\n'
+            comp+=("'$name'")
         fi
     done <<< "$arg"
-    _myapp_compreply "$comp"
+    _myapp_compreply ${comp[@]}
 }
 
 function __myapp_handle_options() {
