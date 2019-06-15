@@ -1,5 +1,9 @@
 Revision history for Perl module App::Spec
 
+0.010 2019-06-16 00:21:29+02:00
+
+    - Fix bug in dynamic option completion (bash)
+
 0.009 2019-06-09 15:16:28+02:00
 
     - Several completion fixes regarding colons and spaces
