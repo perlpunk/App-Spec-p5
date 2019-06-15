@@ -189,7 +189,7 @@ EOM
             options => $options,
             level => $level,
             functions => $args{functions},
-            previous => $args{previous},
+            previous => $previous,
         );
     }
     if (@$parameters) {
@@ -351,7 +351,7 @@ EOM
 sub dynamic_completion {
     my ($self, %args) = @_;
     my $functions = $args{functions};
-    my $previous = $args{previous};
+    my $previous = $args{previous} || [];
     my $p = $args{option};
     my $level = $args{level};
     my $indent = '        ' x $level;
