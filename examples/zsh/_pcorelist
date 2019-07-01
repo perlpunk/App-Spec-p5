@@ -414,31 +414,31 @@ _pcorelist_module_param_module_completion
 _pcorelist_diff_param_perl1_completion() {
     local __dynamic_completion
     local CURRENT_WORD="$words[CURRENT]"
-    IFS=$'\n' set -A __dynamic_completion $( $program 'perl' '--raw' )
+    IFS=$'\n' __dynamic_completion=( $( $program 'perl' '--raw' ) )
     compadd -X "perl1:" $__dynamic_completion
 }
 _pcorelist_diff_param_perl2_completion() {
     local __dynamic_completion
     local CURRENT_WORD="$words[CURRENT]"
-    IFS=$'\n' set -A __dynamic_completion $( $program 'perl' '--raw' )
+    IFS=$'\n' __dynamic_completion=( $( $program 'perl' '--raw' ) )
     compadd -X "perl2:" $__dynamic_completion
 }
 _pcorelist_features_param_feature_completion() {
     local __dynamic_completion
     local CURRENT_WORD="$words[CURRENT]"
-    IFS=$'\n' set -A __dynamic_completion $( $program 'features' '--raw' )
+    IFS=$'\n' __dynamic_completion=( $( $program 'features' '--raw' ) )
     compadd -X "feature:" $__dynamic_completion
 }
 _pcorelist_module_param_module_completion() {
     local __dynamic_completion
     local CURRENT_WORD="$words[CURRENT]"
-    IFS=$'\n' set -A __dynamic_completion $( $program 'modules' )
+    IFS=$'\n' __dynamic_completion=( $( $program 'modules' ) )
     compadd -X "module:" $__dynamic_completion
 }
 _pcorelist_module_option_perl_completion() {
     local __dynamic_completion
     local CURRENT_WORD="$words[CURRENT]"
-    IFS=$'\n' set -A __dynamic_completion $( $program 'perl' '--raw' )
+    IFS=$'\n' __dynamic_completion=( $( $program 'perl' '--raw' ) )
     compadd -X "perl:" $__dynamic_completion
 }
 

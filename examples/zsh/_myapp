@@ -633,14 +633,14 @@ _myapp_convert_param_target_completion() {
 _myapp_palindrome_param_string_completion() {
     local __dynamic_completion
     local CURRENT_WORD="$words[CURRENT]"
-    IFS=$'\n' set -A __dynamic_completion $( cat /usr/share/dict/words | perl -nle'print if $_ eq reverse $_'
- )
+    IFS=$'\n' __dynamic_completion=( $( cat /usr/share/dict/words | perl -nle'print if $_ eq reverse $_'
+ ) )
     compadd -X "string:" $__dynamic_completion
 }
 _myapp_weather_cities_option_country_completion() {
     local __dynamic_completion
     local CURRENT_WORD="$words[CURRENT]"
-    IFS=$'\n' set -A __dynamic_completion $( $program 'weather' 'countries' )
+    IFS=$'\n' __dynamic_completion=( $( $program 'weather' 'countries' ) )
     compadd -X "country:" $__dynamic_completion
 }
 _myapp_weather_show_param_country_completion() {
