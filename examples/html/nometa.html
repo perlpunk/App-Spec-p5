@@ -17,30 +17,49 @@
   <li><a href="#DESCRIPTION">DESCRIPTION</a>
     <ul>
       <li><a href="#GLOBAL-OPTIONS">GLOBAL OPTIONS</a></li>
-      <li><a href="#SUBCOMMANDS">SUBCOMMANDS</a></li>
+      <li><a href="#SUBCOMMANDS">SUBCOMMANDS</a>
+        <ul>
+          <li><a href="#foo">foo</a></li>
+          <li><a href="#help">help</a></li>
+        </ul>
+      </li>
     </ul>
   </li>
 </ul>
 
 <h1 id="NAME">NAME</h1>
 
-<p>mysimpleapp - a simple app</p>
+<p>nometa - Test app for disabling plugins</p>
 
 <h1 id="ABSTRACT">ABSTRACT</h1>
-
-<p>Just a very simple example app to document some features</p>
 
 <h1 id="DESCRIPTION">DESCRIPTION</h1>
 
 <h2 id="GLOBAL-OPTIONS">GLOBAL OPTIONS</h2>
 
-<pre><code>    --verbose -v   [] be verbose (flag; multiple)
-    --wc              word count (flag)          
-    --lc              line count (flag)          
-    --with            with ...                   
-    --help -h         Show command help (flag)   </code></pre>
+<pre><code>    --help -h    Show command help (flag)</code></pre>
 
 <h2 id="SUBCOMMANDS">SUBCOMMANDS</h2>
+
+<h3 id="foo">foo</h3>
+
+<pre><code>    nometa  foo &lt;test&gt;</code></pre>
+
+<p>Test command</p>
+
+<p>Parameters:</p>
+
+<pre><code>    test  *  </code></pre>
+
+<h3 id="help">help</h3>
+
+<pre><code>    nometa  help &lt;subcommands&gt; [options]</code></pre>
+
+<p>Show command help</p>
+
+<p>Options:</p>
+
+<pre><code>    --all     (flag)</code></pre>
 
 
 </body>
