@@ -1,0 +1,22 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use 5.010;
+
+use Data::Dumper;
+use Text::Table;
+use FindBin '$Bin';
+use lib "$Bin/../../lib";
+use lib "$Bin/../../t/lib";
+
+use App::Spec::Example::Nometa;
+
+package main;
+
+use App::Spec;
+
+my $spec = App::Spec->read("$Bin/../nometa-spec.yaml");
+my $run = $spec->runner;
+$run->run;
+
+

@@ -69,8 +69,19 @@ sub read {
 
     my $spec = $class->load_data($file);
 
-    my @plugins = $class->default_plugins;
-    push @plugins, @{ $spec->{plugins} || [] };
+    my %disable;
+    my @plugins;
+
+    my $spec_plugins = $spec->{plugins} || [];
+    for my $plugin (@$spec_plugins) {
+        if ($plugin =~ m/^-(.*)/) {
+            $disable{ $1 } = 1;
+        }
+    }
+    my @default_plugins = grep { not $disable{ $_ } } $class->default_plugins;
+
+    push @plugins, @default_plugins;
+    push @plugins, grep{ not m/^-/ } @$spec_plugins;
     for my $plugin (@plugins) {
         unless ($plugin =~ s/^=//) {
             $plugin = "App::Spec::Plugin::$plugin";
