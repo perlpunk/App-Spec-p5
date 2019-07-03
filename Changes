@@ -1,5 +1,9 @@
 Revision history for Perl module App::Spec
 
+0.011 2019-07-03 21:48:09+02:00
+
+    - Allow to disable default plugins
+
 0.010 2019-06-16 00:21:29+02:00
 
     - Fix bug in dynamic option completion (bash)
