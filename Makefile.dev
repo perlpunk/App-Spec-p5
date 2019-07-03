@@ -29,3 +29,7 @@ watch-test:
 	find lib/ -name "*.pm"; \
 	find examples/ share/ -name "*.yaml" \
 	) | entr -c prove -lr t xt
+
+lib/App/Spec/Schema.pm: share/schema.yaml
+	perl utils/generate-schema-pm.pl
+
