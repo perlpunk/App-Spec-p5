@@ -4,7 +4,6 @@ use warnings;
 use 5.010;
 
 use Data::Dumper;
-use Text::Table;
 use FindBin '$Bin';
 use lib "$Bin/../../lib";
 use lib "$Bin/../../t/lib";

@@ -5,8 +5,6 @@ package App::Spec::Pod;
 
 our $VERSION = '0.000'; # VERSION
 
-use Text::Table;
-
 use Moo;
 
 has spec => ( is => 'ro' );
@@ -154,7 +152,6 @@ sub params2pod {
     my ($self, %args) = @_;
     my $params = $args{parameters};
     my @rows;
-    my $tb = Text::Table->new;
     for my $param (@$params) {
         my $required = $param->required ? '*' : '';
         my $summary = $param->summary;
@@ -168,15 +165,37 @@ sub params2pod {
         my $flags = $self->spec->_param_flags_string($param);
         push @rows, ["    " . $param->name, " " . $required, $multi, $summary . $flags];
     }
-    $tb->load(@rows);
-    return "$tb";
+    my $test = $self->simple_table(\@rows);
+    return $test;
+}
+
+sub simple_table {
+    my ($self, $rows) = @_;
+    my @widths;
+
+    for my $row (@$rows) {
+        for my $i (0 .. $#$row) {
+            my $col = $row->[ $i ];
+            $widths[ $i ] ||= 0;
+            if ( $widths[ $i ] < length $col) {
+                $widths[ $i ] = length $col;
+            }
+        }
+    }
+    my $format = join ' ', map { "%-" . ($_ || 0) . "s" } @widths;
+    my @lines;
+    for my $row (@$rows) {
+        my $string = sprintf "$format\n", map { $_ // '' } @$row;
+        push @lines, $string;
+    }
+    return join '', @lines;
+
 }
 
 sub options2pod {
     my ($self, %args) = @_;
     my $options = $args{options};
     my @rows;
-    my $tb = Text::Table->new;
     for my $opt (@$options) {
         my $name = $opt->name;
         my $aliases = $opt->aliases;
@@ -195,8 +214,8 @@ sub options2pod {
         my $flags = $self->spec->_param_flags_string($opt);
         push @rows, ["    @names", " " . $required, $multi, $summary . $flags];
     }
-    $tb->load(@rows);
-    return "$tb";
+    my $test = $self->simple_table(\@rows);
+    return $test;
 }
 
 sub markup {
