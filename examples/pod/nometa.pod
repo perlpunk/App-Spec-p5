@@ -1,0 +1,42 @@
+=head1 NAME
+
+nometa - Test app for disabling plugins
+
+=head1 ABSTRACT
+
+
+
+=head1 DESCRIPTION
+
+
+
+=head2 GLOBAL OPTIONS
+
+    --help -h    Show command help (flag)
+
+
+=head2 SUBCOMMANDS
+
+=head3  foo
+
+    nometa  foo <test>
+
+Test command
+
+Parameters:
+
+    test  *  
+
+=head3  help
+
+    nometa  help <subcommands> [options]
+
+Show command help
+
+Options:
+
+    --all     (flag)
+
+
+
+

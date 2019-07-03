@@ -1,6 +1,7 @@
 name: subrepo
 appspec: { "version": 0.001 }
 title: Git Submodule Alternative
+plugins: [ -Meta ]
 markup: swim
 description: |
   This is just an example for generating completion for an existing

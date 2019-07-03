@@ -181,51 +181,5 @@ Same as C<git help subrepo>
 
 
 
-=head3  _meta
-
-    subrepo  _meta <subcommands>
-
-Information and utilities for this app
-
-
-
-=head3 _meta completion
-
-    subrepo _meta completion <subcommands>
-
-Shell completion functions
-
-
-
-=head3 _meta completion generate
-
-    subrepo _meta completion generate [options]
-
-Generate self completion
-
-
-Options:
-
-    --name    name of the program (optional, override name in spec)
-    --zsh     for zsh (flag)                                       
-    --bash    for bash (flag)                                      
-
-
-=head3 _meta pod
-
-    subrepo _meta pod <subcommands>
-
-Pod documentation
-
-
-
-=head3 _meta pod generate
-
-    subrepo _meta pod generate
-
-Generate self pod
-
-
-
 
 
