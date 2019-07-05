@@ -6,7 +6,7 @@ use warnings;
 
 use Test::More;
 
-plan tests => 21 + ($ENV{AUTHOR_TESTING} ? 1 : 0);
+plan tests => 22 + ($ENV{AUTHOR_TESTING} ? 1 : 0);
 
 my @module_files = (
     'App/Spec.pm',
@@ -29,6 +29,7 @@ my @module_files = (
     'App/Spec/Run/Output.pm',
     'App/Spec/Run/Response.pm',
     'App/Spec/Run/Validator.pm',
+    'App/Spec/Schema.pm',
     'App/Spec/Subcommand.pm'
 );
 

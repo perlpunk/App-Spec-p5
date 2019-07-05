@@ -26,6 +26,7 @@ my %WriteMakefileArgs = (
   "PREREQ_PM" => {
     "Data::Dumper" => 0,
     "Encode" => 0,
+    "Exporter" => 0,
     "Getopt::Long" => 0,
     "List::MoreUtils" => 0,
     "List::Util" => "1.33",
@@ -52,7 +53,7 @@ my %WriteMakefileArgs = (
     "constant" => 0,
     "lib" => 0
   },
-  "VERSION" => "0.011",
+  "VERSION" => "0.012",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -62,6 +63,7 @@ my %WriteMakefileArgs = (
 my %FallbackPrereqs = (
   "Data::Dumper" => 0,
   "Encode" => 0,
+  "Exporter" => 0,
   "File::Spec" => 0,
   "FindBin" => 0,
   "Getopt::Long" => 0,

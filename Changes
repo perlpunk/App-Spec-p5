@@ -1,5 +1,10 @@
 Revision history for Perl module App::Spec
 
+0.012 2019-07-06 00:02:35+02:00
+
+    - Generate App::Spec::Schema from schema.yaml so File::Share is not needed
+      (makes fatpacking possible)
+
 0.011 2019-07-03 21:48:09+02:00
 
     - Allow to disable default plugins
