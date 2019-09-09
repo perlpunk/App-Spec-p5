@@ -30,7 +30,7 @@ properties:
 definitions:
 
   optionTypeSimple:
-    enum: [flag, string, integer, file]
+    enum: [flag, string, integer, float, file, filename, dir, dirname]
 
   options:
     type: array

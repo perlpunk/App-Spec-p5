@@ -157,7 +157,11 @@ $SCHEMA = {
         'flag',
         'string',
         'integer',
-        'file'
+        'float',
+        'file',
+        'filename',
+        'dir',
+        'dirname'
       ]
     },
     'options' => {
