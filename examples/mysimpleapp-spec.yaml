@@ -20,6 +20,19 @@ options:
   summary: with ...
   type: string
   enum: [ab, cd, ef]
+- name: file1
+  summary: existing file
+  type: file
+- name: file2
+  summary: possible file
+  type: filename
+- name: dir1
+  summary: existing dir
+  type: dir
+- name: dir2
+  summary: possible dir
+  type: dirname
+
 parameters:
 - name: foo
   summary: foo

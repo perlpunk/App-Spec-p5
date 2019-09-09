@@ -16,12 +16,28 @@ _mysimpleapp() {
     MYWORDS=("${words[@]:1:$cword}")
 
     FLAGS=('--verbose' 'be verbose' '-v' 'be verbose' '--wc' 'word count' '--lc' 'line count' '--help' 'Show command help' '-h' 'Show command help')
-    OPTIONS=('--with' 'with ...')
+    OPTIONS=('--with' 'with ...' '--file1' 'existing file' '--file2' 'possible file' '--dir1' 'existing dir' '--dir2' 'possible dir')
     __mysimpleapp_handle_options_flags
 
     case ${MYWORDS[$INDEX-1]} in
       --with)
         _mysimpleapp_compreply "ab" "cd" "ef"
+        return
+      ;;
+      --file1)
+        compopt -o filenames
+        return
+      ;;
+      --file2)
+        compopt -o filenames
+        return
+      ;;
+      --dir1)
+        compopt -o dirnames
+        return
+      ;;
+      --dir2)
+        compopt -o dirnames
         return
       ;;
 

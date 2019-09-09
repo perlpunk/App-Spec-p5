@@ -80,6 +80,7 @@ _subrepo() {
           ;;
           2)
               __comp_current_options || return
+                compopt -o filenames
           ;;
 
 
@@ -143,6 +144,7 @@ _subrepo() {
         case $INDEX in
           1)
               __comp_current_options || return
+                compopt -o filenames
           ;;
 
 

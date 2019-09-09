@@ -17,6 +17,10 @@ _mysimpleapp() {
             '--wc[word count]' \
             '--lc[line count]' \
             '--with[with ...]:with:("ab" "cd" "ef")' \
+            '--file1[existing file]:file1:_files' \
+            '--file2[possible file]:file2:_files' \
+            '--dir1[existing dir]:dir1:_path_files -/' \
+            '--dir2[possible dir]:dir2:_path_files -/' \
             '--help[Show command help]' \
             '-h[Show command help]' \
             && ret=0

@@ -18,7 +18,9 @@ has param_specs => ( is => 'ro' );
 my %validate = (
     string => sub { length($_[0]) > 0 },
     file => sub { $_[0] eq '-' or -f $_[0] },
+    filename => sub { 1 },
     dir => sub { -d $_[0] },
+    dirname => sub { 1 },
     integer => sub { $_[0] =~ m/^[+-]?\d+$/ },
     float => sub { $_[0] =~ m/^[+-]?\d+(?:\.\d+)?$/ },
     flag => sub { 1 },

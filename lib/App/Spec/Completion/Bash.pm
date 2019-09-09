@@ -329,7 +329,17 @@ ${indent}    _${appname}_compreply @list
 ${indent}    return
 EOM
         }
-        elsif ($type eq "file" or $type eq "dir") {
+        elsif ($type =~ m/^file(name)?\z/) {
+            $comp_value .= <<"EOM";
+${indent}    compopt -o filenames
+${indent}    return
+EOM
+        }
+        elsif ($type =~ m/^dir(name)?\z/) {
+            $comp_value .= <<"EOM";
+${indent}    compopt -o dirnames
+${indent}    return
+EOM
         }
         elsif ($opt->completion) {
             my $function_name = $self->dynamic_completion(
@@ -502,7 +512,15 @@ sub completion_parameter {
 ${indent}    _${appname}_compreply @list
 EOM
     }
-    elsif ($type eq "file" or $type eq "dir") {
+    elsif ($type =~ m/^file(name)?\z/) {
+        $comp = <<"EOM";
+${indent}    compopt -o filenames
+EOM
+    }
+    elsif ($type =~ m/^dir(name)?\z/) {
+        $comp = <<"EOM";
+${indent}    compopt -o dirnames
+EOM
     }
     elsif ($param->completion) {
         my $function_name = $self->dynamic_completion(

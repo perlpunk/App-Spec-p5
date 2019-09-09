@@ -202,8 +202,11 @@ sub parameters {
             my @list = map { "'$_'" } @$enum;
             $completion = $indent . "        compadd -X '$name:' @list";
         }
-        elsif ($p->type eq 'file') {
+        elsif ($p->type =~ m/^file(name)?\z/) {
             $completion = '_files';
+        }
+        elsif ($p->type =~ m/^dir(name)?\z/) {
+            $completion = '_path_files -/';
         }
         elsif ($p->type eq 'user') {
             $completion = '_users';
@@ -407,8 +410,11 @@ sub options {
             } @$enum;
             $values = ":$name:(@list)";
         }
-        elsif ($type eq "file" or $type eq "dir") {
+        elsif ($type =~ m/^file(name)?\z/) {
             $values = ":$name:_files";
+        }
+        elsif ($type =~ m/^dir(name)?\z/) {
+            $values = ":$name:_path_files -/";
         }
         elsif (not ref $type and $type ne "flag") {
             $values = ":$name";
