@@ -27,7 +27,7 @@ sub generate_completion {
     my $global_options = $spec->options;
     my ($flags_string, $options_string) = $self->flags_options($global_options);
     my $body = <<"EOM";
-#!bash
+#!/usr/bin/env bash
 
 # Generated with perl module App::Spec v$appspec_version
 
