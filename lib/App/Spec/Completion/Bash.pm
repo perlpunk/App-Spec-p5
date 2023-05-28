@@ -34,6 +34,7 @@ sub generate_completion {
 _$appname() \{
 
     COMPREPLY=()
+    local IFS=\$'\\n'
     local program=$appname
     local cur prev words cword
     _init_completion -n : || return
@@ -54,7 +55,7 @@ $completion_outer
 _${appname}_compreply() \{
     local prefix=""
     cur="\$(printf '%q' "\$cur")"
-    IFS=\$'\\n' COMPREPLY=(\$(compgen -P "\$prefix" -W "\$*" -- "\$cur"))
+    COMPREPLY=(\$(compgen -P "\$prefix" -W "\$*" -- "\$cur"))
     __ltrim_colon_completions "\$prefix\$cur"
 
     # http://stackoverflow.com/questions/7267185/bash-autocompletion-add-description-for-possible-completions
