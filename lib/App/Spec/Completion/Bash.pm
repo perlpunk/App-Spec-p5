@@ -448,7 +448,7 @@ EOM
         $function = <<"EOM";
 $function_name() \{
     local CURRENT_WORD="\${words\[\$cword\]\}"
-    local param_$shell_name="\$($string)"
+    local param_$shell_name="\$(\n$string\n)"
     _${appname}_compreply "\$param_$shell_name"
 \}
 EOM
