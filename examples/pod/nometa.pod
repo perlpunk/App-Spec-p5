@@ -27,6 +27,21 @@ Parameters:
 
     test  *  
 
+=head3  longsubcommand
+
+    nometa  longsubcommand [<longparam>]
+
+A subcommand with a
+very long summary split
+over multiple lines
+
+
+Parameters:
+
+    longparam    A parameter with a     
+                 very long summary split
+                 over multiple lines    
+
 =head3  help
 
     nometa  help <subcommands> [options]

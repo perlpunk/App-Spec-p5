@@ -1,4 +1,4 @@
-#!bash
+#!/usr/bin/env bash
 
 # Generated with perl module App::Spec v0.000
 

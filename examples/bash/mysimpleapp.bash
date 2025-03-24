@@ -1,4 +1,4 @@
-#!bash
+#!/usr/bin/env bash
 
 # Generated with perl module App::Spec v0.000
 
@@ -15,8 +15,8 @@ _mysimpleapp() {
     local INDEX=`expr $cword - 1`
     MYWORDS=("${words[@]:1:$cword}")
 
-    FLAGS=('--verbose' 'be verbose' '-v' 'be verbose' '--wc' 'word count' '--lc' 'line count' '--help' 'Show command help' '-h' 'Show command help')
-    OPTIONS=('--with' 'with ...' '--file1' 'existing file' '--file2' 'possible file' '--dir1' 'existing dir' '--dir2' 'possible dir')
+    FLAGS=('--verbose' 'be verbose' '-v' 'be verbose' '--wc' 'word count' '--lc' 'line count' '--longoption' 'some long option description split over several lines to demonstrate ' '--help' 'Show command help' '-h' 'Show command help')
+    OPTIONS=('--with' 'with ...' '--file1' 'existing file' '--file2' 'possible file' '--dir1' 'existing dir' '--dir2' 'possible dir' '--longoption2' 'some other long option description split over several lines to demonstrate ')
     __mysimpleapp_handle_options_flags
 
     case ${MYWORDS[$INDEX-1]} in
@@ -39,6 +39,8 @@ _mysimpleapp() {
       --dir2)
         compopt -o dirnames
         return
+      ;;
+      --longoption2)
       ;;
 
     esac

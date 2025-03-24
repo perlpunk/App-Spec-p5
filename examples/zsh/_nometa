@@ -17,7 +17,7 @@ _nometa() {
 
         case $state in
         cmd1)
-            _alternative 'args:cmd2:((foo\:"Test command" help\:"Show command help"))'
+            _alternative 'args:cmd2:((foo\:"Test command" help\:"Show command help" longsubcommand\:"A subcommand with a very long summary split over multiple lines "))'
         ;;
 
         args)
@@ -51,7 +51,7 @@ _nometa() {
 
                 case $state in
                 cmd2)
-                    _alternative 'args:cmd3:((foo))'
+                    _alternative 'args:cmd3:((foo longsubcommand))'
                 ;;
 
                 args)
@@ -69,11 +69,41 @@ _nometa() {
 
 
                     ;;
+                    longsubcommand)
+
+                        # ---- Command: help longsubcommand
+                        _arguments -s -C \
+                            '1: :->cmd1' \
+                            '2: :->cmd2' \
+                            '--help[Show command help]' \
+                            '-h[Show command help]' \
+                            '--all[]' \
+                            && ret=0
+
+
+                    ;;
                     esac
 
                 ;;
 
                 esac
+            ;;
+            longsubcommand)
+
+                # ---- Command: longsubcommand
+                _arguments -s -C \
+                    '1: :->cmd1' \
+                    '2: :->longparam' \
+                    '--help[Show command help]' \
+                    '-h[Show command help]' \
+                    && ret=0
+
+                case $state in
+                longparam)
+
+                ;;
+                esac
+
             ;;
             esac
 

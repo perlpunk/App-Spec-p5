@@ -342,6 +342,7 @@ sub commands_alternative {
         my $cmd = $commands->{ $key };
         my $name = $cmd->name;
         my $summary = $cmd->summary;
+        $summary =~ s/\s+/ /g if defined $summary;
         push @subcommands, [$name, $summary];
     }
     my $string = $self->list_to_alternative(
@@ -419,6 +420,7 @@ sub options {
         elsif (not ref $type and $type ne "flag") {
             $values = ":$name";
         }
+        $summary =~ s/\s+/ /g;
         $summary =~ s/['`]/'"'"'/g;
         $summary =~ s/\$/\\\$/g;
 

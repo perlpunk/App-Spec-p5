@@ -163,7 +163,9 @@ sub params2pod {
             $multi = '[]';
         }
         my $flags = $self->spec->_param_flags_string($param);
-        push @rows, ["    " . $param->name, " " . $required, $multi, $summary . $flags];
+        my @lines = split m/\n/, $summary;
+        push @rows, ["    " . $param->name, " " . $required, $multi, ($lines[0] // '') . $flags];
+        push @rows, ["    " , " ", '', $_] for map {s/^ +//; $_ } @lines[1 .. $#lines];
     }
     my $test = $self->simple_table(\@rows);
     return $test;
@@ -212,7 +214,9 @@ sub options2pod {
             length $_ > 1 ? "--$_" : "-$_"
         } ($name, @$aliases);
         my $flags = $self->spec->_param_flags_string($opt);
-        push @rows, ["    @names", " " . $required, $multi, $summary . $flags];
+        my @lines = split m/\n/, $summary;
+        push @rows, ["    @names", " " . $required, $multi, ($lines[0] // '') . $flags];
+        push @rows, ["    ", " " , '', $_ ] for map {s/^ +//; $_ } @lines[1 .. $#lines];
     }
     my $test = $self->simple_table(\@rows);
     return $test;

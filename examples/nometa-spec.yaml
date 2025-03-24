@@ -14,5 +14,16 @@ subcommands:
       type: string
       required: true
       enum: [a, b, c]
+  longsubcommand:
+    summary: |
+      A subcommand with a
+      very long summary split
+      over multiple lines
+    parameters:
+      - name: longparam
+        summary: |
+          A parameter with a
+          very long summary split
+          over multiple lines
 
 # vim:et:sts=2:sws=2:sw=2:foldmethod=indent

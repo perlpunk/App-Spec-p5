@@ -21,6 +21,8 @@ _mysimpleapp() {
             '--file2[possible file]:file2:_files' \
             '--dir1[existing dir]:dir1:_path_files -/' \
             '--dir2[possible dir]:dir2:_path_files -/' \
+            '--longoption[some long option description split over several lines to demonstrate ]' \
+            '--longoption2[some other long option description split over several lines to demonstrate ]:longoption2' \
             '--help[Show command help]' \
             '-h[Show command help]' \
             && ret=0

@@ -5,6 +5,7 @@ use FindBin '$Bin';
 use lib "$Bin/lib";
 use App::Spec::Example::MyApp;
 use App::Spec::Example::MySimpleApp;
+use App::Spec::Example::Nometa;
 use App::Spec;
 use YAML::PP;
 $ENV{PERL5_APPSPECRUN_COLOR} = 'never';

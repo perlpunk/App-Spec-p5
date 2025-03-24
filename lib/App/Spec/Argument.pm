@@ -129,7 +129,7 @@ sub from_dsl {
         }
     }
 
-    if ($dsl =~ s/^\s*--\s*(.*)//) {
+    if ($dsl =~ s/^\s*--\s*(.*)//s) {
         # TODO only summary should be supported
         $hash{summary} = $1;
     }

@@ -86,7 +86,9 @@ EOM
         for my $name (@keys) {
             my $cmd_spec = $subcmds->{ $name };
             my $summary = $cmd_spec->summary;
-            push @table, [$name, $summary];
+            my @lines = split m/\n/, $summary;
+            push @table, [$name, $lines[0] // ''];
+            push @table, ['', $_] for map { s/^ +//; $_ } @lines[1 .. $#lines];
             if (length $name > $maxlength) {
                 $maxlength = length $name;
             }
@@ -121,7 +123,9 @@ EOM
 
             my $flags = $self->_param_flags_string($param);
 
-            push @table, [$name, $req, $multi, $summary . $flags];
+            my @lines = split m/\n/, $summary;
+            push @table, [$name, $req, $multi, ($lines[0] // '') . $flags];
+            push @table, ['', ' ', '  ', $_] for map { s/^ +//; $_ } @lines[1 .. $#lines];
             if (length $name > $maxlength) {
                 $maxlength = length $name;
             }
@@ -164,7 +168,9 @@ EOM
 
             my $flags = $self->_param_flags_string($opt);
 
-            push @table, [$string, $req, $multi, $summary . $flags];
+            my @lines = split m/\n/, $summary;
+            push @table, [$string, $req, $multi, ($lines[0] // '') . $flags];
+            push @table, ['', ' ', '  ', $_ ] for map { s/^ +//; $_ } @lines[1 .. $#lines];
         }
         my $options_string = $colored->([qw/ bold /], "Options:");
         $body .= "\n$options_string\n";

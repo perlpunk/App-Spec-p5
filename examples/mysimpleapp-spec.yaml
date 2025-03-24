@@ -32,6 +32,15 @@ options:
 - name: dir2
   summary: possible dir
   type: dirname
+- |
+  longoption --some long option description
+               split over several lines to
+               demonstrate
+- name: longoption2
+  summary: |
+    some other long option
+    description split over several
+    lines to demonstrate
 
 parameters:
 - name: foo

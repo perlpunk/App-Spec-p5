@@ -12,11 +12,21 @@ Just a very simple example app to document some features
 
 =head2 GLOBAL OPTIONS
 
-    --verbose -v   [] be verbose (flag; multiple)
-    --wc              word count (flag)          
-    --lc              line count (flag)          
-    --with            with ...                   
-    --help -h         Show command help (flag)   
+    --verbose -v    [] be verbose (flag; multiple)        
+    --wc               word count (flag)                  
+    --lc               line count (flag)                  
+    --with             with ...                           
+    --file1            existing file                      
+    --file2            possible file                      
+    --dir1             existing dir                       
+    --dir2             possible dir                       
+    --longoption       some long option description (flag)
+                       split over several lines to        
+                       demonstrate                        
+    --longoption2      some other long option             
+                       description split over several     
+                       lines to demonstrate               
+    --help -h          Show command help (flag)           
 
 
 =head2 SUBCOMMANDS

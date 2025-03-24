@@ -1,4 +1,4 @@
-#!bash
+#!/usr/bin/env bash
 
 # Generated with perl module App::Spec v0.000
 
@@ -23,7 +23,7 @@ _nometa() {
 
     0)
         __comp_current_options || return
-        __nometa_dynamic_comp 'commands' 'foo'$'\t''Test command'$'\n''help'$'\t''Show command help'
+        __nometa_dynamic_comp 'commands' 'foo'$'\t''Test command'$'\n''help'$'\t''Show command help'$'\n''longsubcommand'$'\t''A subcommand with a very long summary split over multiple lines '
 
     ;;
     *)
@@ -53,7 +53,7 @@ _nometa() {
 
         1)
             __comp_current_options || return
-            __nometa_dynamic_comp 'commands' 'foo'
+            __nometa_dynamic_comp 'commands' 'foo'$'\n''longsubcommand'
 
         ;;
         *)
@@ -63,8 +63,28 @@ _nometa() {
             __nometa_handle_options_flags
             __comp_current_options true || return # no subcmds, no params/opts
           ;;
+          longsubcommand)
+            __nometa_handle_options_flags
+            __comp_current_options true || return # no subcmds, no params/opts
+          ;;
         esac
 
+        ;;
+        esac
+      ;;
+      longsubcommand)
+        __nometa_handle_options_flags
+        case ${MYWORDS[$INDEX-1]} in
+
+        esac
+        case $INDEX in
+          1)
+              __comp_current_options || return
+          ;;
+
+
+        *)
+            __comp_current_options || return
         ;;
         esac
       ;;
