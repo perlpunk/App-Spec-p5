@@ -2,3 +2,4 @@ cover_db
 pod2htmd.tmp
 dev
 local
+Makefile.dev

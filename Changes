@@ -1,5 +1,10 @@
 Revision history for Perl module App::Spec
 
+v0.15.0 2025-03-25 21:54:22+01:00
+
+    - Use '/usr/bin/env bash' (#22 @alexiswl)
+    - Support multiline descriptions
+
 0.013 2019-09-09 19:22:34+02:00
 
     - Add types filename and dirname
