@@ -309,13 +309,14 @@ sub _desc {
 # fish identifier part, e.g. lwp-request => lwp_request
 sub _ident {
     my ($name) = @_;
-    return $name =~ tr/A-Za-z0-9_/_/cr;
+    $name =~ tr/A-Za-z0-9_/_/c;
+    return $name;
 }
 
 # fish single quoted string, bare word if no quoting is needed
 sub _quote {
     my ($string) = @_;
-    return $string if $string =~ m{\A[\w.,:+/@][\w.,:+/@-]*\z}a;
+    return $string if $string =~ m{\A[A-Za-z0-9_.,:+/@][A-Za-z0-9_.,:+/@-]*\z};
     $string =~ s/([\\'])/\\$1/g;
     return "'$string'";
 }
