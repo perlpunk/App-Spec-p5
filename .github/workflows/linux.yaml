@@ -38,7 +38,7 @@ jobs:
       image: perl:${{ matrix.perl-version }}
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v7
     - run: env | sort
     - run: perl -V
     - name: Install fish
