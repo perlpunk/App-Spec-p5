@@ -52,6 +52,10 @@ $option_string
 @{[ join '', @subcmd_pod ]}
 EOM
 
+    if ($pod =~ m/[^\x00-\x7F]/) {
+        $pod = "=encdding utf-8\n\n$pod";
+    }
+    return $pod;
 }
 
 sub subcommand_pod {

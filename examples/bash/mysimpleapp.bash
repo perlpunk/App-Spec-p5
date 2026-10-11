@@ -16,7 +16,7 @@ _mysimpleapp() {
     MYWORDS=("${words[@]:1:$cword}")
 
     FLAGS=('--verbose' 'be verbose' '-v' 'be verbose' '--wc' 'word count' '--lc' 'line count' '--longoption' 'some long option description split over several lines to demonstrate ' '--help' 'Show command help' '-h' 'Show command help')
-    OPTIONS=('--with' 'with ...' '--file1' 'existing file' '--file2' 'possible file' '--dir1' 'existing dir' '--dir2' 'possible dir' '--longoption2' 'some other long option description split over several lines to demonstrate ')
+    OPTIONS=('--with' 'with ...' '--file1' 'existing file' '--file2' 'possible file' '--dir1' 'existing dir' '--dir2' 'possible dir' '--longoption2' 'some other long option description split over several lines to demonstrate ' '--optionwithutf8' 'Description with … ellipsis')
     __mysimpleapp_handle_options_flags
 
     case ${MYWORDS[$INDEX-1]} in
@@ -41,6 +41,8 @@ _mysimpleapp() {
         return
       ;;
       --longoption2)
+      ;;
+      --optionwithutf8)
       ;;
 
     esac

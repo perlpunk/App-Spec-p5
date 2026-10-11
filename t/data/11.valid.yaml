@@ -3,10 +3,10 @@
   args: [ mysimpleapp, -h ]
   stdout:
   - regex: 'Usage: mysimpleapp \[options\]'
-  - regex: '--longoption          some long option'
-  - regex: '                      split over'
-  - regex: '--longoption2         some other long option'
-  - regex: '                      description split'
+  - regex: '--longoption             some long option'
+  - regex: '                         split over'
+  - regex: '--longoption2            some other long option'
+  - regex: '                         description split'
   exit: 0
 -
   args: [ mysimpleapp, -vvv ]

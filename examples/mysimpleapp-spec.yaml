@@ -41,6 +41,8 @@ options:
     some other long option
     description split over several
     lines to demonstrate
+- name: optionwithutf8
+  summary: Description with … ellipsis
 
 parameters:
 - name: foo

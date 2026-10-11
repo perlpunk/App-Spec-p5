@@ -10,7 +10,7 @@ my @apps = qw(nometa mysimpleapp myapp pcorelist);
 for my $app (@apps) {
     my $spec = App::Spec->read("$Bin/../examples/$app-spec.yaml");
     my $podfile = "$Bin/../examples/pod/$app.pod";
-    my $podexpected = do { open my $fh, '<', $podfile; local $/; <$fh> };
+    my $podexpected = do { open my $fh, '<:encoding(UTF-8)', $podfile; local $/; <$fh> };
     my $generator = App::Spec::Pod->new(
         spec => $spec,
     );

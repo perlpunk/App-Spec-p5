@@ -14,7 +14,7 @@ my @apps = qw(nometa mysimpleapp myapp pcorelist subrepo);
 for my $app (@apps) {
     my $spec = App::Spec->read("$Bin/../examples/$app-spec.yaml");
     my $file = "$Bin/../examples/fish/$app.fish";
-    my $expected = do { open my $fh, '<', $file or die $!; local $/; <$fh> };
+    my $expected = do { open my $fh, '<:encoding(UTF-8)', $file or die $!; local $/; <$fh> };
     my $completion = $spec->generate_completion(shell => 'fish');
     s/\s+\z// for $completion, $expected;
     $completion =~ s/App::Spec vv0.15.0/App::Spec v0.000/;

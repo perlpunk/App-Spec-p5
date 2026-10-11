@@ -11,7 +11,7 @@ end
 function __mysimpleapp_optspecs
     switch "$argv"
         case ''
-            string join \n -- dir1= dir2= file1= file2= h help lc longoption longoption2= v verbose wc with=
+            string join \n -- dir1= dir2= file1= file2= h help lc longoption longoption2= optionwithutf8= v verbose wc with=
     end
 end
 
@@ -80,5 +80,6 @@ complete -c mysimpleapp -n __mysimpleapp_prefix -l dir1 -d 'existing dir' -r -f 
 complete -c mysimpleapp -n __mysimpleapp_prefix -l dir2 -d 'possible dir' -r -f -a '(__fish_complete_directories (commandline -ct))'
 complete -c mysimpleapp -n __mysimpleapp_prefix -l longoption -d 'some long option description split over several lines to demonstrate'
 complete -c mysimpleapp -n __mysimpleapp_prefix -l longoption2 -d 'some other long option description split over several lines to demonstrate' -x
+complete -c mysimpleapp -n __mysimpleapp_prefix -l optionwithutf8 -d 'Description with … ellipsis' -x
 complete -c mysimpleapp -n __mysimpleapp_prefix -l help -s h -d 'Show command help'
 

@@ -23,6 +23,7 @@ _mysimpleapp() {
             '--dir2[possible dir]:dir2:_path_files -/' \
             '--longoption[some long option description split over several lines to demonstrate ]' \
             '--longoption2[some other long option description split over several lines to demonstrate ]:longoption2' \
+            '--optionwithutf8[Description with … ellipsis]:optionwithutf8' \
             '--help[Show command help]' \
             '-h[Show command help]' \
             && ret=0
