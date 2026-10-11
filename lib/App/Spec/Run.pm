@@ -387,10 +387,12 @@ sub colorize_error {
     $msg = $self->colored('err', [qw/ error /], $msg) . "\n";
 }
 
+my $has_color;
 sub colored {
     my ($self, $out, $colors, $msg) = @_;
     $colors = [ map { $_ eq 'error' ? qw/ bold red / : $_ } @$colors ];
-    require Term::ANSIColor;
+    $has_color //= eval { require Term::ANSIColor; 1 };
+    return $msg unless $has_color;
     $self->colorize($out)
         and $msg = Term::ANSIColor::colored($colors, $msg);
     return $msg;
