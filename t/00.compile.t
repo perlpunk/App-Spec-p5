@@ -6,7 +6,7 @@ use warnings;
 
 use Test::More;
 
-plan tests => 22 + ($ENV{AUTHOR_TESTING} ? 1 : 0);
+plan tests => 23 + ($ENV{AUTHOR_TESTING} ? 1 : 0);
 
 my @module_files = (
     'App/Spec.pm',
@@ -14,6 +14,7 @@ my @module_files = (
     'App/Spec/Completion.pm',
     'App/Spec/Completion/Bash.pm',
     'App/Spec/Completion/Zsh.pm',
+    'App/Spec/Completion/Fish.pm',
     'App/Spec/Option.pm',
     'App/Spec/Parameter.pm',
     'App/Spec/Plugin/Format.pm',

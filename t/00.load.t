@@ -1,5 +1,5 @@
 
-use Test::More tests => 11;
+use Test::More tests => 12;
 
 use_ok( 'App::Spec' ); 
 use_ok( 'App::Spec::Run' ); 
@@ -12,3 +12,4 @@ use_ok( 'App::Spec::Run::Validator' );
 use_ok( 'App::Spec::Completion' ); 
 use_ok( 'App::Spec::Completion::Zsh' ); 
 use_ok( 'App::Spec::Completion::Bash' ); 
+use_ok( 'App::Spec::Completion::Fish' );

@@ -54,7 +54,7 @@ _pcorelist() {
             # subcmds
             case ${MYWORDS[2]} in
               generate)
-                FLAGS+=('--zsh' 'for zsh' '--bash' 'for bash')
+                FLAGS+=('--zsh' 'for zsh' '--bash' 'for bash' '--fish' 'for fish (>= 4.0)')
                 OPTIONS+=('--name' 'name of the program (optional, override name in spec)')
                 __pcorelist_handle_options_flags
                 case ${MYWORDS[$INDEX-1]} in

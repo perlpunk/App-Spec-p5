@@ -72,6 +72,7 @@ _myapp() {
                                     '--name[name of the program (optional, override name in spec)]:name' \
                                     '--zsh[for zsh]' \
                                     '--bash[for bash]' \
+                                    '--fish[for fish (>= 4.0)]' \
                                     && ret=0
 
 

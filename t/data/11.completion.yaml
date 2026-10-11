@@ -18,6 +18,14 @@
   exit: 0
 -
   env:
+    PERL5_APPSPECRUN_COMPLETION_PARAMETER: target
+    PERL5_APPSPECRUN_SHELL: fish
+  args: [ myapp, convert, distance, meter, 23, foot, "" ]
+  stdout:
+    regex: \Ainch\n\z
+  exit: 0
+-
+  env:
     PERL5_APPSPECRUN_COMPLETION_PARAMETER: city
   args: [ myapp, weather, show, Netherlands ]
   stdout:

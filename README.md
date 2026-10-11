@@ -16,9 +16,9 @@ Write a specification for your command line application (currently in YAML) and 
  * validates options and parameters
  * outputs help
 * Automatic creation of pod, man pages
-* Automatic creation of zsh and bash completion scripts. Completion includes:
+* Automatic creation of zsh, bash and fish (>= 4.0) completion scripts. Completion includes:
  * Subcommands, parameter values, option names and option values.
- * Description for completion items are shown, in zsh builtin, in bash with a cute little trick.
+ * Description for completion items are shown, in zsh and fish builtin, in bash with a cute little trick.
  * Generating dynamic completion. When completing a parameter or option, you can call an external
  command returning possible completion values
 * Possibly even creating a specification for your favourite app which lacks shell completion
@@ -111,6 +111,16 @@ If you change the completion script later, you just need to source it:
  `% source examples/zsh/_myapp`
  
  Note that the completion script must also be executable!
+
+### Fish
+
+Requires fish >= 4.0. Source the completion script:
+```
+ > source examples/fish/myapp.fish
+ > myapp <TAB>
+```
+
+To load it automatically, copy it to `~/.config/fish/completions/myapp.fish`.
 
 ## Reinventing the wheel?
 

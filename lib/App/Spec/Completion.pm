@@ -19,7 +19,8 @@ __DATA__
 
 App::Spec::Completion - Shell Completion generator
 
-See L<App::Spec::Completion::Bash> and L<App::Spec::Completion::Zsh>
+See L<App::Spec::Completion::Bash>, L<App::Spec::Completion::Zsh> and
+L<App::Spec::Completion::Fish>
 
 =head1 ATTRIBUTES
 

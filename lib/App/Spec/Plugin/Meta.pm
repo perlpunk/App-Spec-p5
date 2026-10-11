@@ -21,14 +21,14 @@ sub install_subcommands {
 sub cmd_self_completion {
     my ($self, $run) = @_;
     my $options = $run->options;
-    my $shell = $options->{zsh} ? "zsh" : $options->{bash} ? "bash" : '';
+    my $shell = $options->{zsh} ? "zsh" : $options->{bash} ? "bash" : $options->{fish} ? "fish" : '';
     unless ($shell) {
         my $ppid = getppid();
         chomp($shell = `ps --no-headers -o cmd $ppid`);
         $shell =~ s/.*\W(\w*sh).*$/$1/; #handling case of '-zsh' or '/bin/bash'
                                         #or bash -i -rs
     }
-    unless (any { $_ eq $shell } qw/ bash zsh / ) {
+    unless (any { $_ eq $shell } qw/ bash zsh fish / ) {
         die "Specify which shell, '$shell' not supported";
     }
     my $spec = $run->spec;
@@ -108,6 +108,9 @@ subcommands:
                         type: flag
                     -   name: bash
                         summary: for bash
+                        type: flag
+                    -   name: fish
+                        summary: for fish (>= 4.0)
                         type: flag
     pod:
         summary: Pod documentation

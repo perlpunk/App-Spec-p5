@@ -2,6 +2,7 @@ completion:
 	for i in myapp mysimpleapp pcorelist subrepo nometa ; do \
 		appspec completion examples/$$i-spec.yaml --zsh  > examples/zsh/_$$i; \
 		appspec completion examples/$$i-spec.yaml --bash > examples/bash/$$i.bash; \
+		appspec completion examples/$$i-spec.yaml --fish > examples/fish/$$i.fish; \
 	done
 
 pod:

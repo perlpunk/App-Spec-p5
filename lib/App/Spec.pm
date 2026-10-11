@@ -264,6 +264,13 @@ sub generate_completion {
         );
         return $completer->generate_completion(%args);
     }
+    elsif ($shell eq "fish") {
+        require App::Spec::Completion::Fish;
+        my $completer = App::Spec::Completion::Fish->new(
+            spec => $self,
+        );
+        return $completer->generate_completion(%args);
+    }
 }
 
 
@@ -396,7 +403,7 @@ Returns usage output for the specified subcommands:
 
 =item generate_completion
 
-Generates shell completion script for the spec.
+Generates shell completion script for the spec. Supported shells: C<zsh>, C<bash>, C<fish> (fish >= 4.0).
 
     my $completion = $spec->generate_completion(
         shell => "zsh",

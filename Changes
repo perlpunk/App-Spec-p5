@@ -1,5 +1,9 @@
 Revision history for Perl module App::Spec
 
+unreleased
+
+    - Add fish completion generator (fish >= 4.0 only)
+
 v0.15.0 2025-03-25 21:54:22+01:00
 
     - Use '/usr/bin/env bash' (#22 @alexiswl)
