@@ -1,8 +1,10 @@
 Revision history for Perl module App::Spec
 
-unreleased
+v0.16.0 2026-10-12 12:39:10+02:00
 
-    - Add fish completion generator (fish >= 4.0 only)
+    - Add fish completion generator (fish >= 4.0 only) PR#27 @ilmanzo
+    - Support unicode in pod
+    - Make Term::ANSIColor optional
 
 v0.15.0 2025-03-25 21:54:22+01:00
 
