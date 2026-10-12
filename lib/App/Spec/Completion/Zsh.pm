@@ -322,7 +322,7 @@ EOM
 $function_name() \{
     local __dynamic_completion
     local CURRENT_WORD="\$words\[CURRENT\]"
-    IFS=\$'\\n' __dynamic_completion=( \$( $string ) )
+    IFS=\$'\\n' __dynamic_completion=( \$( \n$string\n ) )
     compadd -X "$shell_name:" \$__dynamic_completion
 \}
 EOM
