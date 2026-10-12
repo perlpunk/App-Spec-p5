@@ -1,5 +1,9 @@
 Revision history for Perl module App::Spec
 
+v0.17.0 2026-10-12 23:14:45+02:00
+
+    - Fix typo in =encoding pod header
+
 v0.16.0 2026-10-12 12:39:10+02:00
 
     - Add fish completion generator (fish >= 4.0 only) PR#27 @ilmanzo
