@@ -53,7 +53,7 @@ $option_string
 EOM
 
     if ($pod =~ m/[^\x00-\x7F]/) {
-        $pod = "=encdding utf-8\n\n$pod";
+        $pod = "=encoding utf-8\n\n$pod";
     }
     return $pod;
 }
